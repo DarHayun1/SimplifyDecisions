@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.DashboardFragment"
+        android:label="dashboard_fragment"
+        tools:layout="@layout/dashboard_fragment" >
+        <action
+            android:id="@+id/action_dashboardFragment_to_issuesFragment"
+            app:destination="@id/issuesFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_decisionsFragment"
+            app:destination="@id/decisionsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/issuesFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.IssuesFragment"
+        android:label="fragment_issues"
+        tools:layout="@layout/fragment_issues" />
+    <fragment
+        android:id="@+id/decisionsFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.DecisionsFragment"
+        android:label="fragment_decisions"
+        tools:layout="@layout/fragment_decisions" />
+</navigation>
