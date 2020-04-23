@@ -15,6 +15,6 @@ data class Issue(var title: String) {
     @PrimaryKey
     var id: String = "$title$date"
     @TypeConverters(OpinionConverter::class)
-    var opinions = mutableListOf<Opinion>()
+    var opinions: MutableList<Opinion>? = mutableListOf<Opinion>()
 
 }
