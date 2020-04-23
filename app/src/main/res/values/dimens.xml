@@ -3,4 +3,5 @@
     <dimen name="menu_logo_size">96dp</dimen>
     <dimen name="menu_item_size">64dp</dimen>
     <dimen name="menu_margin">24dp</dimen>
+    <dimen name="fab_size">64dp</dimen>
 </resources>
