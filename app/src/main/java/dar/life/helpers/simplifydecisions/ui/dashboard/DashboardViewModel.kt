@@ -1,4 +1,4 @@
-package dar.life.helpers.simplifydecisions.ui
+package dar.life.helpers.simplifydecisions.ui.dashboard
 
 import androidx.lifecycle.ViewModel
 

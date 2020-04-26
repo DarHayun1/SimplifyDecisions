@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -15,21 +16,21 @@ import dar.life.helpers.simplifydecisions.data.Issue;
 public class AppRepository {
 
     private static AppRepository sInstance;
-    private final Context mAppContext;
     private final IssuesDao mDao;
     private final LiveData<List<Issue>> mIssues;
+    private final LiveData<List<Issue>> mActiveIssues;
+
 
     private AppRepository(Application application) {
 
-        mAppContext = application.getApplicationContext();
-
         IssuesDatabase db = Room.databaseBuilder(
-                mAppContext,
+                application.getApplicationContext(),
                 IssuesDatabase.class, IssuesDatabase.DB_NAME
         ).build();
 
         mDao = db.issuesDao();
 
+        mActiveIssues = mDao.getAllActiveIssues();
         mIssues = mDao.getAllIssues();
 
     }
@@ -53,6 +54,16 @@ public class AppRepository {
     @NotNull
     public LiveData<List<Issue>> getAllIssues() {
         return mIssues;
+    }
+
+    @NotNull
+    public LiveData<List<Issue>> getAllActiveIssues() {
+        return mActiveIssues;
+    }
+
+    @Nullable
+    public LiveData<Issue> getIssue(String requestedId) {
+        return mDao.getIssueById(requestedId);
     }
 
     public void addNewIssue(@NotNull final Issue issue) {

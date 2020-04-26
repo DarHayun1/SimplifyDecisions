@@ -3,4 +3,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="issue_default_title">Issue default title</string>
+    <string name="opinions_section_header">Stuff I Need To Figure Out</string>
+    <string name="facts_header_text">My Facts</string>
 </resources>

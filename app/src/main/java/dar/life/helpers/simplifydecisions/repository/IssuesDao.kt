@@ -12,6 +12,12 @@ interface IssuesDao {
     @Query("SELECT * FROM issues ORDER BY date DESC")
     fun getAllIssues(): LiveData<List<Issue>>
 
+    @Query("SELECT * FROM issues WHERE isActive = 1 ORDER BY date DESC")
+    fun getAllActiveIssues(): LiveData<List<Issue>>
+
+    @Query("SELECT * FROM issues WHERE id = :requestedId")
+    fun getIssueById(requestedId: String): LiveData<Issue>
+
     @Insert(onConflict = REPLACE)
     fun addNewIssue(issue: Issue)
 

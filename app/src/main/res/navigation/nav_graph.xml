@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="dar.life.helpers.simplifydecisions.ui.DashboardFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.dashboard.DashboardFragment"
         android:label="dashboard_fragment"
         tools:layout="@layout/dashboard_fragment" >
         <action
@@ -19,12 +19,37 @@
     </fragment>
     <fragment
         android:id="@+id/issuesFragment"
-        android:name="dar.life.helpers.simplifydecisions.ui.IssuesFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.issues.IssuesFragment"
         android:label="fragment_issues"
-        tools:layout="@layout/fragment_issues" />
+        tools:layout="@layout/fragment_issues" >
+        <action
+            android:id="@+id/action_issuesFragment_to_editIssueFragment"
+            app:destination="@id/editIssueFragment" />
+        <action
+            android:id="@+id/action_issuesFragment_to_createFromTemplateFragment"
+            app:destination="@id/createFromTemplateFragment" />
+    </fragment>
     <fragment
         android:id="@+id/decisionsFragment"
         android:name="dar.life.helpers.simplifydecisions.ui.DecisionsFragment"
         android:label="fragment_decisions"
         tools:layout="@layout/fragment_decisions" />
+    <fragment
+        android:id="@+id/editIssueFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.issues.EditIssueFragment"
+        android:label="fragment_edit_issue"
+        tools:layout="@layout/fragment_edit_issue" >
+        <argument
+            android:name="issueId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/createFromTemplateFragment"
+        android:name="dar.life.helpers.simplifydecisions.CreateFromTemplateFragment"
+        android:label="fragment_create_from_template"
+        tools:layout="@layout/fragment_create_from_template" >
+        <action
+            android:id="@+id/action_createFromTemplateFragment_to_editIssueFragment"
+            app:destination="@id/editIssueFragment" />
+    </fragment>
 </navigation>

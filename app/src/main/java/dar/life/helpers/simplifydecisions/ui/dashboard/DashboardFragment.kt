@@ -1,4 +1,4 @@
-package dar.life.helpers.simplifydecisions.ui
+package dar.life.helpers.simplifydecisions.ui.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,8 @@ import dar.life.helpers.simplifydecisions.databinding.DashboardFragmentBinding
 class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
 
     companion object {
-        fun newInstance() = DashboardFragment()
+        fun newInstance() =
+            DashboardFragment()
     }
     private var _binding: DashboardFragmentBinding? = null
     private val binding get() = _binding!!
@@ -33,11 +34,12 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
     private fun initViews() {
         binding.issuesBtn.setOnClickListener{
             findNavController().navigate(
-                DashboardFragmentDirections.actionDashboardFragmentToIssuesFragment())
+                DashboardFragmentDirections.actionDashboardFragmentToIssuesFragment()
+            )
         }
         binding.decisionsBtn.setOnClickListener{
             findNavController().navigate(
-            DashboardFragmentDirections.actionDashboardFragmentToDecisionsFragment()
+                DashboardFragmentDirections.actionDashboardFragmentToDecisionsFragment()
         )}
     }
 
