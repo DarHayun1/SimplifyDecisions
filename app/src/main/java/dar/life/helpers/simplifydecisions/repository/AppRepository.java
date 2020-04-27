@@ -1,7 +1,6 @@
 package dar.life.helpers.simplifydecisions.repository;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Room;
@@ -11,14 +10,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import dar.life.helpers.simplifydecisions.data.Decision;
 import dar.life.helpers.simplifydecisions.data.Issue;
 
 public class AppRepository {
 
     private static AppRepository sInstance;
-    private final IssuesDao mDao;
+    private final IssuesDao mIssuesDao;
+    private final DecisionsDao mDecisionsDao;
+
     private final LiveData<List<Issue>> mIssues;
     private final LiveData<List<Issue>> mActiveIssues;
+
+    private final LiveData<List<Decision>> mDecisions;
+
 
 
     private AppRepository(Application application) {
@@ -28,10 +33,15 @@ public class AppRepository {
                 IssuesDatabase.class, IssuesDatabase.DB_NAME
         ).build();
 
-        mDao = db.issuesDao();
+        mIssuesDao = db.issuesDao();
+        mDecisionsDao = db.decisionsDao();
 
-        mActiveIssues = mDao.getAllActiveIssues();
-        mIssues = mDao.getAllIssues();
+
+        mActiveIssues = mIssuesDao.getAllActiveIssues();
+        mIssues = mIssuesDao.getAllIssues();
+
+        mDecisions = mDecisionsDao.getAllDecisions();
+
 
     }
 
@@ -57,16 +67,30 @@ public class AppRepository {
     }
 
     @NotNull
+    public LiveData<List<Decision>> getAllDecisions() {
+        return mDecisions;
+    }
+
+    @NotNull
     public LiveData<List<Issue>> getAllActiveIssues() {
         return mActiveIssues;
     }
 
     @Nullable
     public LiveData<Issue> getIssue(String requestedId) {
-        return mDao.getIssueById(requestedId);
+        return mIssuesDao.getIssueById(requestedId);
     }
 
     public void addNewIssue(@NotNull final Issue issue) {
-        AppExecutors.getInstance().diskIO().execute( () -> mDao.addNewIssue(issue));
+        AppExecutors.getInstance().diskIO().execute(() -> mIssuesDao.addNewIssue(issue));
+    }
+
+    public void updateIssue(@NotNull Issue issue) {
+        AppExecutors.getInstance().diskIO().execute(() -> mIssuesDao.updateIssue(issue));
+    }
+
+    public void addNewDecision(@NotNull Decision decision) {
+        AppExecutors.getInstance().diskIO().execute(() -> mDecisionsDao.addNewDecision(decision));
+
     }
 }

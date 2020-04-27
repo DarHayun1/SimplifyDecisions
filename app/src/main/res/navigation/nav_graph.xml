@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/decisionsFragment"
-        android:name="dar.life.helpers.simplifydecisions.ui.DecisionsFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.decisions.DecisionsFragment"
         android:label="fragment_decisions"
         tools:layout="@layout/fragment_decisions" />
     <fragment
@@ -42,10 +42,13 @@
         <argument
             android:name="issueId"
             app:argType="string" />
+        <argument
+            android:name="issueTitle"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/createFromTemplateFragment"
-        android:name="dar.life.helpers.simplifydecisions.CreateFromTemplateFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.issues.CreateFromTemplateFragment"
         android:label="fragment_create_from_template"
         tools:layout="@layout/fragment_create_from_template" >
         <action

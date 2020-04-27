@@ -10,6 +10,8 @@ import dar.life.helpers.simplifydecisions.data.Issue
 @Database(entities = [Issue::class, Decision::class], version = 1, exportSchema = false)
 abstract class IssuesDatabase : RoomDatabase() {
     abstract fun issuesDao(): IssuesDao
+    abstract fun decisionsDao(): DecisionsDao
+
 
     companion object {
         @Volatile private var instance: IssuesDatabase? = null

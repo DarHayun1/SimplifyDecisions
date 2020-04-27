@@ -6,7 +6,12 @@ import dar.life.helpers.simplifydecisions.repository.OpinionConverter
 import java.time.LocalDateTime
 
 @Entity(tableName = "issues")
-data class Issue(var title: String, var description: String?, var type: String = TYPE_YES_NO) {
+data class Issue(
+    var title: String,
+    var description: String?,
+    var type: String = TYPE_YES_NO,
+    var isActive: Boolean = true
+) {
 
     @TypeConverters(DateConverter::class)
     var date = LocalDateTime.now()
@@ -14,7 +19,7 @@ data class Issue(var title: String, var description: String?, var type: String =
     var id: String = "$title$date"
     @TypeConverters(OpinionConverter::class)
     var opinions: MutableList<Opinion> = createDemoOpinions()
-    var isActive = true
+
 
     @Ignore
     var expanded: Boolean = false

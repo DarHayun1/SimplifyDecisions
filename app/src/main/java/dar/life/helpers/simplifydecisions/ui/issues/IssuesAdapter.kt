@@ -10,12 +10,15 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 
-class IssuesAdapter(private val mContext: Context): RecyclerView.Adapter<IssuesAdapter.IssueVH>() {
+class IssuesAdapter(private val mContext: Context, private val mCallback: OnIssueEditClick) :
+    RecyclerView.Adapter<IssuesAdapter.IssueVH>() {
 
     private var mIssues: List<Issue> = mutableListOf()
+    var expandedPos: Int = -1
 
     private val shortAnimationDuration = mContext.resources.getInteger(
         android.R.integer.config_shortAnimTime).toLong()
@@ -36,31 +39,50 @@ class IssuesAdapter(private val mContext: Context): RecyclerView.Adapter<IssuesA
     override fun getItemCount(): Int = mIssues.size
 
     override fun onBindViewHolder(holder: IssueVH, position: Int) {
-        var issue = mIssues[position]
+        holder.bindItem(mIssues[position])
+        val issue = mIssues[position]
 
-        holder.title.text = issue.title
+        if (issue.expanded) {
+            expandedPos = position
+            fadeInViews(holder.extraInfoLayout)
+        } else
+            fadeOutViews(holder.extraInfoLayout)
+
         holder.itemView.setOnClickListener{
-            issue.expanded = !issue.expanded
-            notifyItemChanged(position)
+            if (issue.expanded) {
+                expandedPos = -1
+                issue.expanded = false
+                launchDetailsScreen(issue, holder.title)
+            } else {
+                if (expandedPos != -1) {
+                    mIssues[expandedPos].expanded = false
+                    notifyItemChanged(expandedPos)
+                }
+                issue.expanded = true
+                notifyItemChanged(position)
+            }
         }
-        if (issue.description == null || issue.description!!.isEmpty() )
-            holder.descriptionTv.visibility = GONE
-        else
-            holder.descriptionTv.text = issue.description
-        holder.type.text = issue.type
+    }
 
-        if (issue.expanded) fadeInViews(holder.extraInfoLayout)
-        else fadeOutViews(holder.extraInfoLayout)
-
+    private fun launchDetailsScreen(issue: Issue, itemView: View) {
+        mCallback.openIssueDetails(issue.id, issue.title, itemView)
     }
 
     class IssueVH(itemView: View) : RecyclerView.ViewHolder(itemView){
         val title: TextView = itemView.findViewById(R.id.issue_item_title_tv)
-
         val descriptionTv: TextView = itemView.findViewById(R.id.issue_item_desc_tv)
         val type: TextView = itemView.findViewById(R.id.issue_type_tv)
         val extraInfoLayout: View = itemView.findViewById(R.id.issue_item_extra_info)
 
+        fun bindItem(item: Issue) {
+            title.text = item.title
+            if (item.description == null || item.description!!.isEmpty())
+                descriptionTv.visibility = GONE
+            else
+                descriptionTv.text = item.description
+            type.text = item.type
+            title.transitionName = item.id
+        }
     }
 
 
