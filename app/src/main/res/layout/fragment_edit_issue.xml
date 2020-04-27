@@ -45,7 +45,8 @@
             android:src="@drawable/pencil_edit_icon"
             app:layout_constraintBottom_toBottomOf="@id/issue_title_tv"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/issue_title_tv" />
+            app:layout_constraintTop_toTopOf="@+id/issue_title_tv"
+            android:contentDescription="@string/edit_button_contentdesc" />
 
         <TextView
             android:id="@+id/issue_date_tv"

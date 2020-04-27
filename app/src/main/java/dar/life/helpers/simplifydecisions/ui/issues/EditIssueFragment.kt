@@ -35,14 +35,13 @@ class EditIssueFragment : Fragment() {
     private lateinit var mContext: Context
     private lateinit var mViewModel: EditIssueViewModel
 
-    // TODO: Rename and change types of parameters
     private var mIssueId: Int = 0
-    private lateinit var mIssue: Issue
+    private var mIssue: Issue? = null
 
     private var _binding: FragmentEditIssueBinding? = null
     private val binding get() = _binding!!
 
-    val args: EditIssueFragmentArgs by navArgs()
+    private val args: EditIssueFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -62,7 +61,6 @@ class EditIssueFragment : Fragment() {
     ): View? {
         _binding = FragmentEditIssueBinding.inflate(inflater, container, false)
 
-        // Inflate the layout for this fragment
         return binding.root
     }
 
@@ -72,14 +70,15 @@ class EditIssueFragment : Fragment() {
         binding.issueTitleTv.text = args.issueTitle
 
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mViewModel = ViewModelProvider(this).get(EditIssueViewModel::class.java)
 
         mViewModel.getIssueById(args.issueId.toString())?.observe(viewLifecycleOwner, Observer {
-            it?.run {
-                mIssue = this
-                populateUi()
+            it?.let {
+                mIssue = it
+                populateUi(it)
             }
         })
 
@@ -89,26 +88,30 @@ class EditIssueFragment : Fragment() {
         Toast.makeText(mContext, "No Data Found", Toast.LENGTH_SHORT).show()
     }
 
-    private fun populateUi() {
-        issue_date_tv.text = mIssue.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
+    private fun populateUi(issue: Issue) {
 
-        var gridLayoutManager = GridLayoutManager(mContext, 2)
+        issue_date_tv.text =
+            issue.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
+
+        val gridLayoutManager = GridLayoutManager(mContext, 2)
         opinions_rv.layoutManager = gridLayoutManager
         opinions_rv.setHasFixedSize(true)
         val opinionsAdapter = OpinionsAdapter(mContext)
         opinions_rv.adapter = opinionsAdapter
-        opinionsAdapter.setData(mIssue.opinions.filter { !it.isAFact() })
+
+        opinionsAdapter.setData(issue.opinions.filter { !it.isAFact() })
 
 
-        val (positive, negative) = mIssue.opinions.filter { it.isAFact() }.partition { it.isPositive }
+        val (positive, negative) = issue.opinions.filter { it.isAFact() }
+            .partition { it.isPositive }
         populateFacts(true, positive)
         populateFacts(false, negative)
 
         to_decision_button.setOnClickListener {
-            val decision = mIssue.toDecision().also {
+            val decision = issue.toDecision().also {
                 mViewModel.addDecision(it)
             }
-            mViewModel.updateIssue(mIssue)
+            mViewModel.updateIssue(issue)
             Toast.makeText(mContext, decision.toString(), Toast.LENGTH_SHORT).show()
         }
 
@@ -122,9 +125,9 @@ class EditIssueFragment : Fragment() {
                         .getDrawable(R.drawable.confirm_edit_icon)
                 )
             } else {
-                mIssue.title = issue_title_et.text.toString()
-                issue_title_tv.text = mIssue.title
-                mViewModel.updateIssue(mIssue)
+                issue.title = issue_title_et.text.toString()
+                issue_title_tv.text = issue.title
+                mViewModel.updateIssue(issue)
                 issue_title_tv.visibility = View.VISIBLE
                 issue_title_et.visibility = View.INVISIBLE
                 edit_issue_title_icon.setImageDrawable(
@@ -143,11 +146,14 @@ class EditIssueFragment : Fragment() {
 
     private fun populateFacts(
         isPositive: Boolean,
-        factsList: List<Opinion>) {
+        factsList: List<Opinion>
+    ) {
         val adapter = FactsAdapter(mContext, isPositive)
         val recyclerView = if (isPositive) facts_positive_rv else facts_negative_rv
-        recyclerView.layoutManager = LinearLayoutManager(mContext,
-            RecyclerView.VERTICAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(
+            mContext,
+            RecyclerView.VERTICAL, false
+        )
         recyclerView.adapter = adapter
         adapter.mFacts = factsList.sortedBy { it.importance }.reversed()
     }

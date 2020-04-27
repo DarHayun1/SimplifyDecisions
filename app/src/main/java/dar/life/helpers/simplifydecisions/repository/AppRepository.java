@@ -93,4 +93,12 @@ public class AppRepository {
         AppExecutors.getInstance().diskIO().execute(() -> mDecisionsDao.addNewDecision(decision));
 
     }
+
+    public LiveData<Decision> getDecision(int id) {
+        return mDecisionsDao.getDecisionById(id);
+    }
+
+    public void updateDecision(@NotNull Decision decision) {
+        AppExecutors.getInstance().diskIO().execute(() -> mDecisionsDao.updateDecision(decision));
+    }
 }

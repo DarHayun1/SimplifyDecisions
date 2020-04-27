@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">Simplify Decisions</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="issue_default_title">default issue title</string>
-    <string name="decision_default_title">default decision title</string>
+    <string name="decision_default_title">Default decision title</string>
     <string name="opinions_section_header">Stuff I Need To Figure Out</string>
     <string name="facts_header_text">My Facts</string>
     <string name="issue_title_hint">Issue Title</string>
     <string name="new_issue_title">New Issue</string>
     <string name="new_decision_title">New Decision</string>
     <string name="issue_title_transition_name">issue_title_transition</string>
+    <string name="edit_button_contentdesc">edit button</string>
+    <string name="decision_title_hint">Decision Title</string>
 </resources>
