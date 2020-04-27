@@ -4,6 +4,7 @@ import androidx.room.*
 import dar.life.helpers.simplifydecisions.repository.DateConverter
 import dar.life.helpers.simplifydecisions.repository.OpinionConverter
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Entity(tableName = "issues")
 data class Issue(
@@ -15,8 +16,8 @@ data class Issue(
 
     @TypeConverters(DateConverter::class)
     var date = LocalDateTime.now()
-    @PrimaryKey
-    var id: String = "$title$date"
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = date.toEpochSecond(ZoneOffset.UTC).toInt()
     @TypeConverters(OpinionConverter::class)
     var opinions: MutableList<Opinion> = createDemoOpinions()
 

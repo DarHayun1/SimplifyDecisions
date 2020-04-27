@@ -8,17 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.databinding.FragmentDecisionsBinding
+import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
+import dar.life.helpers.simplifydecisions.ui.issues.IssuesFragmentDirections
 
 /**
  * A simple [Fragment] subclass.
  * Use the [DecisionsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DecisionsFragment : Fragment() {
+class DecisionsFragment : Fragment(), OnDetailsRequest {
 
     private lateinit var mDecisionsViewModel: DecisionsViewModel
     private lateinit var mContext: Context
@@ -65,7 +69,7 @@ class DecisionsFragment : Fragment() {
 
     private fun initViews() {
 
-        val rvAdapter = DecisionsAdapter(mContext)
+        val rvAdapter = DecisionsAdapter(mContext, this)
         binding.decisionsRv.adapter = rvAdapter
         binding.decisionsRv.layoutManager =
             LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
@@ -74,13 +78,23 @@ class DecisionsFragment : Fragment() {
         )
 
         mDecisionsViewModel.getAllDecisions().observe(viewLifecycleOwner, Observer {
-            rvAdapter.setData(it)
+            rvAdapter.decisions = it
         })
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    override fun openDetailsScreen(id: Int, title: String, view: View) {
+        val fragmentNavigatorExtras = FragmentNavigatorExtras(
+            view to id.toString()
+        )
+        findNavController().navigate(
+            DecisionsFragmentDirections.actionDecisionsFragmentToDecisionDetailsFragment(id, title),
+            fragmentNavigatorExtras
+        )
     }
 }
 

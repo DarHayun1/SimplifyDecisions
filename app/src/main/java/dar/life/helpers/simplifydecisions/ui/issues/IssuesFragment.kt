@@ -17,17 +17,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.databinding.FragmentIssuesBinding
+import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import kotlinx.android.synthetic.main.fragment_issues.*
-import kotlinx.android.synthetic.main.issues_list_item.view.*
 
 /**
  * A simple [Fragment] subclass.
  * Use the [IssuesFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class IssuesFragment : Fragment(), OnIssueEditClick {
+class IssuesFragment : Fragment(),
+    OnDetailsRequest {
 
     private lateinit var mViewModel: IssuesViewModel
     private lateinit var mContext: Context
@@ -70,7 +70,6 @@ class IssuesFragment : Fragment(), OnIssueEditClick {
     private fun initViews() {
         binding.addIssueFab.setOnClickListener{
             val issueId = mViewModel.addNewIssue().id
-            Log.d("HEYHEY", issueId)
             findNavController().navigate(
                 IssuesFragmentDirections.actionIssuesFragmentToEditIssueFragment(
                     issueId,
@@ -93,18 +92,18 @@ class IssuesFragment : Fragment(), OnIssueEditClick {
         )
         issues_rv.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         mViewModel.getAllActiveIssues().observe(viewLifecycleOwner, Observer
-        { issuesAdapter.setData(it) }
+            { issuesAdapter.issues = it }
         )
         postponeEnterTransition()
         issues_rv.doOnPreDraw { startPostponedEnterTransition() }
     }
 
-    override fun openIssueDetails(issueId: String, issueTitle: String, view: View) {
+    override fun openDetailsScreen(id: Int, title: String, view: View) {
         val fragmentNavigatorExtras = FragmentNavigatorExtras(
-            view to issueId
+            view to id.toString()
         )
         findNavController().navigate(
-            IssuesFragmentDirections.actionIssuesFragmentToEditIssueFragment(issueId, issueTitle),
+            IssuesFragmentDirections.actionIssuesFragmentToEditIssueFragment(id, title),
             fragmentNavigatorExtras
         )
     }

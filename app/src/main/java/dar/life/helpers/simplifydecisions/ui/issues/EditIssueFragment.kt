@@ -68,7 +68,7 @@ class EditIssueFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.issueTitleTv.transitionName = args.issueId
+        binding.issueTitleTv.transitionName = args.issueId.toString()
         binding.issueTitleTv.text = args.issueTitle
 
     }
@@ -76,7 +76,7 @@ class EditIssueFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         mViewModel = ViewModelProvider(this).get(EditIssueViewModel::class.java)
 
-        mViewModel.getIssueById(args.issueId)?.observe(viewLifecycleOwner, Observer {
+        mViewModel.getIssueById(args.issueId.toString())?.observe(viewLifecycleOwner, Observer {
             it?.run {
                 mIssue = this
                 populateUi()

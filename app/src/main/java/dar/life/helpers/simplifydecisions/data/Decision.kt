@@ -1,12 +1,14 @@
 package dar.life.helpers.simplifydecisions.data
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import dar.life.helpers.simplifydecisions.repository.DateConverter
 import dar.life.helpers.simplifydecisions.repository.OpinionConverter
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
 
@@ -16,15 +18,18 @@ data class Decision(
     var title: String,
     var description: String?,
     var opinions: MutableList<Opinion> = mutableListOf(),
-    val issueIdBasedOf: String? = null
+    val issueIdBasedOf: Int? = null
 ) {
 
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
     @TypeConverters(DateConverter::class)
     var date: LocalDateTime = LocalDateTime.now()
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = date.toEpochSecond(ZoneOffset.UTC).toInt()
     @TypeConverters(DateConverter::class)
     var reminders: MutableList<Instant> = mutableListOf()
+
+    @Ignore
+    var expanded: Boolean = false
 
 
 }

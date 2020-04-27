@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/dashboardFragment">
+    app:startDestination="@id/dashboardFragment"
+    tools:ignore="UnusedNavigation">
 
     <fragment
         android:id="@+id/dashboardFragment"
@@ -33,7 +34,11 @@
         android:id="@+id/decisionsFragment"
         android:name="dar.life.helpers.simplifydecisions.ui.decisions.DecisionsFragment"
         android:label="fragment_decisions"
-        tools:layout="@layout/fragment_decisions" />
+        tools:layout="@layout/fragment_decisions" >
+        <action
+            android:id="@+id/action_decisionsFragment_to_decisionDetailsFragment"
+            app:destination="@id/decisionDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/editIssueFragment"
         android:name="dar.life.helpers.simplifydecisions.ui.issues.EditIssueFragment"
@@ -41,10 +46,13 @@
         tools:layout="@layout/fragment_edit_issue" >
         <argument
             android:name="issueId"
-            app:argType="string" />
+            app:argType="integer" />
         <argument
             android:name="issueTitle"
             app:argType="string" />
+        <action
+            android:id="@+id/action_editIssueFragment_to_decisionDetailsFragment"
+            app:destination="@id/decisionDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/createFromTemplateFragment"
@@ -54,5 +62,17 @@
         <action
             android:id="@+id/action_createFromTemplateFragment_to_editIssueFragment"
             app:destination="@id/editIssueFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/decisionDetailsFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.decisions.DecisionDetailsFragment"
+        android:label="decision_details_fragment"
+        tools:layout="@layout/decision_details_fragment" >
+        <argument
+            android:name="decisionId"
+            app:argType="integer" />
+        <argument
+            android:name="decisionTitle"
+            app:argType="string" />
     </fragment>
 </navigation>
