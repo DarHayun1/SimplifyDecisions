@@ -2,10 +2,12 @@ package dar.life.helpers.simplifydecisions.ui.decisions
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -16,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.databinding.FragmentDecisionsBinding
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import dar.life.helpers.simplifydecisions.ui.issues.IssuesFragmentDirections
+import kotlinx.android.synthetic.main.fragment_decisions.*
+import kotlinx.android.synthetic.main.fragment_issues.*
 
 /**
  * A simple [Fragment] subclass.
@@ -80,6 +84,8 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
         mDecisionsViewModel.getAllDecisions().observe(viewLifecycleOwner, Observer {
             rvAdapter.decisions = it
         })
+        postponeEnterTransition()
+        decisions_rv.doOnPreDraw { startPostponedEnterTransition() }
     }
 
     override fun onDestroyView() {
@@ -88,6 +94,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
     }
 
     override fun openDetailsScreen(id: Int, title: String, view: View) {
+
         val fragmentNavigatorExtras = FragmentNavigatorExtras(
             view to id.toString()
         )

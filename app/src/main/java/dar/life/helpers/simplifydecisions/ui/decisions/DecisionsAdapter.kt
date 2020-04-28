@@ -3,6 +3,7 @@ package dar.life.helpers.simplifydecisions.ui.decisions
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -71,7 +72,11 @@ class DecisionsAdapter(private val mContext: Context, private val mCallback: OnD
 
         fun bindItem(decision: Decision) {
             title.text = decision.title
-            description.text = decision.description
+            if (decision.description == null || decision.description!!.isEmpty())
+                description.visibility = GONE
+            else
+                description.text = decision.description
+            title.transitionName = decision.id.toString()
         }
 
 

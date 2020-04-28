@@ -99,6 +99,7 @@ class IssuesFragment : Fragment(),
     }
 
     override fun openDetailsScreen(id: Int, title: String, view: View) {
+        Log.d("TOTO11", id.toString())
         val fragmentNavigatorExtras = FragmentNavigatorExtras(
             view to id.toString()
         )

@@ -2,6 +2,8 @@ package dar.life.helpers.simplifydecisions.ui.decisions
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionInflater
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -38,12 +40,17 @@ class DecisionDetailsFragment : Fragment() {
         mContext = context
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DecisionDetailsFragmentBinding
-            .inflate(inflater, container, true)
+        _binding = DecisionDetailsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -73,7 +80,7 @@ class DecisionDetailsFragment : Fragment() {
 
     private fun populateUi(decision: Decision) {
         binding.decisionDateTv.text = decision.date.format(ofLocalizedDate(FormatStyle.LONG))
-        binding.decisionTitleTv.text =decision.title
+        binding.decisionTitleTv.text = decision.title
         binding.editDecisionTitleIcon.setOnClickListener {
             if (decision_title_tv.visibility == View.VISIBLE) {
                 decision_title_tv.visibility = View.INVISIBLE
@@ -102,6 +109,11 @@ class DecisionDetailsFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
