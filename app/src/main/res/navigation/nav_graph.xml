@@ -93,5 +93,9 @@
             android:name="opinionId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <argument
+            android:name="opinionTitle"
+            app:argType="string"
+            android:defaultValue="New Opinion" />
     </fragment>
 </navigation>

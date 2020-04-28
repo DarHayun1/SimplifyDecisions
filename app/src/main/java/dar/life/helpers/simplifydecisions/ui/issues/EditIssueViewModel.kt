@@ -11,7 +11,7 @@ class EditIssueViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val mDecisionsRepository = AppRepository.getInstance(application)
 
-    fun getIssueById(id: String): LiveData<Issue>?{
+    fun getIssueById(id: Int): LiveData<Issue>?{
         return mDecisionsRepository.getIssue(id)
     }
 

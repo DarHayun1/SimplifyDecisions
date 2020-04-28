@@ -39,18 +39,48 @@ data class Issue(
         return mutableListOf(
             Opinion("First Opinion!", 100),
             Opinion("Second! OMG it's bigger", 80),
+            Opinion("First Opinion!", 100),
+            Opinion("Second! OMG it's bigger", 80),
+            Opinion("First Opinion!", 100),
+            Opinion("Second! OMG it's bigger", 80),
+            Opinion("First Opinion!", 100),
+            Opinion("Second! OMG it's bigger", 80),
             Opinion(
                 "3Second! OMG it's bigger! the Biggeeesssstt", 100,
                 isPositive = false, importance = Opinion.GAME_CHANGER
             ),
             Opinion(
                 "4Second! OMG it's Biggeeesssstt", 100, importance =
-                Opinion.VERY_IMPORTANT
+                Opinion.HIGH_IMPORTANCE
             ),
             Opinion("Second! OMG it's bigger", 100),
             Opinion(
                 "Second! OMG it's bigger", 100, isPositive = false,
-                importance = Opinion.NOT_IMPORTANT
+                importance = Opinion.LOW_IMPORTANCE
+            ),
+            Opinion(
+                "Second! OMG it's bigger", 100, isPositive = false,
+                importance = Opinion.HIGH_IMPORTANCE
+            ),
+            Opinion(
+                "Second! OMG it's bigger", 100, isPositive = true,
+                importance = Opinion.MEDIUM_IMPORTANCE
+            ),
+            Opinion(
+                "Second! OMG it's bigger", 100, isPositive = false,
+                importance = Opinion.LOW_IMPORTANCE
+            ),
+            Opinion(
+                "Second! OMG it's bigger", 100, isPositive = false,
+                importance = Opinion.LOW_IMPORTANCE
+            ),
+            Opinion(
+                "Second! OMG it's bigger", 100, isPositive = false,
+                importance = Opinion.LOW_IMPORTANCE
+            ),
+            Opinion(
+                "Second! OMG it's bigger", 100, isPositive = false,
+                importance = Opinion.LOW_IMPORTANCE
             ),
             Opinion("Second! OMG it's bigger", 80)
         )

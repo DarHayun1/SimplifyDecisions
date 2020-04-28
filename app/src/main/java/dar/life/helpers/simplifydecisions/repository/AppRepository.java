@@ -76,8 +76,7 @@ public class AppRepository {
         return mActiveIssues;
     }
 
-    @Nullable
-    public LiveData<Issue> getIssue(String requestedId) {
+    public LiveData<Issue> getIssue(int requestedId) {
         return mIssuesDao.getIssueById(requestedId);
     }
 

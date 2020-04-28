@@ -12,17 +12,35 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/related_issue_label"
+            android:textAlignment="textStart"
+            android:textSize="16sp"
+            android:text="@string/related_issue_label_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/related_issue_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/related_issue_label"
+            app:layout_constraintTop_toTopOf="@id/related_issue_label"/>
+
+        <TextView
             android:id="@+id/opinion_title_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-black"
+            android:paddingTop="6dp"
             android:text="@string/default_opinion_title"
             android:textAlignment="textStart"
             android:textSize="@dimen/issue_title_text_size"
-            android:paddingTop="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/related_issue_label" />
 
         <EditText
             android:id="@+id/opinion_title_et"
@@ -34,7 +52,7 @@
             android:textSize="@dimen/issue_title_text_size"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/opinion_title_tv" />
 
         <ImageView
             android:id="@+id/edit_opinion_title_icon"

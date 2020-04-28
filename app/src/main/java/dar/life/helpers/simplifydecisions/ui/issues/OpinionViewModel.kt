@@ -8,9 +8,9 @@ import dar.life.helpers.simplifydecisions.repository.AppRepository
 
 class OpinionViewModel(application: Application): AndroidViewModel(application) {
 
-    val repository: AppRepository = AppRepository.getInstance(application)
+    private val repository: AppRepository = AppRepository.getInstance(application)
 
-    fun getIssueById(id: String): LiveData<Issue>?{
+    fun getIssueById(id: Int): LiveData<Issue?>{
         return repository.getIssue(id)
     }
 

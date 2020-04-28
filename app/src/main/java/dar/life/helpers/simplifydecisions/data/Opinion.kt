@@ -4,13 +4,13 @@ data class Opinion(var title: String,
                    var certaintypercent: Int,
                    var description: String = "",
                    var isPositive: Boolean = true,
-                   var importance: Int = IMPORTANT) {
+                   var importance: Int = MEDIUM_IMPORTANCE) {
 
     companion object {
 
-        const val NOT_IMPORTANT = 2
-        const val IMPORTANT = 3
-        const val VERY_IMPORTANT = 9
+        const val LOW_IMPORTANCE = 2
+        const val MEDIUM_IMPORTANCE = 3
+        const val HIGH_IMPORTANCE = 9
         const val GAME_CHANGER = 18
 
     }

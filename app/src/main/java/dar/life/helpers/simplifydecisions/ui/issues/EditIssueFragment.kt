@@ -81,7 +81,7 @@ class EditIssueFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         mViewModel = ViewModelProvider(this).get(EditIssueViewModel::class.java)
 
-        mViewModel.getIssueById(args.issueId.toString())?.observe(viewLifecycleOwner, Observer {
+        mViewModel.getIssueById(args.issueId)?.observe(viewLifecycleOwner, Observer {
             it?.let {
                 mIssue = it
                 populateUi(it)
