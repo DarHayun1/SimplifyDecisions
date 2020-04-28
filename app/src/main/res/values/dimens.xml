@@ -3,7 +3,7 @@
     <dimen name="menu_logo_size">96dp</dimen>
     <dimen name="menu_item_size">64dp</dimen>
     <dimen name="menu_margin">24dp</dimen>
-    <dimen name="fab_size">64dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
     <dimen name="list_item_vert_pad">6dp</dimen>
     <dimen name="list_item_hor_pad">8dp</dimen>
     <dimen name="top_header_margin">80dp</dimen>

@@ -28,8 +28,8 @@ class FactsAdapter(private val mContext: Context, private val isPositive: Boolea
         holder.itemView.layoutDirection =
             if (isPositive) View.LAYOUT_DIRECTION_LTR else View.LAYOUT_DIRECTION_RTL
         holder.frame.setBackgroundResource(
-            if (isPositive) R.drawable.rounded_corners_pos_item
-            else R.drawable.rounded_corners_neg_item
+            if (isPositive) R.drawable.positive_fact_ripple
+            else R.drawable.negative_fact_ripple
         )
         val height = mContext.resources.getDimension(R.dimen.grid_item_height).toInt()
         holder.frame.layoutParams = LinearLayout.LayoutParams(0, height,

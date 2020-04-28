@@ -1,0 +1,20 @@
+package dar.life.helpers.simplifydecisions.ui.issues
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import dar.life.helpers.simplifydecisions.data.Issue
+import dar.life.helpers.simplifydecisions.repository.AppRepository
+
+class OpinionViewModel(application: Application): AndroidViewModel(application) {
+
+    val repository: AppRepository = AppRepository.getInstance(application)
+
+    fun getIssueById(id: String): LiveData<Issue>?{
+        return repository.getIssue(id)
+    }
+
+    fun updateIssue(issue: Issue) {
+        repository.updateIssue(issue)
+    }
+}

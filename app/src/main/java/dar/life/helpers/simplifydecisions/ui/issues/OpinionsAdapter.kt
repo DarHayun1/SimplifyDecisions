@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
+import dar.life.helpers.simplifydecisions.ui.UiUtils
+import kotlinx.android.synthetic.main.fragment_edit_issue.*
 
 class OpinionsAdapter(private val mContext: Context): RecyclerView.Adapter<OpinionsAdapter.OpinionVH>() {
 
@@ -34,8 +36,6 @@ class OpinionsAdapter(private val mContext: Context): RecyclerView.Adapter<Opini
         var opinion = mOpinions[position]
 
         holder.title.text = opinion.title
-
-
     }
 
     class OpinionVH(itemView: View) : RecyclerView.ViewHolder(itemView){

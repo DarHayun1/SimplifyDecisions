@@ -1,9 +1,13 @@
 package dar.life.helpers.simplifydecisions.ui.issues
 
 import android.content.Context
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -11,6 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +24,7 @@ import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.databinding.FragmentEditIssueBinding
+import dar.life.helpers.simplifydecisions.ui.UiUtils
 import kotlinx.android.synthetic.main.facts_layout.*
 import kotlinx.android.synthetic.main.fragment_edit_issue.*
 import kotlinx.android.synthetic.main.opinions_layout.*
@@ -82,6 +88,18 @@ class EditIssueFragment : Fragment() {
             }
         })
 
+        initViews()
+
+    }
+
+    private fun initViews() {
+        binding.addOpinionFab.setOnClickListener{
+            var action =
+                EditIssueFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(mIssueId)
+            findNavController().navigate(
+                action
+            )
+        }
     }
 
     private fun noDataFound() {

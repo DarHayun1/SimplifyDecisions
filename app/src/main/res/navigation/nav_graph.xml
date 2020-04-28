@@ -53,6 +53,9 @@
         <action
             android:id="@+id/action_editIssueFragment_to_decisionDetailsFragment"
             app:destination="@id/decisionDetailsFragment" />
+        <action
+            android:id="@+id/action_editIssueFragment_to_opinionDetailsFragment"
+            app:destination="@id/opinionDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/createFromTemplateFragment"
@@ -74,5 +77,21 @@
         <argument
             android:name="decisionTitle"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/opinionDetailsFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.issues.OpinionDetailsFragment"
+        android:label="fragment_opinion_details"
+        tools:layout="@layout/fragment_opinion_details" >
+        <action
+            android:id="@+id/action_opinionDetailsFragment_to_editIssueFragment"
+            app:destination="@id/editIssueFragment" />
+        <argument
+            android:name="issueId"
+            app:argType="integer" />
+        <argument
+            android:name="opinionId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
 </navigation>

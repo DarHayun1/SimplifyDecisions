@@ -6,4 +6,8 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="colorPositive">#1BDD23</color>
     <color name="colorNegative">#DA2121</color>
+
+    <color name="prioRed">#E74C3C</color>
+    <color name="prioOrange">#E67E22</color>
+    <color name="prioYellow">#F1C40F</color>
 </resources>

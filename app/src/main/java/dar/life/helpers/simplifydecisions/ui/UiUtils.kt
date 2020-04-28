@@ -2,7 +2,12 @@ package dar.life.helpers.simplifydecisions.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.view.MotionEvent
 import android.view.View
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 
 class UiUtils {
 
@@ -31,6 +36,27 @@ class UiUtils {
                         }
                     })
             }
+        }
+
+        fun buttonEffect(vararg buttons: View) {
+            buttons.forEach {
+                it.setOnTouchListener { v, event ->
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            v.background.colorFilter = BlendModeColorFilterCompat
+                                .createBlendModeColorFilterCompat(-0x1f0b8adf,
+                                    BlendModeCompat.SRC_ATOP)
+                            v.invalidate()
+                        }
+                        MotionEvent.ACTION_UP -> {
+                            v.background.colorFilter = null
+                            v.invalidate()
+                        }
+                    }
+                    false
+                }
+            }
+
         }
     }
 
