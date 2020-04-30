@@ -13,7 +13,7 @@ import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 import kotlinx.android.synthetic.main.fragment_edit_issue.*
 
-class OpinionsAdapter(private val mContext: Context): RecyclerView.Adapter<OpinionsAdapter.OpinionVH>() {
+class OpinionsAdapter(private val mContext: Context, private val mCallback: OnOpinionRequest): RecyclerView.Adapter<OpinionsAdapter.OpinionVH>() {
 
     private var mOpinions: List<Opinion> = mutableListOf()
 
@@ -36,6 +36,13 @@ class OpinionsAdapter(private val mContext: Context): RecyclerView.Adapter<Opini
         var opinion = mOpinions[position]
 
         holder.title.text = opinion.title
+        holder.itemView.setOnClickListener{
+            launchOpinionScreen(opinion, position, holder.title)
+        }
+    }
+
+    private fun launchOpinionScreen(opinion: Opinion, position: Int, titleView: View) {
+        mCallback.openOpinionScreen(position, opinion.title, titleView)
     }
 
     class OpinionVH(itemView: View) : RecyclerView.ViewHolder(itemView){

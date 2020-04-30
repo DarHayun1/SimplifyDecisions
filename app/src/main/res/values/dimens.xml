@@ -10,4 +10,8 @@
     <dimen name="grid_item_height">64dp</dimen>
     <dimen name="issue_title_icon_size">32dp</dimen>
     <dimen name="issue_title_text_size">30sp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="task_item_height">48dp</dimen>
 </resources>

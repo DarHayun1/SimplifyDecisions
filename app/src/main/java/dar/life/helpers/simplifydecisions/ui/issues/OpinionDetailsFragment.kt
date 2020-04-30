@@ -3,18 +3,25 @@ package dar.life.helpers.simplifydecisions.ui.issues
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
+import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+import androidx.recyclerview.widget.RecyclerView
+import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.databinding.FragmentOpinionDetailsBinding
+import dar.life.helpers.simplifydecisions.ui.UiUtils
 import kotlinx.android.synthetic.main.fragment_opinion_details.*
 
 
@@ -53,9 +60,11 @@ class OpinionDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(args.opinionId == -1)
+
+        if(args.opinionPos == -1)
             startWithTitleEdit()
         else{
+            binding.opinionTitleTv.transitionName = args.issueId.toString() + args.opinionPos
             binding.opinionTitleTv.text = args.opinionTitle
         }
 
@@ -64,6 +73,9 @@ class OpinionDetailsFragment : Fragment() {
     private fun startWithTitleEdit() {
         binding.opinionTitleTv.visibility = View.INVISIBLE
         binding.opinionTitleEt.visibility = View.VISIBLE
+        binding.editOpinionTitleIcon.setImageDrawable(
+            (mContext.getDrawable(R.drawable.confirm_edit_icon))
+        )
         binding.opinionTitleEt.requestFocus()
         val imm =
             mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
@@ -80,21 +92,71 @@ class OpinionDetailsFragment : Fragment() {
     private fun initViews() {
         viewModel.getIssueById(args.issueId).observe(viewLifecycleOwner, Observer {
             it?.let {
-                mIssue = it
-                mOpinion = it.opinions[args.opinionId]
-                binding.relatedIssueTitle.text = mIssue?.title
-                radioGroup.check(
-                    when(mOpinion!!.importance){
-                        Opinion.LOW_IMPORTANCE -> binding.radButtonLow.id
-                        Opinion.MEDIUM_IMPORTANCE -> binding.radButtonMedium.id
-                        Opinion.HIGH_IMPORTANCE -> binding.radButtonHigh.id
-                        //TODO: Game Changer
-                        else -> binding.radButtonHigh.id
-                    }
-                )
+                issueFoundInflateFragment(it) } })
 
+        binding.saveOpinionBtn.setOnClickListener{
+            mIssue?.let { viewModel.updateIssue(mIssue!!) }
+            findNavController().popBackStack()
+        }
+
+        binding.editOpinionTitleIcon.setOnClickListener {
+            if (UiUtils.handleEditTitleClick(mContext,
+                    binding.opinionTitleTv,
+                    binding.opinionTitleEt,
+                    binding.editOpinionTitleIcon)) {
+                mOpinion?.title = binding.opinionTitleEt.text.toString()
+                binding.opinionTitleTv.text = mOpinion?.title
             }
-        })
+        }
+    }
+
+
+    private fun issueFoundInflateFragment(it: Issue) {
+        mIssue = it
+        mOpinion = if (args.opinionPos == -1)
+            Opinion(title = getString(R.string.default_opinion_title),
+                certaintypercent = 80)
+                .also {newOpinion -> mIssue!!.opinions.add(newOpinion)}
+        else
+            it.opinions[args.opinionPos]
+        Log.d("ABCD", mOpinion.toString())
+
+        binding.relatedIssueTitle.text = mIssue?.title
+        setupRadioGroup()
+        setupTasks()
+    }
+
+    private fun setupTasks() {
+        val adapter = TasksAdapter(mContext)
+        binding.tasksRv.adapter = adapter
+        binding.tasksRv.layoutManager = LinearLayoutManager(mContext, VERTICAL, false)
+        Log.d("ABCD2", mOpinion.toString())
+        adapter.tasks = mOpinion!!.tasks
+
+    }
+
+    private fun setupRadioGroup() {
+        radioGroup.check(
+            when (mOpinion!!.importance) {
+                Opinion.LOW_IMPORTANCE -> R.id.radButton_low
+                Opinion.MEDIUM_IMPORTANCE -> R.id.radButton_medium
+                Opinion.HIGH_IMPORTANCE -> R.id.radButton_high
+                //TODO: Game Changer
+                else -> binding.radButtonHigh.id
+            }
+        )
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            mOpinion?.importance = when (checkedId) {
+                R.id.radButton_low -> Opinion.LOW_IMPORTANCE
+                R.id.radButton_medium -> Opinion.MEDIUM_IMPORTANCE
+                else -> Opinion.HIGH_IMPORTANCE
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
 }

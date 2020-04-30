@@ -1,10 +1,14 @@
 package dar.life.helpers.simplifydecisions.data
 
+import androidx.room.Ignore
+
 data class Opinion(var title: String,
                    var certaintypercent: Int,
                    var description: String = "",
                    var isPositive: Boolean = true,
                    var importance: Int = MEDIUM_IMPORTANCE) {
+
+    val tasks: MutableList<String> = mutableListOf()
 
     companion object {
 
@@ -15,7 +19,5 @@ data class Opinion(var title: String,
 
     }
 
-    fun isAFact(): Boolean{
-        return certaintypercent == 100
-    }
+    val isAFact: Boolean get() = certaintypercent == 100
 }

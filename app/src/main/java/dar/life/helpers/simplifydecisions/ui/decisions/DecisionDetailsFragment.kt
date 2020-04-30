@@ -16,7 +16,9 @@ import androidx.navigation.fragment.navArgs
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Decision
 import dar.life.helpers.simplifydecisions.databinding.DecisionDetailsFragmentBinding
+import dar.life.helpers.simplifydecisions.ui.UiUtils
 import kotlinx.android.synthetic.main.decision_details_fragment.*
+import kotlinx.android.synthetic.main.fragment_edit_issue.*
 import java.time.format.DateTimeFormatter.ofLocalizedDate
 import java.time.format.FormatStyle
 
@@ -82,30 +84,13 @@ class DecisionDetailsFragment : Fragment() {
         binding.decisionDateTv.text = decision.date.format(ofLocalizedDate(FormatStyle.LONG))
         binding.decisionTitleTv.text = decision.title
         binding.editDecisionTitleIcon.setOnClickListener {
-            if (decision_title_tv.visibility == View.VISIBLE) {
-                decision_title_tv.visibility = View.INVISIBLE
-                decision_title_et.visibility = View.VISIBLE
-                decision_title_et.setText(decision_title_tv.text)
-                edit_decision_title_icon.setImageDrawable(
-                    mContext
-                        .getDrawable(R.drawable.confirm_edit_icon)
-                )
-            } else {
-                decision.title = decision_title_et.text.toString()
-                decision_title_tv.text = decision.title
+            if (UiUtils.handleEditTitleClick(mContext,
+                    decision_title_tv,
+                    decision_title_et,
+                    edit_decision_title_icon)) {
+                decision.title = issue_title_et.text.toString()
+                issue_title_tv.text = decision.title
                 viewModel.updateDecision(decision)
-                decision_title_tv.visibility = View.VISIBLE
-                decision_title_et.visibility = View.INVISIBLE
-                edit_decision_title_icon.setImageDrawable(
-                    (mContext
-                        .getDrawable(R.drawable.pencil_edit_icon))
-                )
-                val imm: InputMethodManager? =
-                    mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-                imm?.hideSoftInputFromWindow(
-                    decision_title_et.windowToken,
-                    InputMethodManager.RESULT_UNCHANGED_SHOWN
-                )
             }
         }
 

@@ -90,7 +90,7 @@
             android:name="issueId"
             app:argType="integer" />
         <argument
-            android:name="opinionId"
+            android:name="opinionPos"
             app:argType="integer"
             android:defaultValue="-1" />
         <argument

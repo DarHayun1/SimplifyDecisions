@@ -19,13 +19,14 @@ data class Issue(
     @PrimaryKey(autoGenerate = true)
     var id: Int = date.toEpochSecond(ZoneOffset.UTC).toInt()
     @TypeConverters(OpinionConverter::class)
-    var opinions: MutableList<Opinion> = createDemoOpinions()
+    var opinions: MutableList<Opinion> = mutableListOf()
 
 
     @Ignore
     var expanded: Boolean = false
 
     companion object{
+        val DEFAULT_ISSUE: Issue = Issue(title = "", description = null)
         const val TYPE_YES_NO = "Yes/No Question"
         const val TYPE_MULTIPLE_OPTIONS = "Multiple Options Dilemma"
     }
@@ -34,6 +35,7 @@ data class Issue(
         isActive = false
         return Decision(title, description, opinions, id)
     }
+
 
     private fun createDemoOpinions(): MutableList<Opinion> {
         return mutableListOf(
