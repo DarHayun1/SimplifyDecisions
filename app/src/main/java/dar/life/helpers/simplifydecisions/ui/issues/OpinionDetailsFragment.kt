@@ -28,10 +28,10 @@ import kotlinx.android.synthetic.main.fragment_opinion_details.*
 /**
  * A simple [Fragment] subclass.
  */
-class OpinionDetailsFragment : Fragment() {
+class OpinionDetailsFragment : Fragment(), OnTaskTextChangedListener {
 
-    private var mOpinion: Opinion? = null
-    private var mIssue: Issue? = null
+    private val mOpinion: Opinion? get() = viewModel.opinion
+    private val mIssue: Issue? get() = viewModel.issue
     private var _binding: FragmentOpinionDetailsBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: OpinionViewModel
@@ -92,7 +92,8 @@ class OpinionDetailsFragment : Fragment() {
     private fun initViews() {
         viewModel.getIssueById(args.issueId).observe(viewLifecycleOwner, Observer {
             it?.let {
-                issueFoundInflateFragment(it) } })
+                viewModel.issue = it
+                issueFoundInflateFragment() } })
 
         binding.saveOpinionBtn.setOnClickListener{
             mIssue?.let { viewModel.updateIssue(mIssue!!) }
@@ -111,14 +112,13 @@ class OpinionDetailsFragment : Fragment() {
     }
 
 
-    private fun issueFoundInflateFragment(it: Issue) {
-        mIssue = it
-        mOpinion = if (args.opinionPos == -1)
+    private fun issueFoundInflateFragment() {
+        viewModel.opinion = if (args.opinionPos == -1)
             Opinion(title = getString(R.string.default_opinion_title),
                 certaintypercent = 80)
                 .also {newOpinion -> mIssue!!.opinions.add(newOpinion)}
         else
-            it.opinions[args.opinionPos]
+            mIssue!!.opinions[args.opinionPos]
         Log.d("ABCD", mOpinion.toString())
 
         binding.relatedIssueTitle.text = mIssue?.title
@@ -127,11 +127,17 @@ class OpinionDetailsFragment : Fragment() {
     }
 
     private fun setupTasks() {
-        val adapter = TasksAdapter(mContext)
+        val adapter = TasksAdapter(mContext, this)
         binding.tasksRv.adapter = adapter
         binding.tasksRv.layoutManager = LinearLayoutManager(mContext, VERTICAL, false)
         Log.d("ABCD2", mOpinion.toString())
         adapter.tasks = mOpinion!!.tasks
+        binding.addTaskBtn.setOnClickListener{
+            mOpinion?.tasks?.let{
+                it.add("")
+                adapter.newTaskAdded(it)
+            }
+        }
 
     }
 
@@ -157,6 +163,10 @@ class OpinionDetailsFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    override fun onTaskTextChange(pos: Int, text: String) {
+        mOpinion?.tasks?.set(pos, text)
     }
 
 }

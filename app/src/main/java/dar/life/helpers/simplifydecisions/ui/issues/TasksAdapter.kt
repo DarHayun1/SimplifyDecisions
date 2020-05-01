@@ -1,6 +1,9 @@
 package dar.life.helpers.simplifydecisions.ui.issues
 
 import android.content.Context
+import android.text.Editable
+import android.text.Selection.setSelection
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -11,77 +14,65 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView.OnEditorActionListener
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
 
 
-class TasksAdapter(private val context: Context): RecyclerView.Adapter<TasksAdapter.TaskVH>() {
-
+class TasksAdapter(private val context: Context, private val mCallback: OnTaskTextChangedListener): RecyclerView.Adapter<TasksAdapter.TaskVH>() {
     var tasks: MutableList<String> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
+    //true if the last task is being edited (happens in a new task)
+    var taskOnEdit: Boolean = false
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskVH {
         val view = LayoutInflater.from(context)
             .inflate(R.layout.task_item, parent, false)
-        return TaskVH(view)
+        return TaskVH(view, tasks, mCallback)
     }
 
-    override fun getItemCount(): Int = tasks.size+1
+    override fun getItemCount(): Int = tasks.size
 
     override fun onBindViewHolder(holder: TaskVH, position: Int) {
-        Log.d("TOTO", "pos: $position")
-        if (position != tasks.size){
-            holder.bindItem(tasks[position])
-            holder.editText.setOnFocusChangeListener{_, isFocused ->
-                Log.d("TOTO", "focus")
-                if (!isFocused && holder.editText.text.toString().isNotEmpty()){
-                    Log.d("TOTO", "focus2")
-                    tasks[position] = holder.editText.text.toString()
-                    notifyDataSetChanged()
-                }
-            }
-
-        }else{
-            holder.setLastItem(context.getString(R.string.new_task_hint_text))
-            holder.editText.setOnFocusChangeListener{_, isFocused ->
-                Log.d("TOTO", "focus")
-                if (!isFocused && holder.editText.text.toString().isNotEmpty()){
-                    Log.d("TOTO", "focus2")
-                    tasks.add(holder.editText.text.toString())
-                    notifyDataSetChanged()
-                }
+        holder.bindItem(tasks[position])
+        if (taskOnEdit && position == tasks.size - 1) {
+            !taskOnEdit
+            holder.editText.apply {
+                isCursorVisible = true
+                setSelection(holder.editText.text.length)
+                requestFocus()
             }
         }
-        holder.editText.setOnEditorActionListener() { _, actionId, keyEvent ->
-            Log.d("TOTO",  "actionId: $actionId")
-            Log.d("TOTO", "key event: $keyEvent")
-            holder.editText.isCursorVisible = false
+
+        holder.editText.setOnEditorActionListener { _, actionId, _ ->
+            Log.d("TASK", "editor $tasks $position $actionId")
             if (actionId == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
+                holder.editText.isCursorVisible = false
                 val imm: InputMethodManager? =
                     context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
                 imm?.hideSoftInputFromWindow(
                     holder.editText.applicationWindowToken,
                     InputMethodManager.HIDE_NOT_ALWAYS
                 )
-
-                if (position==tasks.size)
-                {
-                    tasks.add(holder.editText.text.toString())
-                }else
-                    tasks[position] = holder.editText.text.toString()
             }
             false
         }
-
     }
-    class TaskVH(itemView: View) : RecyclerView.ViewHolder(itemView){
+
+
+    fun newTaskAdded(newTasks: MutableList<String>) {
+        tasks = newTasks
+        taskOnEdit = true
+        notifyDataSetChanged()
+    }
+
+    class TaskVH(itemView: View, tasks: MutableList<String>, val mCallback: OnTaskTextChangedListener) : RecyclerView.ViewHolder(itemView){
         val editText: EditText = itemView.findViewById<EditText>(R.id.task_item_et).also {
             it.imeOptions = EditorInfo.IME_ACTION_DONE
             it.setOnTouchListener { _ , _ ->
-                Log.d("TOTO", "touched")
                 it.isCursorVisible = true
                 return@setOnTouchListener false
             }
@@ -92,13 +83,15 @@ class TasksAdapter(private val context: Context): RecyclerView.Adapter<TasksAdap
         fun bindItem(task: String){
             editText.apply {
                 setText(task)
-                hint = task }
-
-
+                hint = task
+                addTextChangedListener(onTextChanged = {
+                    text, _, _, _ ->
+                    text?.let {
+                        mCallback.onTaskTextChange(adapterPosition, it.toString())
+                    }
+                })
+            }
         }
 
-        fun setLastItem(text: String){
-            editText.hint = text
-        }
     }
 }

@@ -133,14 +133,35 @@
         android:text="@string/tasks_label"
         android:textColor="@android:color/primary_text_light" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tasks_rv"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:descendantFocusability="afterDescendants"
-        android:focusableInTouchMode="true"
-        android:clickable="true"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasks_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="afterDescendants"
+            android:focusableInTouchMode="true"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/add_task_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/task_item_height"
+            android:text="@string/add_new_task_text"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            style="@style/TextAppearance.AppCompat.Medium"/>
+    </LinearLayout>
+    </ScrollView>
+
     <Button
         android:id="@+id/save_opinion_btn"
         style="@style/TextAppearance.AppCompat.Large"

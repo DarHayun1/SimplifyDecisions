@@ -23,4 +23,5 @@
     <string name="related_issue_label_text">related issue:</string>
     <string name="save_button_text">SAVE</string>
     <string name="tasks_label">Tasks</string>
+    <string name="add_new_task_text">+ add new task</string>
 </resources>
