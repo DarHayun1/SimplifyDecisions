@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/edit_iss_first_option_icon"
+            android:layout_width="@dimen/option_icon_size"
+            android:layout_height="@dimen/option_icon_size"
+            android:elevation="12dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/temp_logo" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option_a"
+            android:background="@drawable/rounded_corners_option_title"
+            android:elevation="12dp"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:textAlignment="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/edit_iss_second_option_icon"
+            android:layout_width="@dimen/option_icon_size"
+            android:layout_height="@dimen/option_icon_size"
+            android:elevation="12dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/temp_logo" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option_b"
+            android:background="@drawable/rounded_corners_option_title"
+            android:elevation="12dp"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:textAlignment="center"/>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

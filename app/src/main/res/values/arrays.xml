@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="topics">
+        <item>new</item>
+        <item>work</item>
+        <item>love</item>
+        <item>purchase</item>
+        <item>car</item>
+        <item>vacation</item>
+    </string-array>
+</resources>

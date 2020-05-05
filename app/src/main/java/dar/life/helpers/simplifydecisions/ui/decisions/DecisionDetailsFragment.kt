@@ -88,7 +88,7 @@ class DecisionDetailsFragment : Fragment() {
                     decision_title_tv,
                     decision_title_et,
                     edit_decision_title_icon)) {
-                decision.title = issue_title_et.text.toString()
+                decision.title = binding.decisionTitleEt.text.toString()
                 issue_title_tv.text = decision.title
                 viewModel.updateDecision(decision)
             }

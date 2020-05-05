@@ -9,7 +9,6 @@ import dar.life.helpers.simplifydecisions.repository.OpinionConverter
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.time.ZonedDateTime
 
 
 @Entity(tableName = "decisions")
@@ -17,7 +16,7 @@ import java.time.ZonedDateTime
 data class Decision(
     var title: String,
     var description: String?,
-    var opinions: MutableList<Opinion> = mutableListOf(),
+    var opinions: MutableMap<String, MutableList<Opinion>> = mutableMapOf(),
     val issueIdBasedOf: Int? = null
 ) {
 

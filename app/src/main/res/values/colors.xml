@@ -2,10 +2,13 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryLight">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimaryDark">#223646</color>
+
     <color name="colorAccent">#03DAC5</color>
     <color name="colorPositive">#1BDD23</color>
     <color name="colorNegative">#DA2121</color>
+
+    <color name="light_text_second">#B0B0B0</color>
 
     <color name="prioRed">#E74C3C</color>
     <color name="prioOrange">#E67E22</color>

@@ -1,14 +1,15 @@
 package dar.life.helpers.simplifydecisions.data
 
-import androidx.room.Ignore
+import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_CATEGORY
+
 
 data class Opinion(var title: String,
-                   var certaintypercent: Int,
                    var description: String = "",
-                   var isPositive: Boolean = true,
+                   var isOfFirstOption: Boolean = true,
                    var importance: Int = MEDIUM_IMPORTANCE) {
 
-    val tasks: MutableList<String> = mutableListOf()
+    val tasks: MutableList<Task> = mutableListOf()
+    var category: String = DEFAULT_CATEGORY
 
     companion object {
 
@@ -19,5 +20,22 @@ data class Opinion(var title: String,
 
     }
 
-    val isAFact: Boolean get() = certaintypercent == 100
+    val isAFact: Boolean get() = tasks.size == 0
+
+    fun checkTask(position: Int, checked: Boolean): Boolean{
+        return if(tasks[position].isChecked == checked)
+            false
+        else{
+            tasks[position].flipChecked()
+            true
+        }
+    }
+
+    data class Task(val text: String) {
+        var isChecked = false
+
+        fun flipChecked(){
+            isChecked = !isChecked
+        }
+    }
 }

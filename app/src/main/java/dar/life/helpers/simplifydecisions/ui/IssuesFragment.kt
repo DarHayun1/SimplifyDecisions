@@ -1,4 +1,4 @@
-package dar.life.helpers.simplifydecisions.ui.issues
+package dar.life.helpers.simplifydecisions.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.databinding.FragmentIssuesBinding
-import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
+import dar.life.helpers.simplifydecisions.ui.issues.IssuesAdapter
+import dar.life.helpers.simplifydecisions.ui.issues.IssuesViewModel
 import kotlinx.android.synthetic.main.fragment_issues.*
 
 /**
@@ -62,18 +62,17 @@ class IssuesFragment : Fragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mViewModel = ViewModelProvider(this).get(IssuesViewModel::class.java)
+        mViewModel = ViewModelProvider(requireActivity()).get(IssuesViewModel::class.java)
         initViews()
     }
 
 
     private fun initViews() {
         binding.addIssueFab.setOnClickListener{
-            val issueId = mViewModel.addNewIssue().id
             findNavController().navigate(
-                IssuesFragmentDirections.actionIssuesFragmentToEditIssueFragment(
-                    issueId,
-                    mContext.getString(R.string.new_issue_title)
+                IssuesFragmentDirections.actionIssuesFragmentToCreateFromTemplateFragment(
+//                    issueId,
+//                    mContext.getString(R.string.new_issue_title)
                 )
             )
         }
@@ -82,7 +81,10 @@ class IssuesFragment : Fragment(),
 
     private fun setupIssuesList() {
         val issuesAdapter =
-            IssuesAdapter(mContext, this)
+            IssuesAdapter(
+                mContext,
+                this
+            )
 
         issues_rv.adapter = issuesAdapter
         (issues_rv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
@@ -99,14 +101,10 @@ class IssuesFragment : Fragment(),
     }
 
     override fun openDetailsScreen(id: Int, title: String, view: View) {
-        Log.d("TOTO11", id.toString())
-        val fragmentNavigatorExtras = FragmentNavigatorExtras(
-            view to id.toString()
-        )
         findNavController().navigate(
-            IssuesFragmentDirections.actionIssuesFragmentToEditIssueFragment(id, title),
-            fragmentNavigatorExtras
-        )
+            IssuesFragmentDirections.actionIssuesFragmentToEditIssueFragment(id, title))
+//                    issueId,
+//                    mContext.getString(R.string.new_issue_title)
     }
 
     override fun onDestroyView() {

@@ -1,17 +1,11 @@
-package dar.life.helpers.simplifydecisions.ui.issues
+package dar.life.helpers.simplifydecisions.ui
 
 import android.content.Context
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
@@ -20,28 +14,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.databinding.FragmentEditIssueBinding
-import dar.life.helpers.simplifydecisions.ui.UiUtils
-import kotlinx.android.synthetic.main.facts_layout.*
+import dar.life.helpers.simplifydecisions.ui.issues.*
 import kotlinx.android.synthetic.main.fragment_edit_issue.*
-import kotlinx.android.synthetic.main.fragment_issues.*
 import kotlinx.android.synthetic.main.opinions_layout.*
+import kotlinx.android.synthetic.main.options_headers_layout.*
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [EditIssueFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class EditIssueFragment : Fragment(), OnOpinionRequest {
+class EditIssueFragment : Fragment(),
+    OnOpinionRequest {
+    private lateinit var opinionsAdapter: FactsAdapter
     private lateinit var mContext: Context
     private lateinit var mViewModel: EditIssueViewModel
 
@@ -61,8 +49,14 @@ class EditIssueFragment : Fragment(), OnOpinionRequest {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition =
-            TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
+//        sharedElementEnterTransition =
+//            TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (this::opinionsAdapter.isInitialized)
+            opinionsAdapter.setData(mIssue.opinions)
     }
 
     override fun onCreateView(
@@ -79,7 +73,6 @@ class EditIssueFragment : Fragment(), OnOpinionRequest {
         mIssueId = args.issueId
         binding.issueTitleTv.transitionName = mIssueId.toString()
         binding.issueTitleTv.text = args.issueTitle
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -100,13 +93,13 @@ class EditIssueFragment : Fragment(), OnOpinionRequest {
         to_decision_button.setOnClickListener {handleToDecisionClick()}
         edit_issue_title_icon.setOnClickListener { handleEditTitleClick() }
         postponeEnterTransition()
-        //TODO: fix return animation
-        opinions_rv?.doOnPreDraw { startPostponedEnterTransition() }
     }
 
     private fun navigateToNewOpinion() {
         val action =
-            EditIssueFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(mIssueId)
+            EditIssueFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(
+                mIssueId
+            )
         findNavController().navigate(
             action
         )
@@ -121,19 +114,30 @@ class EditIssueFragment : Fragment(), OnOpinionRequest {
         issue_date_tv.text =
             issue.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
 
-        val gridLayoutManager = GridLayoutManager(mContext, 2)
-        opinions_rv.layoutManager = gridLayoutManager
-        opinions_rv.setHasFixedSize(true)
-        val opinionsAdapter = OpinionsAdapter(mContext, this)
-        opinions_rv.adapter = opinionsAdapter
+        val linearLayoutManager =
+            LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
+        complex_opinions_rv.layoutManager = linearLayoutManager
+        complex_opinions_rv.setHasFixedSize(true)
+            opinionsAdapter = FactsAdapter(
+                mContext,
+                this,
+                mIssue.id.toString()
+            )
+        complex_opinions_rv.adapter = opinionsAdapter
 
-        opinionsAdapter.setData(issue.opinions.filter { !it.isAFact })
+        edit_iss_first_option_icon.setImageDrawable(
+            mContext.getDrawable(mContext.resources.getIdentifier(
+                issue.optionAIconName, "drawable", mContext.packageName
+            ))
+        )
+        edit_iss_second_option_icon.setImageDrawable(
+            mContext.getDrawable(mContext.resources.getIdentifier(
+                issue.optionBIconName, "drawable", mContext.packageName
+            ))
+        )
+        opinionsAdapter.setData(issue.opinions)
+        binding.complexOpinionsRv.doOnPreDraw { startPostponedEnterTransition() }
 
-
-        val (positive, negative) = issue.opinions.filter { it.isAFact }
-            .partition { it.isPositive }
-        populateFacts(true, positive)
-        populateFacts(false, negative)
 
     }
 
@@ -161,23 +165,13 @@ class EditIssueFragment : Fragment(), OnOpinionRequest {
             mViewModel.addDecision(it)
             mViewModel.updateIssue(mIssue)
             findNavController()
-                .navigate(EditIssueFragmentDirections
-                .actionEditIssueFragmentToDecisionDetailsFragment(it.id, it.title))
+                .navigate(
+                    EditIssueFragmentDirections.actionEditIssueFragmentToDecisionDetailsFragment(
+                        it.id,
+                        it.title
+                    )
+                )
         }
-    }
-
-    private fun populateFacts(
-        isPositive: Boolean,
-        factsList: List<Opinion>
-    ) {
-        val adapter = FactsAdapter(mContext, isPositive)
-        val recyclerView = if (isPositive) facts_positive_rv else facts_negative_rv
-        recyclerView.layoutManager = LinearLayoutManager(
-            mContext,
-            RecyclerView.VERTICAL, false
-        )
-        recyclerView.adapter = adapter
-        adapter.mFacts = factsList.sortedBy { it.importance }.reversed()
     }
 
     override fun onDestroyView() {
@@ -185,12 +179,13 @@ class EditIssueFragment : Fragment(), OnOpinionRequest {
         super.onDestroyView()
     }
 
-    override fun openOpinionScreen(position: Int, title: String, titleView: View) {
+    override fun openOpinionScreen(opinion: Opinion, titleView: View) {
         val action =
-            EditIssueFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(mIssue.id)
-        action.opinionPos = position
-        action.opinionTitle = title
-        val transitionName = mIssue.id.toString() + position
+            EditIssueFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(
+                mIssue.id
+            )
+        action.opinionTitle = opinion.title
+        val transitionName = mIssue.id.toString() + opinion.title
         titleView.transitionName = transitionName
         val fragmentNavigatorExtras = FragmentNavigatorExtras(
             titleView to transitionName

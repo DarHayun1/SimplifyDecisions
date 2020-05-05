@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.issues.IssuesFragment">
+    tools:context=".ui.IssuesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/issues_rv"

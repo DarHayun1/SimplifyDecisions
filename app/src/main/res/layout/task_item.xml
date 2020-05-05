@@ -17,6 +17,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
+
         android:gravity="center_vertical"
         android:imeOptions="actionDone"
         android:maxLines="1"

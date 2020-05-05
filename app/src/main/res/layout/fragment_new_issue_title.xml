@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/top_padding_templates"
+    tools:context=".ui.issues.NewIssueTitleFragment">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginStart="@dimen/logo_hor_margin"
+            android:layout_marginEnd="@dimen/logo_hor_margin"
+            android:transitionName="@string/new_issue_logo_transition"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center"
+            android:elevation="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/temp_logo" />
+    </FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/templates_bottom_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <LinearLayout
+            android:id="@+id/from_template_bottom_drawer"
+            android:transitionName="@string/bot_drawer_trans_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bottom_drawer_background"
+            android:paddingTop="@dimen/bottom_drawer_vert_margin"
+            android:paddingBottom="@dimen/bottom_drawer_vert_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+                <EditText
+                    android:id="@+id/from_template_title_et"
+                    android:layout_width="wrap_content"
+                    android:minWidth="260dp"
+                    android:layout_marginBottom="@dimen/menu_vert_margin"
+                    android:layout_height="wrap_content"
+                    android:hint="Title"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="@dimen/menu_vert_margin"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spinner1"
+                        android:layout_width="112dp"
+                        android:dropDownWidth="64dp"
+                        android:layout_height="match_parent" />
+
+                    <EditText
+                        android:id="@+id/first_option_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:hint="@string/option_a_name_hint" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="@dimen/menu_vert_margin"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spinner2"
+                        android:dropDownWidth="64dp"
+                        android:layout_width="112dp"
+                        android:layout_height="match_parent" />
+
+                    <EditText
+                        android:id="@+id/second_option_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:hint="@string/option_b_name_hint" />
+
+                </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/new_issue_next_fab"
+                android:layout_width="@dimen/fab_size"
+                android:layout_height="@dimen/fab_size"
+                android:layout_gravity="end"
+                android:src="?attr/actionModeCloseDrawable"
+                android:layoutDirection="rtl"/>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

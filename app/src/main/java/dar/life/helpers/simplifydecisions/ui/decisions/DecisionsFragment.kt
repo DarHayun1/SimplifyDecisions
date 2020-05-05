@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.databinding.FragmentDecisionsBinding
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
-import dar.life.helpers.simplifydecisions.ui.issues.IssuesFragmentDirections
 import kotlinx.android.synthetic.main.fragment_decisions.*
 import kotlinx.android.synthetic.main.fragment_issues.*
 

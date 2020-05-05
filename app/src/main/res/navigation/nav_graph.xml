@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/issuesFragment"
-        android:name="dar.life.helpers.simplifydecisions.ui.issues.IssuesFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.IssuesFragment"
         android:label="fragment_issues"
         tools:layout="@layout/fragment_issues" >
         <action
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/editIssueFragment"
-        android:name="dar.life.helpers.simplifydecisions.ui.issues.EditIssueFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.EditIssueFragment"
         android:label="fragment_edit_issue"
         tools:layout="@layout/fragment_edit_issue" >
         <argument
@@ -59,12 +59,12 @@
     </fragment>
     <fragment
         android:id="@+id/createFromTemplateFragment"
-        android:name="dar.life.helpers.simplifydecisions.ui.issues.CreateFromTemplateFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.CreateFromTemplateFragment"
         android:label="fragment_create_from_template"
         tools:layout="@layout/fragment_create_from_template" >
         <action
-            android:id="@+id/action_createFromTemplateFragment_to_editIssueFragment"
-            app:destination="@id/editIssueFragment" />
+            android:id="@+id/action_createFromTemplateFragment_to_newIssueTitleFragment"
+            app:destination="@id/newIssueTitleFragment" />
     </fragment>
     <fragment
         android:id="@+id/decisionDetailsFragment"
@@ -80,7 +80,7 @@
     </fragment>
     <fragment
         android:id="@+id/opinionDetailsFragment"
-        android:name="dar.life.helpers.simplifydecisions.ui.issues.OpinionDetailsFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.OpinionDetailsFragment"
         android:label="fragment_opinion_details"
         tools:layout="@layout/fragment_opinion_details" >
         <action
@@ -90,12 +90,21 @@
             android:name="issueId"
             app:argType="integer" />
         <argument
-            android:name="opinionPos"
-            app:argType="integer"
-            android:defaultValue="-1" />
-        <argument
             android:name="opinionTitle"
             app:argType="string"
             android:defaultValue="New Opinion" />
+    </fragment>
+    <fragment
+        android:id="@+id/newIssueTitleFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.issues.NewIssueTitleFragment"
+        android:label="fragment_new_issue_title"
+        tools:layout="@layout/fragment_new_issue_title" >
+        <action
+            android:id="@+id/action_newIssueTitleFragment_to_editIssueFragment"
+            app:destination="@id/editIssueFragment" />
+        <argument
+            android:name="template"
+            app:argType="string"
+            android:defaultValue="new" />
     </fragment>
 </navigation>

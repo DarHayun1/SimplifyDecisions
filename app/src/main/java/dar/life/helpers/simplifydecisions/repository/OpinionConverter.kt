@@ -9,15 +9,15 @@ import java.lang.reflect.Type
 class OpinionConverter {
 
     @TypeConverter
-    fun fromString(value: String?): MutableList<Opinion> {
-        val listType: Type = object : TypeToken<MutableList<Opinion>>() {}.type
-        return Gson().fromJson(value, listType)
+    fun fromString(value: String?): MutableMap<String, MutableList<Opinion>> {
+        val mapType: Type = object : TypeToken<MutableMap<String, MutableList<Opinion>>>() {}.type
+        return Gson().fromJson(value, mapType)
     }
 
     @TypeConverter
-    fun fromList(list: MutableList<Opinion>?): String {
+    fun fromMap(map: MutableMap<String, MutableList<Opinion>>?): String {
         val gson = Gson()
-        return gson.toJson(list)
+        return gson.toJson(map)
     }
 
 

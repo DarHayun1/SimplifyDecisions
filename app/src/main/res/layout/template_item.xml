@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/grid_item_ripple"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/template_item_height"
+    android:layout_margin="2dp">
+
+    <ImageView
+        android:id="@+id/template_icon_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:contentDescription="@string/template_icon"
+        android:foregroundTint="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/decisions_temp_logo" />
+
+</FrameLayout>
