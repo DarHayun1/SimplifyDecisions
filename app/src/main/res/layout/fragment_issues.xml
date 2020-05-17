@@ -30,13 +30,13 @@
             android:scaleType="centerInside"
             android:src="@drawable/temp_logo"
             android:elevation="16dp"
-            app:layout_constraintBottom_toTopOf="@id/from_template_bottom_drawer"
+            app:layout_constraintBottom_toTopOf="@id/issues_bottom_drawer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/from_template_bottom_drawer" />
+            app:layout_constraintTop_toTopOf="@id/issues_bottom_drawer" />
 
         <FrameLayout
-            android:id="@+id/from_template_bottom_drawer"
+            android:id="@+id/issues_bottom_drawer"
             android:transitionName="@string/bot_drawer_trans_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:src="@android:drawable/ic_input_add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/from_template_bottom_drawer" />
+            app:layout_constraintTop_toTopOf="@+id/issues_bottom_drawer" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

@@ -54,7 +54,7 @@
             <FrameLayout
                 android:id="@+id/edit_issue_bottom_drawer"
                 android:layout_width="match_parent"
-                android:transitionName="@string/opinions_bottom_drawer_nav"
+                android:transitionName="@string/bot_drawer_trans_name"
                 android:layout_height="match_parent"
                 android:background="@drawable/bottom_drawer_background"
                 android:layout_marginTop="40dp">

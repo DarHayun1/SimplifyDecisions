@@ -17,6 +17,7 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
         fun newInstance() =
             DashboardFragment()
     }
+
     private var _binding: DashboardFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -33,20 +34,33 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
     }
 
     private fun initViews() {
-        binding.issuesBtn.setOnClickListener{
-            val extras = FragmentNavigatorExtras(
-                binding.dashboardLogo to getString(R.string.dash_to_issues_logo_trans),
-                binding.dashboardBackground to getString(R.string.bot_drawer_trans_name)
-            )
-            findNavController().navigate(
-                DashboardFragmentDirections.actionDashboardFragmentToIssuesFragment(),
-                extras
-            )
+        binding.issuesBtn.setOnClickListener {
+            openIssues()
         }
-        binding.decisionsBtn.setOnClickListener{
-            findNavController().navigate(
-                DashboardFragmentDirections.actionDashboardFragmentToDecisionsFragment()
-        )}
+        binding.decisionsBtn.setOnClickListener {
+            openDecisions()
+        }
+    }
+
+    private fun openIssues() {
+        val extras = FragmentNavigatorExtras(
+            binding.dashboardLogo to getString(R.string.dash_to_issues_logo_trans),
+            binding.dashboardBackground to getString(R.string.bot_drawer_trans_name)
+        )
+        findNavController().navigate(
+            DashboardFragmentDirections.actionDashboardFragmentToIssuesFragment(),
+            extras
+        )
+    }
+
+    private fun openDecisions() {
+        val extras = FragmentNavigatorExtras(
+            binding.dashboardLogo to getString(R.string.dash_to_issues_logo_trans),
+            binding.dashboardBackground to getString(R.string.bot_drawer_trans_name)
+        )
+        findNavController().navigate(
+            DashboardFragmentDirections.actionDashboardFragmentToDecisionsFragment(), extras
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

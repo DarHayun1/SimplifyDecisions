@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.databinding.FragmentIssuesBinding
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import kotlinx.android.synthetic.main.fragment_issues.*
@@ -105,9 +106,10 @@ class IssuesFragment : Fragment(),
         issues_rv.doOnPreDraw { startPostponedEnterTransition() }
     }
 
-    override fun openDetailsScreen(id: Int, title: String, view: View) {
+    override fun openDetailsScreen(id: Int, title: String, titleView: View) {
         val extras = FragmentNavigatorExtras(
-            view to id.toString()
+            titleView to id.toString(),
+            binding.issuesBottomDrawer to getString(R.string.bot_drawer_trans_name)
         )
         findNavController().navigate(
             IssuesFragmentDirections.actionIssuesFragmentToEditIssueFragment(
