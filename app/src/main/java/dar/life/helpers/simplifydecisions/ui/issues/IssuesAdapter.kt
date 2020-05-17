@@ -24,7 +24,7 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
     }
 
     //Holding the list position of the current expanded item
-    var expandedPos: Int = -1
+    private var expandedPos: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssueVH {
         val view = LayoutInflater.from(mContext)
@@ -38,7 +38,7 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
 
     override fun onBindViewHolder(holder: IssueVH, position: Int) {
         val issue = issues[position]
-        holder.bindItem(issue)
+        holder.bindItem(issue, mContext)
 
         if (issue.expanded) {
             expandedPos = position
@@ -72,8 +72,8 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
         val type: TextView = itemView.findViewById(R.id.issue_type_tv)
         val extraInfoLayout: View = itemView.findViewById(R.id.issue_item_extra_info)
 
-        fun bindItem(item: Issue) {
-            title.text = item.title
+        fun bindItem(item: Issue, context: Context) {
+            title.text = item.displayedTitle(context)
             if (item.description == null || item.description!!.isEmpty())
                 descriptionTv.visibility = GONE
             else

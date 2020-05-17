@@ -10,10 +10,7 @@ import android.view.*
 import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -150,9 +147,14 @@ class OpinionDetailsFragment : Fragment(),
             alertDialog.dismiss()
         }
         saveBtn.setOnClickListener {
-            mOpinion?.title = textInputLayout.editText?.text.toString()
-            binding.opinionDetailsToolbarTitle.text = mOpinion?.title
-            alertDialog.dismiss()
+            if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength) {
+                mOpinion?.title = textInputLayout.editText?.text.toString()
+                binding.opinionDetailsToolbarTitle.text = mOpinion?.title
+                alertDialog.dismiss()
+            }else
+                Toast.makeText(mContext,
+                    "Title length is limited to max ${textInputLayout.counterMaxLength}" +
+                            " characters", Toast.LENGTH_SHORT).show()
         }
         alertDialog.setView(dialogView)
         alertDialog.show()
@@ -183,7 +185,7 @@ class OpinionDetailsFragment : Fragment(),
 
     private fun issueFoundInflateFragment(issue: Issue) {
 
-        binding.relatedIssueTitle.text = issue.title
+        binding.relatedIssueTitle.text = issue.displayedTitle(mContext)
 
         viewModel.lastUsedOpinion =
             issue.opinions.values.flatten().firstOrNull { it.title == args.opinionTitle }

@@ -15,7 +15,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout"
-        style="@style/textInputStyle"
+        style="@style/titleTextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/issue_title_hint"

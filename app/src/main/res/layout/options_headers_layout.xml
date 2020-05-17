@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="8dp"
@@ -7,9 +7,12 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:layout_marginHorizontal="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,16 +30,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/option_a"
-            android:elevation="12dp"
-            style="@style/TextAppearance.AppCompat.Large"
+            android:maxLines="2"
+            style="@style/TextAppearance.AppCompat.Medium"
             android:textAlignment="center"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:layout_marginHorizontal="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,11 +60,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/option_b"
-            android:elevation="12dp"
-            style="@style/TextAppearance.AppCompat.Large"
+            android:maxLines="2"
+            style="@style/TextAppearance.AppCompat.Medium"
             android:textAlignment="center"/>
 
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

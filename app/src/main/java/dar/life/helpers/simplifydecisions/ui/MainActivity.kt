@@ -2,6 +2,7 @@ package dar.life.helpers.simplifydecisions.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import dar.life.helpers.simplifydecisions.R
 
 class MainActivity : AppCompatActivity() {
@@ -11,5 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return super.onCreateOptionsMenu(menu)
+    }
 }

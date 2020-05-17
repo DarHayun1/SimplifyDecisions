@@ -51,14 +51,23 @@
             app:layout_constraintStart_toStartOf="parent">
 
 
-                <EditText
-                    android:id="@+id/from_template_title_et"
-                    android:layout_width="wrap_content"
-                    android:minWidth="260dp"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/from_template_title_layout"
+                    style="@style/titleTextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:layout_marginBottom="@dimen/menu_vert_margin"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/new_issue_title_hint"/>
+                    android:hint="@string/issue_title_hint">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:textSize="@dimen/issue_title_text_size"
+                        android:selectAllOnFocus="true"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
 
 
                 <LinearLayout

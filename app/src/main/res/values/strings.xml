@@ -13,8 +13,6 @@
     <string name="decision_title_hint">Decision Title</string>
     <string name="new_task_hint_text">New task</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="default_opinion_title">New opinion</string>
     <string name="importance_label">Importance</string>
     <string name="low_priority">Low</string>
@@ -60,6 +58,7 @@
     <string name="bottom_Drawer_dash_transition">bottom_Drawer_dash_transition</string>
     <string name="dash_to_issues_bot_trans">dash_to_issues_bot_trans</string>
     <string name="dash_to_issues_logo_trans">dashtoissueslogotrans</string>
+    <string name="noIssueTitle">Unnamed Issue</string>
 
 
 </resources>

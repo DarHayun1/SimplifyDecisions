@@ -24,8 +24,7 @@ import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.databinding.FragmentIssueDetailsBinding
-import kotlinx.android.synthetic.main.fragment_issue_details.*
-import kotlinx.android.synthetic.main.options_headers_layout.*
+
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -133,7 +132,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest {
     }
 
     private fun populateUi(issue: Issue) {
-        binding.editIssueToolbarTitle.text = issue.title
+        binding.editIssueToolbarTitle.text = issue.displayedTitle(mContext)
         binding.issueDateTv.text =
             issue.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
 
@@ -192,9 +191,15 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest {
             dialogBuilder.dismiss()
         }
         saveBtn.setOnClickListener {
-            mIssue.title = textInputLayout.editText?.text.toString()
-            binding.editIssueToolbarTitle.text = mIssue.title
-            dialogBuilder.dismiss()
+            if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength){
+                mIssue.title = textInputLayout.editText?.text.toString()
+                binding.editIssueToolbarTitle.text = mIssue.displayedTitle(mContext)
+                dialogBuilder.dismiss()
+            }else{
+                Toast.makeText(mContext,
+                    "Title length is limited to max ${textInputLayout.counterMaxLength}" +
+                            " characters", Toast.LENGTH_SHORT).show()
+            }
         }
         dialogBuilder.setView(dialogView)
         dialogBuilder.show()

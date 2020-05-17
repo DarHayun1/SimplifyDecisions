@@ -1,8 +1,13 @@
 package dar.life.helpers.simplifydecisions.data
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_A_COLOR
 import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_A_ICON
 import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_B_COLOR
@@ -22,6 +27,7 @@ data class Issue(
     var type: String = TYPE_YES_NO,
     var isActive: Boolean = true
 ) {
+
 
     @TypeConverters(DateConverter::class)
     var date = LocalDateTime.now()
@@ -80,6 +86,12 @@ data class Issue(
         }
     }
 
+    fun displayedTitle(context: Context): String{
+        return if (title.isNotEmpty())
+            title
+        else
+            context.getString(R.string.noIssueTitle)
+    }
     fun toDecision(): Decision {
         isActive = false
         return Decision(title, description, opinions, id)

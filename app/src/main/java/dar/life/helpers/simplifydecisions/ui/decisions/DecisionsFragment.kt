@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import dar.life.helpers.simplifydecisions.databinding.FragmentDecisionsBinding
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import kotlinx.android.synthetic.main.fragment_decisions.*
@@ -74,6 +75,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
 
         val rvAdapter = DecisionsAdapter(mContext, this)
         binding.decisionsRv.adapter = rvAdapter
+        (binding.decisionsRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.decisionsRv.layoutManager =
             LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
         binding.decisionsRv.addItemDecoration(

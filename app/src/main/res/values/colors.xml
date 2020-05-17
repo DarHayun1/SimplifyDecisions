@@ -3,6 +3,7 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryLight">#6200EE</color>
     <color name="colorPrimaryDark">@color/app_blue_dark</color>
+    <color name="textLogo_color">#231f20</color>
 
     <color name="colorAccent">#03DAC5</color>
     <color name="colorPositive">#1BDD23</color>

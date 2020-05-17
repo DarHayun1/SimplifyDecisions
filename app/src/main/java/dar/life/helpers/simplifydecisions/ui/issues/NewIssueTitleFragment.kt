@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -65,7 +66,7 @@ class NewIssueTitleFragment : Fragment() {
     private fun initView() {
         viewModel.lastUsedIssue = Issue.fromTemplate(args.template)
         initSpinners()
-        binding.fromTemplateTitleEt.apply {
+        binding.fromTemplateTitleLayout.editText?.apply {
             imeOptions = EditorInfo.IME_ACTION_DONE
             requestFocus()
             val imm =
@@ -89,17 +90,27 @@ class NewIssueTitleFragment : Fragment() {
         }
 
         binding.newIssueNextFab.setOnClickListener{
-            mIssue?.let {
-                    it1 -> viewModel.addNewIssue(it1)
-                findNavController().navigate(
-                    NewIssueTitleFragmentDirections.actionNewIssueTitleFragmentToEditIssueFragment(
-                        it1.id, it1.title
-                    )
-                )
-            }
+            nextBtnRequest()
 
         }
 
+    }
+
+    private fun nextBtnRequest() {
+        mIssue?.let { it ->
+            val maxLength = binding.fromTemplateTitleLayout.counterMaxLength
+            if (maxLength >= it.title.length) {
+                viewModel.addNewIssue(it)
+                findNavController().navigate(
+                    NewIssueTitleFragmentDirections.actionNewIssueTitleFragmentToEditIssueFragment(
+                        it.id, it.title
+                    )
+                )
+            }else
+                Toast.makeText(mContext,
+                    "Title length is limited to max $maxLength" +
+                            " characters", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun initSpinners() {

@@ -13,6 +13,8 @@ import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeInViews
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeOutViews
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class DecisionsAdapter(private val mContext: Context, private val mCallback: OnDetailsRequest) :
     RecyclerView.Adapter<DecisionsAdapter.DecisionsVH>() {
@@ -23,7 +25,7 @@ class DecisionsAdapter(private val mContext: Context, private val mCallback: OnD
             notifyDataSetChanged()
         }
 
-    var expandedPos = -1
+    private var expandedPos = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DecisionsVH {
         val view = LayoutInflater.from(mContext)
@@ -68,6 +70,7 @@ class DecisionsAdapter(private val mContext: Context, private val mCallback: OnD
         val title: TextView = itemView.findViewById(R.id.decision_item_title_tv)
         val description: TextView = itemView.findViewById(R.id.decision_item_desc_tv)
         val extraInfoLayout: View = itemView.findViewById(R.id.decision_item_extra_info)
+        val decisionDate: TextView = itemView.findViewById(R.id.decision_item_date_tv)
 
 
         fun bindItem(decision: Decision) {
@@ -76,6 +79,8 @@ class DecisionsAdapter(private val mContext: Context, private val mCallback: OnD
                 description.visibility = GONE
             else
                 description.text = decision.description
+            decisionDate.text =
+                decision.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
             title.transitionName = decision.id.toString()
         }
 

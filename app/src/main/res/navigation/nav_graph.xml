@@ -52,7 +52,9 @@
             app:argType="string" />
         <action
             android:id="@+id/action_editIssueFragment_to_decisionDetailsFragment"
-            app:destination="@id/decisionDetailsFragment" />
+            app:destination="@id/decisionDetailsFragment"
+            app:popUpTo="@id/decisionsFragment"
+            app:popUpToInclusive="false"/>
         <action
             android:id="@+id/action_editIssueFragment_to_opinionDetailsFragment"
             app:destination="@id/opinionDetailsFragment" />
