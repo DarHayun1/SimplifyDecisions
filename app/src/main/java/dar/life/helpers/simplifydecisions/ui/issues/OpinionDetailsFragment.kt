@@ -1,18 +1,21 @@
-package dar.life.helpers.simplifydecisions.ui
+package dar.life.helpers.simplifydecisions.ui.issues
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.transition.Slide
 import android.transition.TransitionInflater
-import android.transition.Visibility
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.animation.AnimationUtils
+import android.view.animation.TranslateAnimation
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.CompoundButton
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,6 +24,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+import com.google.android.material.textfield.TextInputLayout
 import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_CATEGORY
 import dar.life.helpers.simplifydecisions.Constants.Companion.NEW_CATEGORY
 import dar.life.helpers.simplifydecisions.R
@@ -28,9 +32,6 @@ import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.data.Opinion.Task
 import dar.life.helpers.simplifydecisions.databinding.FragmentOpinionDetailsBinding
-import dar.life.helpers.simplifydecisions.ui.issues.IssuesViewModel
-import dar.life.helpers.simplifydecisions.ui.issues.OnTaskTextChangedListener
-import dar.life.helpers.simplifydecisions.ui.issues.TasksAdapter
 import kotlinx.android.synthetic.main.fragment_opinion_details.*
 
 
@@ -40,6 +41,7 @@ import kotlinx.android.synthetic.main.fragment_opinion_details.*
 class OpinionDetailsFragment : Fragment(),
     OnTaskTextChangedListener {
 
+    private var isNewOpinion: Boolean = false
     private lateinit var mTasksAdapter: TasksAdapter
     private val mOpinion: Opinion? get() = viewModel.lastUsedOpinion
     private val mIssue: Issue? get() = viewModel.lastUsedIssue
@@ -67,94 +69,136 @@ class OpinionDetailsFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentOpinionDetailsBinding.inflate(layoutInflater, container, false)
+        setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.opinion_details_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(args.opinionTitle == "New Opinion")
-            startWithTitleEdit()
-        else{//TODO: new UNIQUE transition names
-            binding.opinionTitleTv.transitionName = args.issueId.toString() + args.opinionTitle
-            binding.opinionTitleTv.text = args.opinionTitle
+        if(args.opinionTitle == "New Opinion") {
+            isNewOpinion = true
+            setupTopDrawer()
+        }
+        else{
+            val transitionName = args.issueId.toString() + args.opinionTitle
+            binding.opinionDetailsToolbarTitle.transitionName = transitionName
+            binding.opinionDetailsToolbarTitle.text = args.opinionTitle
+
+            binding.topDrawerOpinionDetails.transitionName = transitionName +
+                    getString(R.string.frame_transition_name_extension)
+            binding.topDrawerOpinionDetails.setBackgroundColor(args.opinionColor)
+            Handler().postDelayed({
+                setupTopDrawer()
+            }, 300)
+
+
         }
 
     }
 
-    private fun startWithTitleEdit() {
-        binding.opinionTitleTv.visibility = View.INVISIBLE
-        binding.opinionTitleEt.visibility = View.VISIBLE
-        binding.editOpinionTitleIcon.setImageDrawable(
-            (mContext.getDrawable(R.drawable.confirm_edit_icon))
-        )
-        binding.opinionTitleEt.requestFocus()
-        val imm =
-            mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        imm!!.showSoftInput(binding.opinionTitleEt, InputMethodManager.SHOW_IMPLICIT)
+    private fun setupTopDrawer() {
+        binding.topDrawerOpinionDetails.elevation = 0f
+        binding.root.setBackgroundColor(args.opinionColor)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        val slide = Slide(Gravity.BOTTOM)
+        slide.addTarget(binding.opinionDetailsBottomDrawer)
+        slide.interpolator = AnimationUtils.loadInterpolator(
+            mContext,
+            android.R.interpolator.linear_out_slow_in
+        )
+        requireActivity().window.enterTransition = slide
         viewModel = ViewModelProvider(this).get(IssuesViewModel::class.java)
+        initToolbar()
         initViews()
+    }
+
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_edit_opinion_title -> editTitle()
+            R.id.action_save_opinion -> saveClicked()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun editTitle() {
+        val alertDialog: AlertDialog = AlertDialog.Builder(mContext).create()
+        val dialogView = layoutInflater.inflate(R.layout.edit_title_layout, null)
+
+        val textInputLayout: TextInputLayout = dialogView.findViewById(R.id.text_input_layout)
+        val dialogTitle: TextView = dialogView.findViewById(R.id.edit_title_header_tv)
+        val cancelBtn: Button = dialogView.findViewById(R.id.et_cancel_button)
+        val saveBtn: Button = dialogView.findViewById(R.id.et_save_button)
+
+        dialogTitle.text = getString(R.string.edit_opinion_title_label)
+        textInputLayout.hint = getString(R.string.opinion_title)
+        mOpinion?.let {
+            textInputLayout.editText?.setText(mOpinion?.title)
+        }
+
+        cancelBtn.setOnClickListener {
+            alertDialog.dismiss()
+        }
+        saveBtn.setOnClickListener {
+            mOpinion?.title = textInputLayout.editText?.text.toString()
+            binding.opinionDetailsToolbarTitle.text = mOpinion?.title
+            alertDialog.dismiss()
+        }
+        alertDialog.setView(dialogView)
+        alertDialog.show()
+
+        val imm =
+            mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        imm!!.showSoftInput(binding.opinionDetailsToolbarTitle, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun initViews() {
         viewModel.getIssueById(args.issueId).observe(viewLifecycleOwner, Observer {
             it?.let {
                 viewModel.lastUsedIssue = it
-                issueFoundInflateFragment() } })
+                issueFoundInflateFragment(it) } })
 
-        saveBtnInit()
-
-        editTitleViewInit()
-
-        binding.ofFirstCb.setOnCheckedChangeListener {
-                _, isChecked ->
-            mOpinion?.isOfFirstOption = isChecked
-        }
+        if(isNewOpinion) editTitle()
     }
 
-    private fun editTitleViewInit() {
-        binding.editOpinionTitleIcon.setOnClickListener {
-            if (UiUtils.handleEditTitleClick(
-                    mContext,
-                    binding.opinionTitleTv,
-                    binding.opinionTitleEt,
-                    binding.editOpinionTitleIcon
-                )
-            ) {
-                mOpinion?.title = binding.opinionTitleEt.text.toString()
-                binding.opinionTitleTv.text = mOpinion?.title
-            }
+    private fun saveClicked() {
+        mIssue?.let {
+            if (category == "")
+                category = DEFAULT_CATEGORY
+            it.changeOpinionCategory(mOpinion!!, category)
+            viewModel.updateIssue(mIssue!!)
         }
+        findNavController().popBackStack()
     }
 
-    private fun saveBtnInit() {
-        binding.saveOpinionBtn.setOnClickListener {
-            mIssue?.let {
-                it.changeOpinionCategory(mOpinion!!, category)
-                viewModel.updateIssue(mIssue!!) }
-            findNavController().popBackStack()
-        }
-    }
+    private fun issueFoundInflateFragment(issue: Issue) {
 
+        binding.relatedIssueTitle.text = issue.title
 
-    private fun issueFoundInflateFragment() {
         viewModel.lastUsedOpinion =
-            mIssue!!.opinions.values.flatten().firstOrNull { it.title == args.opinionTitle }
+            issue.opinions.values.flatten().firstOrNull { it.title == args.opinionTitle }
         if (mOpinion == null)
-            viewModel.lastUsedOpinion = Opinion(getString(R.string.default_opinion_title))
+            viewModel.lastUsedOpinion = Opinion(getString(R.string.default_opinion_title),
+                isOfFirstOption = args.ofFirstOption)
                 .also {newOpinion -> mIssue!!.opinions[DEFAULT_CATEGORY]!!.add(newOpinion)}
 
-        binding.relatedIssueTitle.text = mIssue?.title
+        binding.opinionDetailsToolbarTitle.text = mOpinion?.title
         setupRadioGroup()
         setupTasks()
 
         initCategorySpinner()
     }
+
 
     private fun initCategorySpinner() {
         binding.categorySpinner.adapter =
@@ -187,6 +231,11 @@ class OpinionDetailsFragment : Fragment(),
             text, _, _, _ ->
             category = text.toString()
         })
+    }
+
+    private fun initToolbar() {
+        binding.editOpinionToolbar.title = ""
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.editOpinionToolbar)
     }
 
     private fun setupTasks() {
@@ -230,6 +279,30 @@ class OpinionDetailsFragment : Fragment(),
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    fun slideUp(view: View) {
+        view.visibility = View.VISIBLE
+        val animate = TranslateAnimation(
+            0f,  // fromXDelta
+            0f,  // toXDelta
+            view.height.toFloat(),  // fromYDelta
+            0f
+        ) // toYDelta
+        animate.duration = 500
+        view.startAnimation(animate)
+    }
+
+    // slide the view from its current position to below itself
+    fun slideDown(view: View) {
+        val animate = TranslateAnimation(
+            0f,  // fromXDelta
+            0f,  // toXDelta
+            0f,  // fromYDelta
+            view.height.toFloat()
+        ) // toYDelta
+        animate.duration = 500
+        view.startAnimation(animate)
     }
 
     override fun onTaskTextChange(pos: Int, text: String) {

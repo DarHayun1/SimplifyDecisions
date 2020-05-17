@@ -7,6 +7,7 @@ import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
@@ -15,10 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import dar.life.helpers.simplifydecisions.Constants
 import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_A_ICON
 import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_B_ICON
-import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.databinding.FragmentNewIssueTitleBinding
 
@@ -28,6 +27,8 @@ class NewIssueTitleFragment : Fragment() {
     private lateinit var mContext: Context
     private var _binding: FragmentNewIssueTitleBinding? = null
     private val binding get() = _binding!!
+
+    private val mIssue: Issue? get() = viewModel.lastUsedIssue
 
     private val args: NewIssueTitleFragmentArgs by navArgs()
 
@@ -62,33 +63,34 @@ class NewIssueTitleFragment : Fragment() {
     }
 
     private fun initView() {
+        viewModel.lastUsedIssue = Issue.fromTemplate(args.template)
         initSpinners()
-        viewModel.addNewIssue(Issue.fromTemplate(args.template))
         binding.fromTemplateTitleEt.apply {
+            imeOptions = EditorInfo.IME_ACTION_DONE
             requestFocus()
             val imm =
                 mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
             imm!!.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
             addTextChangedListener(onTextChanged = {text, _, _, _ ->
-                viewModel.lastUsedIssue?.title = text.toString()
+                mIssue?.title = text.toString()
             })
         }
         binding.firstOptionEt.apply {
-            setText(viewModel.lastUsedIssue!!.optionAName)
+            setText(mIssue!!.optionAName)
             addTextChangedListener(onTextChanged = {text, _, _, _ ->
-                viewModel.lastUsedIssue?.optionAName = text.toString()
+                mIssue?.optionAName = text.toString()
             })
         }
         binding.secondOptionEt.apply {
-            setText(viewModel.lastUsedIssue!!.optionBName)
+            setText(mIssue!!.optionBName)
             addTextChangedListener(onTextChanged = {text, _, _, _ ->
-                viewModel.lastUsedIssue?.optionBName = text.toString()
+                mIssue?.optionBName = text.toString()
             })
         }
 
         binding.newIssueNextFab.setOnClickListener{
-            viewModel.lastUsedIssue?.let {
-                    it1 -> viewModel.updateIssue(it1)
+            mIssue?.let {
+                    it1 -> viewModel.addNewIssue(it1)
                 findNavController().navigate(
                     NewIssueTitleFragmentDirections.actionNewIssueTitleFragmentToEditIssueFragment(
                         it1.id, it1.title
@@ -101,8 +103,10 @@ class NewIssueTitleFragment : Fragment() {
     }
 
     private fun initSpinners() {
-        binding.spinner1.adapter = IconsAdapter(mContext, getIconsList())
-        binding.spinner2.adapter = IconsAdapter(mContext, getIconsList())
+        val iconsList = getIconsList()
+        binding.spinner1.adapter = IconsAdapter(mContext, iconsList)
+        binding.spinner2.adapter = IconsAdapter(mContext, iconsList)
+        binding.spinner2.setSelection(1)
 
         binding.spinner1.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
@@ -111,7 +115,7 @@ class NewIssueTitleFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                viewModel.lastUsedIssue?.optionAIconName = getIconsNames()[position]
+                mIssue?.optionAIconName = getIconsNames()[position]
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -124,7 +128,7 @@ class NewIssueTitleFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                viewModel.lastUsedIssue?.optionBIconName = getIconsNames()[position]
+                mIssue?.optionBIconName = getIconsNames()[position]
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}

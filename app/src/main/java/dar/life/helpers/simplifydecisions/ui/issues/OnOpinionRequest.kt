@@ -5,6 +5,7 @@ import dar.life.helpers.simplifydecisions.data.Opinion
 
 interface OnOpinionRequest {
 
-    fun openOpinionScreen(opinion: Opinion, titleView: View)
+    fun openOpinionScreen(opinion: Opinion, opinionItemTv:View, opinionItemFrame: View)
+    fun openNewOpinionScreen(isOfFirstOption: Boolean)
 
 }

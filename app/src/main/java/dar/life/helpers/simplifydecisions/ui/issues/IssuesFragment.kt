@@ -1,8 +1,8 @@
-package dar.life.helpers.simplifydecisions.ui
+package dar.life.helpers.simplifydecisions.ui.issues
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import dar.life.helpers.simplifydecisions.databinding.FragmentIssuesBinding
-import dar.life.helpers.simplifydecisions.ui.issues.IssuesAdapter
-import dar.life.helpers.simplifydecisions.ui.issues.IssuesViewModel
+import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import kotlinx.android.synthetic.main.fragment_issues.*
 
 /**
@@ -50,6 +49,12 @@ class IssuesFragment : Fragment(),
         super.onAttach(context)
 
         mContext = context
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
     }
 
     override fun onCreateView(
@@ -101,10 +106,15 @@ class IssuesFragment : Fragment(),
     }
 
     override fun openDetailsScreen(id: Int, title: String, view: View) {
+        val extras = FragmentNavigatorExtras(
+            view to id.toString()
+        )
         findNavController().navigate(
-            IssuesFragmentDirections.actionIssuesFragmentToEditIssueFragment(id, title))
-//                    issueId,
-//                    mContext.getString(R.string.new_issue_title)
+            IssuesFragmentDirections.actionIssuesFragmentToEditIssueFragment(
+                id,
+                title
+            ),
+            extras)
     }
 
     override fun onDestroyView() {

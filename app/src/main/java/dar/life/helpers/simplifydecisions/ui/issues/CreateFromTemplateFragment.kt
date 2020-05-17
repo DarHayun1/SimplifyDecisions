@@ -1,23 +1,18 @@
-package dar.life.helpers.simplifydecisions.ui
+package dar.life.helpers.simplifydecisions.ui.issues
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionInflater
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.databinding.FragmentCreateFromTemplateBinding
-import dar.life.helpers.simplifydecisions.ui.issues.IssuesViewModel
-import dar.life.helpers.simplifydecisions.ui.issues.OnTemplateClickedListener
-import dar.life.helpers.simplifydecisions.ui.issues.TopicsAdapter
-
 
 class CreateFromTemplateFragment : Fragment(), OnTemplateClickedListener {
 
@@ -37,6 +32,8 @@ class CreateFromTemplateFragment : Fragment(), OnTemplateClickedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
     }
 
     override fun onCreateView(
@@ -64,8 +61,7 @@ class CreateFromTemplateFragment : Fragment(), OnTemplateClickedListener {
 
     override fun onTemplateClicked(template: String) {
         val action =
-            CreateFromTemplateFragmentDirections
-                .actionCreateFromTemplateFragmentToNewIssueTitleFragment()
+            CreateFromTemplateFragmentDirections.actionCreateFromTemplateFragmentToNewIssueTitleFragment()
         action.template = template
         val extras = FragmentNavigatorExtras(
             binding.fromTemplateBottomDrawer to getString(R.string.bot_drawer_trans_name),

@@ -3,27 +3,29 @@ package dar.life.helpers.simplifydecisions.ui.decisions
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputLayout
 
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Decision
+import dar.life.helpers.simplifydecisions.data.Goal
 import dar.life.helpers.simplifydecisions.databinding.DecisionDetailsFragmentBinding
-import dar.life.helpers.simplifydecisions.ui.UiUtils
-import kotlinx.android.synthetic.main.decision_details_fragment.*
-import kotlinx.android.synthetic.main.fragment_edit_issue.*
 import java.time.format.DateTimeFormatter.ofLocalizedDate
 import java.time.format.FormatStyle
 
-class DecisionDetailsFragment : Fragment() {
+class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
+    private var isNewDecision: Boolean = false
     private lateinit var mContext: Context
     private var mDecision: Decision? = null
     private var _binding: DecisionDetailsFragmentBinding? = null
@@ -53,7 +55,13 @@ class DecisionDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DecisionDetailsFragmentBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.decision_details_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -66,8 +74,13 @@ class DecisionDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.decisionTitleTv.transitionName = args.decisionId.toString()
-        binding.decisionTitleTv.text = args.decisionTitle
+
+        if (args.decisionId == -1)
+        {
+            isNewDecision = true
+        }
+        binding.decisionDetailsToolbarTitle.transitionName = args.decisionId.toString()
+        binding.decisionDetailsToolbarTitle.text = args.decisionTitle
     }
 
     private fun initViews() {
@@ -78,27 +91,89 @@ class DecisionDetailsFragment : Fragment() {
                     populateUi(it)
                 }
             })
+        setupGoals()
     }
 
-    private fun populateUi(decision: Decision) {
-        binding.decisionDateTv.text = decision.date.format(ofLocalizedDate(FormatStyle.LONG))
-        binding.decisionTitleTv.text = decision.title
-        binding.editDecisionTitleIcon.setOnClickListener {
-            if (UiUtils.handleEditTitleClick(mContext,
-                    decision_title_tv,
-                    decision_title_et,
-                    edit_decision_title_icon)) {
-                decision.title = binding.decisionTitleEt.text.toString()
-                issue_title_tv.text = decision.title
-                viewModel.updateDecision(decision)
-            }
-        }
+    private fun setupGoals() {
+        val layoutManager = LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
+        binding.goalsRv.adapter = GoalsAdapter(mContext, this)
+        binding.goalsRv.layoutManager = layoutManager
 
+        binding.addAGoal.setOnClickListener{onNewGoalRequest()}
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_edit_decision_title -> {
+                editDecisionTitle()
+                true
+            }
+            R.id.action_collaborate_decision -> {
+                handleCollaborateClick()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+
+        }
+    }
+
+    private fun handleCollaborateClick() {
+        Toast.makeText(mContext, "Upcoming feature (: ", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun editDecisionTitle() {
+        val dialogBuilder: AlertDialog = AlertDialog.Builder(mContext).create()
+        val dialogView = layoutInflater.inflate(R.layout.edit_title_layout, null)
+
+        val textInputLayout: TextInputLayout = dialogView.findViewById(R.id.text_input_layout)
+        val dialogTitle: TextView = dialogView.findViewById(R.id.edit_title_header_tv)
+        val cancelBtn: Button = dialogView.findViewById(R.id.et_cancel_button)
+        val saveBtn: Button = dialogView.findViewById(R.id.et_save_button)
+
+        dialogTitle.text = getString(R.string.edit_issue_title_label)
+        textInputLayout.editText?.setText(mDecision?.title)
+        cancelBtn.setOnClickListener {
+            dialogBuilder.dismiss()
+        }
+        saveBtn.setOnClickListener {
+            mDecision?.title = textInputLayout.editText?.text.toString()
+            binding.decisionDetailsToolbarTitle.text = mDecision?.title
+            dialogBuilder.dismiss()
+        }
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.show()
+    }
+
+    private fun populateUi(decision: Decision) {
+        binding.decisionDateTv.text = decision.date.format(ofLocalizedDate(FormatStyle.LONG))
+        binding.decisionDetailsToolbarTitle.text = decision.title
+        (binding.goalsRv.adapter as GoalsAdapter).goalsList = decision.goals
+    }
+
+    override fun onNewGoalRequest() {
+        val dialogBuilder: AlertDialog = AlertDialog.Builder(mContext).create()
+        val dialogView = layoutInflater.inflate(R.layout.new_goal_layout, null)
+
+        val textInputLayout: TextInputLayout = dialogView.findViewById(R.id.goal_edit_text_input_layout)
+        val cancelBtn: Button = dialogView.findViewById(R.id.edit_goal_cancel_button)
+        val saveBtn: Button = dialogView.findViewById(R.id.edit_goal_save_button)
+
+        textInputLayout.editText?.setText(mDecision?.title)
+        cancelBtn.setOnClickListener {
+            dialogBuilder.dismiss()
+        }
+        saveBtn.setOnClickListener {
+            mDecision?.goals?.add(Goal(textInputLayout.editText?.text.toString()))
+            binding.goalsRv.adapter?.notifyDataSetChanged()
+            dialogBuilder.dismiss()
+        }
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.show()
     }
 
 }

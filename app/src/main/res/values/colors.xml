@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryLight">#6200EE</color>
-    <color name="colorPrimaryDark">#223646</color>
+    <color name="colorPrimaryDark">@color/app_blue_dark</color>
 
     <color name="colorAccent">#03DAC5</color>
     <color name="colorPositive">#1BDD23</color>
@@ -13,4 +13,17 @@
     <color name="prioRed">#E74C3C</color>
     <color name="prioOrange">#E67E22</color>
     <color name="prioYellow">#F1C40F</color>
+
+    <color name="app_red_light">#ec1f25</color>
+    <color name="app_red_pink">#bf263a</color>
+    <color name="app_red_dark">#941924</color>
+    <color name="app_purple">#5b284a</color>
+    <color name="app_yellow">#ffd064</color>
+    <color name="app_yellow_dark">#cf9b28</color>
+    <color name="app_green_light">#a4cf73</color>
+    <color name="app_turquoise">#08b9ab</color>
+    <color name="app_blue_light">#d0eefc</color>
+    <color name="app_grey">#58585a</color>
+    <color name="app_blue_dark">#223646</color>
+
 </resources>

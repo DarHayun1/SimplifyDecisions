@@ -7,6 +7,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionOverflowButtonStyle">@style/AppTheme.OverFlow</item>
+        <item name="android:listDivider">@color/app_yellow</item>
+    </style>
+
+    <style name="AppTheme.OverFlow">
+        <item name="android:src">@drawable/dark_menu_button</item>
     </style>
 
     <style name="header_text_style">
@@ -26,12 +32,26 @@
         <item name="android:textSize">@dimen/opinion_item_text_size</item>
         <item name="android:gravity">center</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:lines">3</item>
+        <item name="android:lines">2</item>
     </style>
 
-    <style name="opinionItemFrameStyle">
-        <item name="android:layout_marginHorizontal">8dp</item>
-        <item name="android:clickable">true</item>
-        <item name="elevation">8dp</item>
+    <style name="ToolbarTitleStyle">
+        <item name="android:textSize">@dimen/issue_title_text_size</item>
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+    </style>
+
+    <style name="ToolbarSecondaryTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+    </style>
+
+    <style name="textInputStyle">
+        <item name="counterEnabled">true</item>
+        <item name="counterMaxLength">16</item>
+        <item name="endIconDrawable">@drawable/ic_check_circle</item>
+        <item name="endIconMode">custom</item>
+        <item name="endIconTint">@color/app_green_light</item>
+
     </style>
 </resources>

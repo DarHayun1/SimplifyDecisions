@@ -1,27 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.IssuesFragment">
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".ui.issues.IssuesFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/issues_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addIssueFab"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="40dp"
-        android:clickable="true"
-        style="@style/Widget.Design.FloatingActionButton"
-        android:backgroundTint="@color/colorAccent"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <ImageView
+            android:id="@+id/small_drawer_logo"
+            android:layout_width="@dimen/drawer_logo_size"
+            android:layout_height="@dimen/drawer_logo_size"
+            android:transitionName="@string/dash_to_issues_logo_trans"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/temp_logo"
+            android:elevation="16dp"
+            app:layout_constraintBottom_toTopOf="@id/from_template_bottom_drawer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/from_template_bottom_drawer" />
+
+        <FrameLayout
+            android:id="@+id/from_template_bottom_drawer"
+            android:transitionName="@string/bot_drawer_trans_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_drawer_background"
+            android:padding="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        </FrameLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addIssueFab"
+            style="@style/Widget.Design.FloatingActionButton"
+            android:layout_width="@dimen/fab_size"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginTop="@dimen/bottom_drawer_top_pad"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="40dp"
+            android:backgroundTint="@color/colorAccent"
+            android:clickable="true"
+            android:src="@android:drawable/ic_input_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/from_template_bottom_drawer" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

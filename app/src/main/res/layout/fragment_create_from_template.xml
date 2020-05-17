@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark"
     android:paddingTop="@dimen/top_padding_templates"
-    tools:context=".ui.CreateFromTemplateFragment">
+    tools:context=".ui.issues.CreateFromTemplateFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,23 +72,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
-
-            <LinearLayout
-                android:id="@+id/template_title_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_label"/>
-
-                <EditText
-                    android:id="@+id/from_template_title_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
 
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

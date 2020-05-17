@@ -1,8 +1,11 @@
 package dar.life.helpers.simplifydecisions.data
 
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import androidx.room.*
+import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_A_COLOR
 import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_A_ICON
+import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_B_COLOR
 import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_B_ICON
 import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_CATEGORY
 import dar.life.helpers.simplifydecisions.repository.DateConverter
@@ -28,6 +31,8 @@ data class Issue(
     var opinions: MutableMap<String, MutableList<Opinion>> = createNewMap()
     var optionAIconName: String = DEFAULT_A_ICON
     var optionBIconName: String = DEFAULT_B_ICON
+    var optionAColor: Int = Color.parseColor(DEFAULT_A_COLOR)
+    var optionBColor: Int = Color.parseColor(DEFAULT_B_COLOR)
 
     private fun createNewMap(): MutableMap<String, MutableList<Opinion>> {
         val generalList: MutableList<Opinion> = mutableListOf()
@@ -78,6 +83,7 @@ data class Issue(
     fun toDecision(): Decision {
         isActive = false
         return Decision(title, description, opinions, id)
+            .also { it.goals.addAll(listOf(Goal("do that"), Goal("do this"))) }
     }
 
     fun changeOpinionCategory(opinion: Opinion, category: String) {

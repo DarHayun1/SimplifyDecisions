@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import dar.life.helpers.simplifydecisions.R
 
-class IconsAdapter(context: Context, objects: MutableList<Drawable>) :
-    ArrayAdapter<Drawable>(context, 0, objects) {
+class IconsAdapter(context: Context, val icons: MutableList<Drawable>) :
+    ArrayAdapter<Drawable>(context, 0, icons) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return initView(position, convertView, parent)

@@ -5,16 +5,18 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
-import android.view.MotionEvent
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.BlendModeColorFilterCompat
-import androidx.core.graphics.BlendModeCompat
+import androidx.appcompat.widget.Toolbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dar.life.helpers.simplifydecisions.R
-import kotlinx.android.synthetic.main.fragment_edit_issue.*
+
 
 class UiUtils {
 
@@ -44,16 +46,17 @@ class UiUtils {
                     })
             }
         }
-
+        // Returns true if the edit is done
         fun handleEditTitleClick(
             context: Context,
             textView: TextView,
-            editText: EditText,
+            editTextLayout: TextInputLayout,
+            editText: TextInputEditText,
             icon: ImageView
         ): Boolean {
             if (textView.visibility == View.VISIBLE) {
                 textView.visibility = View.INVISIBLE
-                editText.visibility = View.VISIBLE
+                editTextLayout.visibility = View.VISIBLE
                 editText.setText(textView.text)
                 icon.setImageDrawable(
                     context
@@ -62,7 +65,7 @@ class UiUtils {
                 return false
             }
             textView.visibility = View.VISIBLE
-            editText.visibility = View.INVISIBLE
+            editTextLayout.visibility = View.INVISIBLE
             icon.setImageDrawable(
                 (context
                     .getDrawable(R.drawable.pencil_edit_icon))
@@ -75,6 +78,14 @@ class UiUtils {
             )
             return true
 
+        }
+
+        fun setColorFilter(drawable: Drawable, color: Int) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                drawable.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_ATOP)
+            } else {
+                drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+            }
         }
     }
 

@@ -31,6 +31,10 @@ data class Opinion(var title: String,
         }
     }
 
+    fun tasksLeftText(): CharSequence? {
+        return "${tasks.filter {it.isChecked}.size}/${tasks.size}"
+    }
+
     data class Task(val text: String) {
         var isChecked = false
 

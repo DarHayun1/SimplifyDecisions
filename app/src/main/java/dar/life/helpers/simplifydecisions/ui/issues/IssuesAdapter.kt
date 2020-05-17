@@ -22,6 +22,8 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
         field = value
         notifyDataSetChanged()
     }
+
+    //Holding the list position of the current expanded item
     var expandedPos: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssueVH {

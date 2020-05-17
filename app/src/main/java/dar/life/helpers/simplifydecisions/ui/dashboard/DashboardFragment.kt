@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.databinding.DashboardFragmentBinding
@@ -33,8 +34,13 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
 
     private fun initViews() {
         binding.issuesBtn.setOnClickListener{
+            val extras = FragmentNavigatorExtras(
+                binding.dashboardLogo to getString(R.string.dash_to_issues_logo_trans),
+                binding.dashboardBackground to getString(R.string.bot_drawer_trans_name)
+            )
             findNavController().navigate(
-                DashboardFragmentDirections.actionDashboardFragmentToIssuesFragment()
+                DashboardFragmentDirections.actionDashboardFragmentToIssuesFragment(),
+                extras
             )
         }
         binding.decisionsBtn.setOnClickListener{

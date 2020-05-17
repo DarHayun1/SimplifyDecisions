@@ -5,6 +5,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import dar.life.helpers.simplifydecisions.repository.DateConverter
+import dar.life.helpers.simplifydecisions.repository.GoalsConverter
 import dar.life.helpers.simplifydecisions.repository.OpinionConverter
 import java.time.Instant
 import java.time.LocalDateTime
@@ -24,8 +25,8 @@ data class Decision(
     var date: LocalDateTime = LocalDateTime.now()
     @PrimaryKey(autoGenerate = true)
     var id: Int = date.toEpochSecond(ZoneOffset.UTC).toInt()
-    @TypeConverters(DateConverter::class)
-    var reminders: MutableList<Instant> = mutableListOf()
+    @TypeConverters(GoalsConverter::class)
+    var goals: MutableList<Goal> = mutableListOf()
 
     @Ignore
     var expanded: Boolean = false

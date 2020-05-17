@@ -77,12 +77,11 @@ class TasksAdapter(private val context: Context, private val mCallback: OnTaskTe
                 return@setOnTouchListener false
             }
         }
-        val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
+        private val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
 
         fun bindItem(task: Opinion.Task){
             editText.apply {
                 setText(task.text)
-                hint = task.text
                 addTextChangedListener(onTextChanged = {
                     text, _, _, _ ->
                     text?.let {
