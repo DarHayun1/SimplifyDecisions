@@ -2,7 +2,6 @@ package dar.life.helpers.simplifydecisions.ui.issues
 
 import android.content.Context
 import android.graphics.Paint
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -15,17 +14,32 @@ import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
+import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
 
-
-class TasksAdapter(
+class IssueTasksAdapter(
     private val context: Context,
-    private val mCallback: OnTaskTextChangedListener)
-    : RecyclerView.Adapter<TasksAdapter.TaskVH>() {
-    var tasks: MutableList<Opinion.Task> = mutableListOf()
+    private val mCallback: IssueDetailsTaskChangedListener
+) : RecyclerView.Adapter<IssueTasksAdapter.TaskVH>() {
+    private var tasksWithLabels: List<Pair<String, Opinion.Task>> = mutableListOf()
 
-    fun setData(newTasks: MutableList<Opinion.Task>){
-        tasks = newTasks
+    fun setData(issue: Issue) {
+        //TODO: Fix implementation
+        tasksWithLabels = mutableListOf<Pair<String, Opinion.Task>>().apply {
+            issue.opinions.forEach { (cat, opinions) ->
+                opinions.forEach { opinion ->
+                    opinion.tasks.forEach {
+                        val optionTitle =
+                            if (opinion.isOfFirstOption) issue.optionAName
+                            else issue.optionBName
+                        this.add(Pair("@ $cat\\$optionTitle", it))
+                    }
+                }
+            }
+            val complexComparator =
+                compareBy<Pair<String, Opinion.Task>>({it.second.isChecked}, {it.first})
+            this.sortWith(complexComparator)
+        }
         notifyDataSetChanged()
     }
 
@@ -37,12 +51,11 @@ class TasksAdapter(
         return TaskVH(view, mCallback)
     }
 
-    override fun getItemCount(): Int = tasks.size
+    override fun getItemCount(): Int = tasksWithLabels.size
 
     override fun onBindViewHolder(holder: TaskVH, position: Int) {
-        Log.d("AAAAA", "onBind - $position,\n ${tasks[position]}")
-        holder.bindItem(tasks[position])
-        if (taskOnEdit && position == tasks.size - 1) {
+        holder.bindItem(tasksWithLabels[position])
+        if (taskOnEdit && position == tasksWithLabels.size - 1) {
             !taskOnEdit
             holder.editText.apply {
                 isCursorVisible = true
@@ -52,7 +65,6 @@ class TasksAdapter(
         }
 
         holder.editText.setOnEditorActionListener { _, actionId, _ ->
-            Log.d("TASK", "editor $tasks $position $actionId")
             if (actionId == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
                 holder.editText.isCursorVisible = false
                 val imm: InputMethodManager? =
@@ -66,53 +78,42 @@ class TasksAdapter(
         }
     }
 
-
-    fun newTaskAdded(newTasks: MutableList<Opinion.Task>) {
-        tasks = newTasks
-        taskOnEdit = true
-        notifyDataSetChanged()
-    }
-
-    fun removeAt(adapterPosition: Int) {
-        tasks.removeAt(adapterPosition)
-        notifyDataSetChanged()
-    }
-
-    fun restoreItem(deletedTask: Opinion.Task, deletedIndex: Int) {
-        tasks.add(deletedIndex, deletedTask)
-        notifyItemInserted(deletedIndex)
-    }
-
-    class TaskVH(itemView: View, val mCallback: OnTaskTextChangedListener) : RecyclerView.ViewHolder(itemView){
+    class TaskVH(itemView: View, val mCallback: IssueDetailsTaskChangedListener) :
+        RecyclerView.ViewHolder(itemView) {
+        val relatedOpinionTv: TextView = itemView.findViewById(R.id.related_opinion_label)
         val editText: EditText = itemView.findViewById<EditText>(R.id.task_item_et)
+
         init {
             editText.run {
                 imeOptions = EditorInfo.IME_ACTION_DONE
-                setOnTouchListener { _ , _ ->
+                setOnTouchListener { _, _ ->
                     this.isCursorVisible = true
                     return@setOnTouchListener false
                 }
-             }
+            }
         }
+
         private val checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
 
-        fun bindItem(task: Opinion.Task){
+        fun bindItem(task: Pair<String, Opinion.Task>) {
+            relatedOpinionTv.visibility = View.VISIBLE
+            relatedOpinionTv.text = "${task.first}"
             editText.apply {
-                setText(task.text)
-                addTextChangedListener(onTextChanged = {
-                    text, _, _, _ ->
+                setText(task.second.text)
+                addTextChangedListener(onTextChanged = { text, _, _, _ ->
                     text?.let {
-                        mCallback.onTaskTextChange(adapterPosition, it.toString())
+                        task.second.text = it.toString()
+                        mCallback.taskTextChanged()
                     }
                 })
             }
-            checkBox.isChecked = task.isChecked
-            crossIfTChecked(task.isChecked)
+            checkBox.isChecked = task.second.isChecked
+            crossIfTChecked(task.second.isChecked)
 
             checkBox.setOnCheckedChangeListener { v, isChecked ->
-                Log.d("AAAAA", "checklistener - $adapterPosition")
-                if (v==checkBox) {
-                    mCallback.onCheckedChanged(adapterPosition, isChecked)
+                if (v == checkBox) {
+                    task.second.isChecked = isChecked
+                    mCallback.taskCheckedChanged()
                     crossIfTChecked(isChecked)
 
                 }

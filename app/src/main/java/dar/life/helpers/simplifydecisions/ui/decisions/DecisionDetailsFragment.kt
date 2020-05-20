@@ -9,10 +9,12 @@ import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -74,6 +76,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         initToolbar()
         initViews()
     }
+
 
     private fun initToolbar() {
         binding.decisionDetailsToolbar.title = ""
@@ -139,11 +142,9 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         val dialogView = layoutInflater.inflate(R.layout.edit_title_layout, null)
 
         val textInputLayout: TextInputLayout = dialogView.findViewById(R.id.text_input_layout)
-        val dialogTitle: TextView = dialogView.findViewById(R.id.edit_title_header_tv)
         val cancelBtn: Button = dialogView.findViewById(R.id.et_cancel_button)
         val saveBtn: Button = dialogView.findViewById(R.id.et_save_button)
 
-        dialogTitle.text = getString(R.string.edit_issue_title_label)
         textInputLayout.editText?.setText(mDecision?.title)
         cancelBtn.setOnClickListener {
             dialogBuilder.dismiss()

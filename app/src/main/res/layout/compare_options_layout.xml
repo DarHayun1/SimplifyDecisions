@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include
+        android:id="@+id/options_headers"
+        layout="@layout/options_headers_layout"
+        app:layout_constraintBottom_toTopOf="@id/edit_issue_bottom_drawer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/edit_issue_bottom_drawer" />
+
+    <FrameLayout
+        android:id="@+id/edit_issue_bottom_drawer"
+        android:layout_width="match_parent"
+        android:transitionName="@string/bot_drawer_trans_name"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_drawer_background"
+        android:layout_marginTop="40dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/complex_opinions_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="64dp"
+            android:elevation="4dp"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingBottom="24dp" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimaryDark" />
+
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

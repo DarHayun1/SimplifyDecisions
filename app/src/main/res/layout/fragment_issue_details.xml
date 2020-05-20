@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-             app:subtitleTextAppearance="@style/ToolbarSecondaryTextStyle"
+            app:subtitleTextAppearance="@style/ToolbarSecondaryTextStyle"
             android:background="@android:color/transparent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -43,6 +43,46 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                android:text="Switch"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="@dimen/switch_icon_size"
+                android:layout_height="@dimen/switch_icon_size"
+                android:background="@drawable/round_icon_background"
+                android:elevation="8dp"
+                android:padding="2dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/compare_icon"
+                app:layout_constraintEnd_toStartOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="@dimen/switch_icon_size"
+                android:layout_height="@dimen/switch_icon_size"
+                android:background="@drawable/round_icon_background"
+                android:elevation="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/checklist_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/switch_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="switch"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <include
                 android:id="@+id/options_headers"
                 layout="@layout/options_headers_layout"
@@ -59,22 +99,54 @@
                 android:background="@drawable/bottom_drawer_background"
                 android:layout_marginTop="40dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/complex_opinions_rv"
+                <FrameLayout
+                    android:id="@+id/compare_options_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/complex_opinions_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="64dp"
+                        android:elevation="4dp"
+                        android:paddingStart="@dimen/activity_horizontal_margin"
+                        android:paddingEnd="@dimen/activity_horizontal_margin"
+                        android:paddingBottom="24dp" />
+
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/colorPrimaryDark" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/unfinished_tasks_frame"
+                    android:visibility="invisible"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="64dp"
-                    android:elevation="4dp"
-                    android:paddingStart="@dimen/activity_horizontal_margin"
-                    android:paddingEnd="@dimen/activity_horizontal_margin"
-                    android:paddingBottom="24dp" />
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/unfinished_tasks"
+                        style="@style/TextAppearance.AppCompat.Large"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@android:color/primary_text_light"/>
 
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="4dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@color/colorPrimaryDark" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/all_tasks_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:descendantFocusability="afterDescendants"
+                        android:focusableInTouchMode="true"
+                        android:clickable="true" />
+                </LinearLayout>
+
 
             </FrameLayout>
 
@@ -82,5 +154,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </LinearLayout>
+</LinearLayout>
+
+
 

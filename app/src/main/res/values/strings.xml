@@ -59,6 +59,25 @@
     <string name="dash_to_issues_bot_trans">dash_to_issues_bot_trans</string>
     <string name="dash_to_issues_logo_trans">dashtoissueslogotrans</string>
     <string name="noIssueTitle">Unnamed Issue</string>
+    <string name="unfinished_tasks">Unfinished Tasks</string>
+    <string name="alertdialog_title">Warning</string>
+    <string name="unsaved_progress_message">There is unsaved progress</string>
+    <string name="ignore_button_text">IGNORE</string>
+    <string name="game_changer_imp">Game Changer</string>
+    <string name="high_imp">High</string>
+    <string name="medium_imp">Medium</string>
+    <string name="low_imp">Low</string>
 
+
+    <array name="instructions_issue_details_title">
+        <item>New Argument</item>
+        <item>Don\'t forgot this option (;</item>
+    </array>
+    <array name="instructions_issue_details_body">
+        <item>Add an argument in favor one of the options
+            \nDifferent arguments can have different impact on the decision
+            \nTry it!</item>
+        <item></item>
+    </array>
 
 </resources>

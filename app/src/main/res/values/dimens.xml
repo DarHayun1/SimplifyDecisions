@@ -29,4 +29,6 @@
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="floating_view_hor_margin">32dp</dimen>
     <dimen name="label_to_text_marg">4dp</dimen>
+    <dimen name="radius">50dp</dimen>
+    <dimen name="switch_icon_size">36dp</dimen>
 </resources>

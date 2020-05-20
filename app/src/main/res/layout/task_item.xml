@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/task_item_height"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        style="@style/TextAppearance.AppCompat.Large"
+        <CheckBox
+            android:id="@+id/checkBox"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false" />
+
+        <EditText
+            android:id="@+id/task_item_et"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/transparent"
+            android:cursorVisible="false"
+            android:gravity="center_vertical"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingVertical="2dp" />
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/related_opinion_label"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:checked="false" />
-
-    <EditText
-        android:id="@+id/task_item_et"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:imeOptions="actionDone"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:inputType="text"
-        android:cursorVisible="false"
-        android:backgroundTint="@android:color/transparent"
-        style="@style/TextAppearance.AppCompat.Large" />
-
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:text="/@"
+        android:visibility="gone"/>
 
 
 </LinearLayout>

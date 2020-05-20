@@ -6,8 +6,11 @@ import androidx.lifecycle.LiveData
 import dar.life.helpers.simplifydecisions.data.Decision
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.repository.AppRepository
+import dar.life.helpers.simplifydecisions.ui.Instruction
 
 class EditIssueViewModel(application: Application) : AndroidViewModel(application) {
+
+    var issueDetailsInstruc: List<Instruction>? = null
 
     private val mDecisionsRepository = AppRepository.getInstance(application)
 

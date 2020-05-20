@@ -13,10 +13,10 @@ data class Opinion(var title: String,
 
     companion object {
 
-        const val LOW_IMPORTANCE = 2
-        const val MEDIUM_IMPORTANCE = 3
-        const val HIGH_IMPORTANCE = 9
-        const val GAME_CHANGER = 18
+        const val LOW_IMPORTANCE = 0
+        const val MEDIUM_IMPORTANCE = 20
+        const val HIGH_IMPORTANCE = 40
+        const val GAME_CHANGER = 60
 
     }
 
@@ -35,7 +35,7 @@ data class Opinion(var title: String,
         return "${tasks.filter {it.isChecked}.size}/${tasks.size}"
     }
 
-    data class Task(val text: String) {
+    data class Task(var text: String) {
         var isChecked = false
 
         fun flipChecked(){

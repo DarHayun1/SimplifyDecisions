@@ -1,2 +1,3 @@
 rootProject.name='Simplify Decisions'
 include ':app'
+include ':gaugeseekbar'

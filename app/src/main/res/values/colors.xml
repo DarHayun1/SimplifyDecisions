@@ -27,4 +27,16 @@
     <color name="app_grey">#58585a</color>
     <color name="app_blue_dark">#223646</color>
 
+    <color name="app_green_light_trans">#80a4cf73</color>
+    <color name="app_turquoise_trans">#8008b9ab</color>
+    <color name="app_blue_light_trans">#80d0eefc</color>
+
+
+    <array name="progressGradientColors">
+        <item>@color/prioYellow</item>
+        <item>@color/prioOrange</item>
+        <item>@color/prioRed</item>
+        <item>@color/app_purple</item>
+    </array>
+
 </resources>
