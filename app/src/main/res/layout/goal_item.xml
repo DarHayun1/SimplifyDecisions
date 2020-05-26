@@ -10,14 +10,25 @@
     android:paddingHorizontal="4dp"
     android:background="@drawable/rounded_corners_grid_item">
 
-    <CheckBox
-        android:id="@+id/goal_title_checkbox"
+    <LinearLayout
+        android:id="@+id/goal_title_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Goal title"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <CheckBox
+            android:id="@+id/goal_title_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/goal_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goal title"/>
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/due_date_frame"
@@ -26,7 +37,7 @@
         android:orientation="horizontal"
         android:layout_marginStart="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/goal_title_checkbox">
+        app:layout_constraintTop_toBottomOf="@+id/goal_title_frame">
 
         <TextView
             android:id="@+id/due_date_label"
@@ -47,8 +58,8 @@
         android:id="@+id/goal_item_extra_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="8dp"
+        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/due_date_frame"
         app:layout_constraintTop_toBottomOf="@+id/due_date_frame">
@@ -58,8 +69,8 @@
             android:id="@+id/reminder_frame_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -81,12 +92,12 @@
 
         <LinearLayout
             android:id="@+id/reminder_frame_2"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="8dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -108,12 +119,12 @@
 
         <LinearLayout
             android:id="@+id/reminder_frame_3"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="8dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -141,9 +152,9 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:background="?android:attr/selectableItemBackgroundBorderless"
-        app:layout_constraintBottom_toBottomOf="@+id/goal_title_checkbox"
+        app:layout_constraintBottom_toBottomOf="@+id/goal_title_frame"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/goal_title_checkbox"
+        app:layout_constraintTop_toTopOf="@+id/goal_title_frame"
         app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
 

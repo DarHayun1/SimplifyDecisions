@@ -1,6 +1,6 @@
 package dar.life.helpers.simplifydecisions.data
 
-import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_CATEGORY
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_CATEGORY
 
 
 data class Opinion(var title: String,

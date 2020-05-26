@@ -8,13 +8,14 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_create_a_decision"
-        android:icon="@android:drawable/ic_lock_idle_lock"
-        android:title="@string/create_a_decision"
+        android:icon="@mipmap/decide_foreground"
+        android:iconTint="@android:color/darker_gray"
+        android:title="@string/make_a_decision"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_collaborate_issue"
         android:icon="@android:drawable/ic_menu_share"
         android:title="@string/collaborate_title"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="never" />
 
 </menu>

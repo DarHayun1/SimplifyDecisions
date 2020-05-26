@@ -4,12 +4,14 @@
     package="dar.life.helpers.simplifydecisions">
 
     <application
+        android:name=".SimplifyDecisions"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".reminders.AlarmReceiver" />
         <activity android:name="dar.life.helpers.simplifydecisions.ui.MainActivity"
             android:screenOrientation = "portrait"
             android:windowSoftInputMode="adjustPan"

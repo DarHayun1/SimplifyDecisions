@@ -12,7 +12,7 @@
     </style>
 
     <style name="AppTheme.OverFlow">
-        <item name="android:src">@drawable/dark_menu_button</item>
+        <item name="android:src">@drawable/dark_menu_button24</item>
     </style>
 
     <style name="header_text_style">

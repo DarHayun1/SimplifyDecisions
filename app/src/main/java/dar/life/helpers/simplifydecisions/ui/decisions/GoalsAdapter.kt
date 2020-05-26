@@ -11,6 +11,7 @@ import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Goal
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeInViews
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeOutViews
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -69,31 +70,48 @@ class GoalsAdapter(val mContext: Context, mCallback: OnGoalClickListener): Recyc
     }
 
     class GoalVH(itemView: View) : RecyclerView.ViewHolder(itemView){
+        //TODO: Add CB functionality
         val titleCb: CheckBox = itemView.findViewById(R.id.goal_title_checkbox)
+        val titleTv: TextView = itemView.findViewById(R.id.goal_title_tv)
         val dueDateFrame: View = itemView.findViewById(R.id.due_date_frame)
         val dueDateTv: TextView = itemView.findViewById(R.id.due_date)
 
         val extraInfoLayout: View = itemView.findViewById(R.id.goal_item_extra_info)
-        val reminderFrame1: View = itemView.findViewById(R.id.reminder_frame_1)
         val firstReminderTv: TextView = itemView.findViewById(R.id.first_reminder_title)
-        /*
-        /Currently not in use
         val secondReminderTv: TextView = itemView.findViewById(R.id.second_reminder_title)
         val thirdReminderTv: TextView = itemView.findViewById(R.id.third_reminder_title)
-     */
+
+        val firstDateTv: TextView = itemView.findViewById(R.id.first_reminder_title)
+        val secondDateTv: TextView = itemView.findViewById(R.id.second_reminder_title)
+        val thirdDateTv: TextView = itemView.findViewById(R.id.third_reminder_title)
+
         fun populateView(goal: Goal) {
-            titleCb.text = goal.name
+            titleTv.text = goal.name
             dueDateFrame.visibility =
-                if (goal.dueDate == null) {
+                if (goal.epochDueDate == null) {
                     View.GONE
                 }else{
-                    dueDateTv.text = goal.dueDate?.format(DateTimeFormatter.ofLocalizedDate(
+                    dueDateTv.text = LocalDate.ofEpochDay(goal.epochDueDate!!)
+                        .format(DateTimeFormatter.ofLocalizedDate(
                         FormatStyle.LONG))
                     View.VISIBLE
                 }
-            if (goal.reminders.size>0){
-                firstReminderTv.text = goal.reminders[0].name
-            }
+            val numOfReminders = goal.reminders.size
+//            if (numOfReminders>0){
+//                firstReminderTv.text = goal.reminders[0].name
+//                firstDateTv.text = goal.reminders[0].time.format(
+//                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+//                if (numOfReminders>1){
+//                    secondReminderTv.text = goal.reminders[1].name
+//                    secondDateTv.text = goal.reminders[1].time.format(
+//                        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+//                    if (numOfReminders>2){
+//                        thirdReminderTv.text = goal.reminders[2].name
+//                        thirdDateTv.text = goal.reminders[2].time.format(
+//                            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+//                    }
+//                }
+//            }
 
         }
 

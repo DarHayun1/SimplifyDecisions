@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout"
+        style="@style/titleTextInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/issue_title_hint">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="@dimen/issue_title_text_size"
+            android:selectAllOnFocus="true"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/option_a_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:inputType="textPersonName"
+            android:selectAllOnFocus="true"
+            android:hint="@string/option_a_name_hint" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/a_icons"
+                android:layout_width="104dp"
+                android:layout_height="match_parent"
+                android:dropDownWidth="64dp" />
+
+            <Spinner
+                android:id="@+id/a_colors"
+                android:layout_width="104dp"
+                android:layout_height="match_parent"
+                android:dropDownWidth="64dp" />
+
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/option_b_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:selectAllOnFocus="true"
+            android:inputType="textPersonName"
+            android:hint="@string/option_a_name_hint" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/b_icons"
+                android:layout_width="104dp"
+                android:layout_height="match_parent"
+                android:dropDownWidth="64dp" />
+
+            <Spinner
+                android:id="@+id/b_colors"
+                android:layout_width="104dp"
+                android:layout_height="match_parent"
+                android:dropDownWidth="64dp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/et_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="@android:color/transparent"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/et_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorPrimaryDark"
+            android:clickable="true"
+            android:background="@android:color/transparent"
+            android:text="@string/save_button_text" />
+    </LinearLayout>
+
+
+</LinearLayout>

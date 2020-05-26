@@ -1,45 +1,72 @@
 package dar.life.helpers.simplifydecisions.ui.decisions
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.transition.TransitionInflater
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.amlcurran.showcaseview.ShowcaseView
+import com.github.amlcurran.showcaseview.targets.ViewTarget
 import com.google.android.material.textfield.TextInputLayout
-
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Decision
 import dar.life.helpers.simplifydecisions.data.Goal
+import dar.life.helpers.simplifydecisions.data.ReminderObj
 import dar.life.helpers.simplifydecisions.databinding.DecisionDetailsFragmentBinding
+import dar.life.helpers.simplifydecisions.reminders.AlarmScheduler
+import dar.life.helpers.simplifydecisions.ui.Instruction
+import dar.life.helpers.simplifydecisions.ui.UiUtils
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter.ofLocalizedDate
+import java.time.format.DateTimeFormatter.ofLocalizedDateTime
 import java.time.format.FormatStyle
+import java.util.*
 
 class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
-    private var isNewDecision: Boolean = false
+    private lateinit var mShowcaseView: ShowcaseView
+    private var mFirstTime: Boolean = false
+    private var mDialogView: View? = null
     private lateinit var mContext: Context
-    private var mDecision: Decision? = null
+
+    private var mDecision: Decision?
+        get() = viewModel.lastUsedDecision
+        set(value) {
+            viewModel.lastUsedDecision = value
+        }
+
+    private val mBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                backPressed()
+            }
+        }
+
     private var _binding: DecisionDetailsFragmentBinding? = null
     private val binding get() = _binding!!
 
     companion object {
+        val REMINDER_ID: String = "reminder_id_extra"
+
         fun newInstance() = DecisionDetailsFragment()
     }
 
-    private lateinit var viewModel: DecisionDetailsViewModel
+    private lateinit var viewModel: DecisionsViewModel
 
     private val args: DecisionDetailsFragmentArgs by navArgs()
 
@@ -50,6 +77,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState == null
+            && args.isNew
+        )
+            mFirstTime = true
         sharedElementEnterTransition =
             TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
     }
@@ -59,7 +90,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DecisionDetailsFragmentBinding.inflate(inflater, container, false)
-        Log.d("TEST", "onCreateView")
         setHasOptionsMenu(true)
         return binding.root
     }
@@ -72,11 +102,12 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)
-            .get(DecisionDetailsViewModel::class.java)
+            .get(DecisionsViewModel::class.java)
         initToolbar()
         initViews()
+        if (mFirstTime)
+            editDecisionTitle(true)
     }
-
 
     private fun initToolbar() {
         binding.decisionDetailsToolbar.title = ""
@@ -86,10 +117,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (args.decisionId == -1)
-        {
-            isNewDecision = true
-        }
         binding.decisionDetailsToolbarTitle.transitionName = args.decisionId.toString()
         binding.decisionDetailsToolbarTitle.text = args.decisionTitle
     }
@@ -125,7 +152,11 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         binding.goalsRv.adapter = GoalsAdapter(mContext, this)
         binding.goalsRv.layoutManager = layoutManager
 
-        binding.addAGoal.setOnClickListener{onNewGoalRequest()}
+        binding.addAGoal.setOnClickListener { onNewGoalRequest() }
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     override fun onDestroyView() {
@@ -137,7 +168,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         Toast.makeText(mContext, "Upcoming feature (: ", Toast.LENGTH_SHORT).show()
     }
 
-    private fun editDecisionTitle() {
+    private fun editDecisionTitle(isNew: Boolean = false) {
         val dialogBuilder: AlertDialog = AlertDialog.Builder(mContext).create()
         val dialogView = layoutInflater.inflate(R.layout.edit_title_layout, null)
 
@@ -145,56 +176,297 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         val cancelBtn: Button = dialogView.findViewById(R.id.et_cancel_button)
         val saveBtn: Button = dialogView.findViewById(R.id.et_save_button)
 
-        textInputLayout.editText?.setText(mDecision?.title)
-        cancelBtn.setOnClickListener {
-            dialogBuilder.dismiss()
-        }
-        saveBtn.setOnClickListener {
-            if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength){
-                mDecision?.title = textInputLayout.editText?.text.toString()
-                binding.decisionDetailsToolbarTitle.text = mDecision?.title
-                dialogBuilder.dismiss()
-            }else
-                Toast.makeText(mContext,
-                    "Title length is limited to max ${textInputLayout.counterMaxLength}" +
-                            " characters", Toast.LENGTH_SHORT).show()
-
-        }
-        dialogBuilder.setView(dialogView)
-        dialogBuilder.show()
-    }
-
-    private fun populateUi(decision: Decision) {
-        binding.decisionDateTv.text = decision.date.format(ofLocalizedDate(FormatStyle.LONG))
-        binding.decisionDetailsToolbarTitle.text = decision.title
-        (binding.goalsRv.adapter as GoalsAdapter).goalsList = decision.goals
-    }
-
-    override fun onNewGoalRequest() {
-        val dialogBuilder: AlertDialog = AlertDialog.Builder(mContext).create()
-        val dialogView = layoutInflater.inflate(R.layout.new_goal_layout, null)
-
-        val textInputLayout: TextInputLayout = dialogView.findViewById(R.id.goal_edit_text_input_layout)
-        val cancelBtn: Button = dialogView.findViewById(R.id.edit_goal_cancel_button)
-        val saveBtn: Button = dialogView.findViewById(R.id.edit_goal_save_button)
-
+        textInputLayout.hint = getString(R.string.decision_title_hint)
         textInputLayout.editText?.setText(mDecision?.title)
         cancelBtn.setOnClickListener {
             dialogBuilder.dismiss()
         }
         saveBtn.setOnClickListener {
             if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength) {
-                mDecision?.goals?.add(Goal(textInputLayout.editText?.text.toString()))
-                binding.goalsRv.adapter?.notifyDataSetChanged()
+                mDecision?.title = textInputLayout.editText?.text.toString()
+                binding.decisionDetailsToolbarTitle.text = mDecision?.title
                 dialogBuilder.dismiss()
-            }else{
-                Toast.makeText(mContext,
+                if (isNew) startHelpMode()
+            } else
+                Toast.makeText(
+                    mContext,
                     "Title length is limited to max ${textInputLayout.counterMaxLength}" +
-                            " characters", Toast.LENGTH_SHORT).show()
+                            " characters", Toast.LENGTH_SHORT
+                ).show()
+
+        }
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.show()
+        if (isNew) textInputLayout.editText?.selectAll()
+    }
+
+    private fun startHelpMode() {
+        val instructions = getInstruction()
+        mShowcaseView = ShowcaseView.Builder(activity)
+            .withHoloShowcase()
+            .hideOnTouchOutside()
+            .setStyle(R.style.ShowcaseTheme)
+            .setTarget(ViewTarget(instructions.view))
+            .setContentTitle(instructions.title)
+            .setContentText(instructions.text.trimMargin())
+            .build()
+        mShowcaseView.hideButton()
+    }
+
+    private fun isHelpMode() = this::mShowcaseView.isInitialized && mShowcaseView.isShown
+
+    private fun hideHelpIfShown(): Boolean {
+        if (isHelpMode()) {
+            mShowcaseView.hide()
+            return true
+        }
+        return false
+    }
+
+    private fun getInstruction(): Instruction = Instruction(
+        getString(R.string.first_goal_title),
+        getString(R.string.first_goal_text),
+        binding.addAGoal
+    )
+
+    private fun backPressed() {
+        if (!hideHelpIfShown()) {
+            clearCallback()
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun clearCallback() {
+        mBackPressedCallback.remove()
+    }
+
+    private fun populateUi(decision: Decision) {
+
+        binding.decisionDateTv.text = decision.date.format(ofLocalizedDate(FormatStyle.LONG))
+
+        binding.decisionDetailsToolbarTitle.text = decision.title
+
+        (binding.goalsRv.adapter as GoalsAdapter).goalsList = decision.goals
+    }
+
+    override fun onNewGoalRequest() {
+        hideHelpIfShown()
+        openEditGoalDialog()
+    }
+
+    private fun openEditGoalDialog(goalPos: Int = -1) {
+        Log.d("FULLCHECK", "openEditGoalDialog ${mDecision?.goals.toString()}")
+        val dialogBuilder: AlertDialog = AlertDialog.Builder(mContext).create()
+        var goal = Goal("New Goal")
+        val dialogView = layoutInflater.inflate(R.layout.edit_goal_layout, null)
+        mDialogView = dialogView
+
+        val textInputLayout: TextInputLayout =
+            dialogView.findViewById(R.id.goal_edit_text_input_layout)
+
+        val dueDateCb: CheckBox = dialogView.findViewById(R.id.due_date_cb)
+        val dueDateTv: TextView = dialogView.findViewById(R.id.edit_goal_due_date_tv)
+        var dueDateCal: Calendar = Calendar.getInstance()
+        val addToCalBtn: View = dialogView.findViewById(R.id.edit_goal_to_cal_tv)
+
+        val cancelBtn: Button = dialogView.findViewById(R.id.edit_goal_cancel_button)
+        val saveBtn: Button = dialogView.findViewById(R.id.edit_goal_save_button)
+
+        val secondReminderFrame: View = dialogView.findViewById(R.id.edit_reminder_frame2)
+        val thirdReminderFrame: View = dialogView.findViewById(R.id.edit_reminder_frame3)
+
+        val firstReminderTv: TextView = dialogView.findViewById(R.id.edit_reminder_title1)
+        val secondReminderTv: TextView = dialogView.findViewById(R.id.edit_reminder_title2)
+        val thirdReminderTv: TextView = dialogView.findViewById(R.id.edit_reminder_title3)
+
+        val firstDateTv: TextView = dialogView.findViewById(R.id.edit_reminder_date1)
+        val secondDateTv: TextView = dialogView.findViewById(R.id.edit_reminder_date2)
+        val thirdDateTv: TextView = dialogView.findViewById(R.id.edit_reminder_date3)
+
+        var isReminderSet = false
+        cancelBtn.setOnClickListener {
+            dialogBuilder.dismiss()
+        }
+        mDecision?.let {decision ->
+            goal = decision.goals.getOrElse(goalPos) {
+                decision.goals.add(0, goal)
+                goal }
+
+            textInputLayout.editText?.setText(goal.name)
+
+            goal.epochDueDate?.let { epochDay ->
+                dueDateCal =
+                    GregorianCalendar.from(
+                        LocalDate.ofEpochDay(epochDay).atStartOfDay(ZoneId.systemDefault())
+                    )
             }
+
+            if (goal.reminders[0].isActive) {
+                isReminderSet = true
+                firstReminderTv.text = goal.reminders[0].title
+                firstDateTv.text = goal.reminders[0].time.format(
+                    ofLocalizedDateTime(FormatStyle.SHORT)
+                )
+                UiUtils.fadeInViews(secondReminderFrame)
+                if (goal.reminders[1].isActive) {
+                    secondReminderTv.text = goal.reminders[1].title
+                    secondDateTv.text = goal.reminders[1].time.format(
+                        ofLocalizedDateTime(FormatStyle.SHORT)
+                    )
+                    UiUtils.fadeInViews(thirdReminderFrame)
+                }
+                if (goal.reminders[2].isActive) {
+                    thirdReminderTv.text = goal.reminders[2].title
+                    thirdDateTv.text = goal.reminders[2].time.format(
+                        ofLocalizedDateTime(FormatStyle.SHORT)
+                    )
+                }
+            }
+            firstDateTv.setOnClickListener { tv ->
+                openDateTimePicker(
+                    goal.reminders.getOrNull(0),
+                    tv as TextView,
+                    secondReminderFrame
+                )
+                isReminderSet = true
+            }
+            secondDateTv.setOnClickListener { tv ->
+                openDateTimePicker(
+                    goal.reminders.getOrNull(1),
+                    tv as TextView,
+                    thirdReminderFrame
+                )
+            }
+            thirdDateTv.setOnClickListener { tv ->
+                openDateTimePicker(
+                    goal.reminders.getOrNull(2),
+                    tv as TextView,
+                    null
+                )
+            }
+        }
+        saveBtn.setOnClickListener {
+
+            if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength) {
+                saveGoal(goalPos, textInputLayout, dueDateCb, dueDateCal, isReminderSet )
+                dialogBuilder.dismiss()
+            } else {
+                Toast.makeText(
+                    mContext,
+                    "Title length is limited to max ${textInputLayout.counterMaxLength}" +
+                            " characters", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        dueDateCb.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
+                UiUtils.fadeInViews(dueDateTv, addToCalBtn)
+            else
+                UiUtils.fadeOutViews(dueDateTv, addToCalBtn)
+        }
+        dueDateTv.setOnClickListener {
+            pickADueDate(dueDateCal, dueDateTv)
+        }
+        addToCalBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, dueDateCal.timeInMillis)
+                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
+                .putExtra(CalendarContract.Events.TITLE, textInputLayout.editText?.text.toString())
+
+            startActivity(intent)
         }
         dialogBuilder.setView(dialogView)
         dialogBuilder.show()
     }
 
+    private fun saveGoal(
+        goalPos: Int,
+        textInputLayout: TextInputLayout,
+        dueDateCb: CheckBox,
+        dueDateCal: Calendar,
+        reminderSet: Boolean) {
+        val goal = mDecision!!.goals[0]
+        goal.reminders[0].title = textInputLayout.editText?.text.toString()
+        if (dueDateCb.isChecked) {
+            goal.epochDueDate =
+                dueDateCal.time.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                    .toEpochDay()
+        } else
+            goal.epochDueDate = null
+        viewModel.addNewReminder(goal.reminders[0])
+        viewModel.updateDecision(mDecision!!)
+        if (reminderSet) AlarmScheduler.scheduleAlarmsForReminder(mContext, goal.reminders[0])
+        (binding.goalsRv.adapter as GoalsAdapter).goalsList = mDecision!!.goals
+        binding.goalsRv.adapter?.notifyDataSetChanged()
+    }
+
+    private fun pickADueDate(
+        dueDateCal: Calendar,
+        dateTv: TextView
+    ) {
+        val dialogView = View.inflate(activity, R.layout.date_picker, null)
+        val alertDialog =
+            AlertDialog.Builder(requireActivity()).create()
+
+        dialogView.findViewById<Button>(R.id.date_set)
+            .setOnClickListener {
+                val datePicker: DatePicker =
+                    dialogView.findViewById(R.id.due_date_picker) as DatePicker
+                dueDateCal.set(
+                    datePicker.year,
+                    datePicker.month,
+                    datePicker.dayOfMonth
+                )
+                dateTv.text = dueDateCal.time.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                    .format(ofLocalizedDate(FormatStyle.SHORT))
+                alertDialog.dismiss()
+            }
+        alertDialog.setView(dialogView)
+        alertDialog.show()
+    }
+
+
+    private fun openDateTimePicker(
+        reminderObj: ReminderObj?,
+        dateTimeView: TextView,
+        nextReminderView: View?
+    ) {
+        val dialogView = View.inflate(activity, R.layout.date_time_picker, null)
+        val alertDialog =
+            AlertDialog.Builder(requireActivity()).create()
+
+        dialogView.findViewById<Button>(R.id.date_time_set)
+            .setOnClickListener {
+                val datePicker: DatePicker =
+                    dialogView.findViewById(R.id.date_picker) as DatePicker
+                val timePicker: TimePicker =
+                    dialogView.findViewById(R.id.time_picker) as TimePicker
+                val calendar: Calendar = GregorianCalendar(
+                    datePicker.year,
+                    datePicker.month,
+                    datePicker.dayOfMonth,
+                    timePicker.hour,
+                    timePicker.minute
+                )
+                reminderObj?.isActive = true
+
+                reminderObj?.time =
+                    LocalDateTime.ofInstant(
+                        calendar.toInstant(),
+                        TimeZone.getDefault().toZoneId()
+                    )
+                Log.d("remindernot", "decisionDetails/timeset, $reminderObj")
+                dateTimeView.text =
+                    reminderObj?.time?.format(ofLocalizedDate(FormatStyle.SHORT))
+                nextReminderView?.let { it1 -> UiUtils.fadeInViews(it1) }
+                alertDialog.dismiss()
+            }
+        alertDialog.setView(dialogView)
+        alertDialog.show()
+    }
 }

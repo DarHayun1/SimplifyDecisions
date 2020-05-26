@@ -38,6 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/decision_title_et_layout" />
 
     <ScrollView
+        android:transitionName="@string/bot_drawer_trans_name"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/bottom_drawer_vert_margin"

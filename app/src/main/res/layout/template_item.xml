@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:contentDescription="@string/template_icon"
+        android:tint="@color/colorPrimaryDark"
         android:foregroundTint="@color/colorPrimaryDark"
         app:srcCompat="@drawable/decisions_temp_logo" />
 

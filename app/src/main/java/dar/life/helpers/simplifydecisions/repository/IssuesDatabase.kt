@@ -6,11 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import dar.life.helpers.simplifydecisions.data.Decision
 import dar.life.helpers.simplifydecisions.data.Issue
+import dar.life.helpers.simplifydecisions.data.ReminderObj
 
-@Database(entities = [Issue::class, Decision::class], version = 1, exportSchema = false)
+@Database(entities = [Issue::class, Decision::class, ReminderObj::class], version = 1, exportSchema = false)
 abstract class IssuesDatabase : RoomDatabase() {
     abstract fun issuesDao(): IssuesDao
     abstract fun decisionsDao(): DecisionsDao
+    abstract fun remindersDao(): RemindersDao
 
 
     companion object {

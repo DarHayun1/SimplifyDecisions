@@ -37,11 +37,11 @@
 
         <FrameLayout
             android:id="@+id/issues_bottom_drawer"
-            android:transitionName="@string/bot_drawer_trans_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="96dp"
             android:background="@drawable/bottom_drawer_background"
             android:padding="48dp"
+            android:transitionName="@string/bot_drawer_trans_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">

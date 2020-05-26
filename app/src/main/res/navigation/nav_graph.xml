@@ -82,6 +82,10 @@
         <argument
             android:name="decisionTitle"
             app:argType="string" />
+        <argument
+            android:name="isNew"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/opinionDetailsFragment"

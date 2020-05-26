@@ -6,8 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.view.*
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -37,8 +36,12 @@ import java.time.format.FormatStyle
 
 
 class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListener,
-    IssueDetailsTaskChangedListener {
+    IssueDetailsTaskChangedListener, AdapterView.OnItemSelectedListener {
 
+    private var aIconsSpinner: Spinner? = null
+    private var aColorsSpinner: Spinner? = null
+    private var bIconsSpinner: Spinner? = null
+    private var bColorsSpinner: Spinner? = null
     private val mBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -119,6 +122,11 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         setupSwitchContent()
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     private fun setupSwitchContent() {
         ObjectAnimator.ofFloat(
             binding.unfinishedTasksFrame,
@@ -181,11 +189,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         UiUtils.fadeInViews(binding.unfinishedTasksFrame)
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_edit_issue_title -> {
@@ -241,12 +244,17 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun setupTasksView(issue: Issue) {
-        val adapter = IssueTasksAdapter(mContext, this)
-        adapter.setData(issue)
+        if (issue.hasTasks()) {
+            binding.noTasksTv.visibility = View.GONE
+            val adapter = IssueTasksAdapter(mContext, this)
+            adapter.setData(issue)
 
-        binding.allTasksRv.adapter = adapter
-        binding.allTasksRv.layoutManager =
-            LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
+            binding.allTasksRv.adapter = adapter
+            binding.allTasksRv.layoutManager =
+                LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
+        }else{
+            binding.noTasksTv.visibility = View.VISIBLE
+        }
 
     }
 
@@ -270,19 +278,26 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     @SuppressLint("InflateParams")
     private fun editIssueTitle() {
         val dialogBuilder: AlertDialog = AlertDialog.Builder(mContext).create()
-        val dialogView = layoutInflater.inflate(R.layout.edit_title_layout, null)
+        val dialogView = layoutInflater.inflate(R.layout.edit_issue_title_and_spinners, null)
 
         val textInputLayout: TextInputLayout = dialogView.findViewById(R.id.text_input_layout)
+        val optionAEt: TextView = dialogView.findViewById(R.id.option_a_et)
+        val optionBEt: TextView = dialogView.findViewById(R.id.option_b_et)
         val cancelBtn: Button = dialogView.findViewById(R.id.et_cancel_button)
         val saveBtn: Button = dialogView.findViewById(R.id.et_save_button)
 
         textInputLayout.editText?.setText(mIssue.title)
+        optionAEt.text = mIssue.optionAName
+        optionBEt.text = mIssue.optionBName
+        setupEditSpinners(dialogView)
         cancelBtn.setOnClickListener {
             dialogBuilder.dismiss()
         }
         saveBtn.setOnClickListener {
             if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength) {
                 mIssue.title = textInputLayout.editText?.text.toString()
+                mIssue.optionAName = optionAEt.text.toString()
+                mIssue.optionBName = optionBEt.text.toString()
                 mViewModel.updateIssue(mIssue)
                 binding.editIssueToolbarTitle.text = mIssue.displayedTitle(mContext)
                 dialogBuilder.dismiss()
@@ -296,6 +311,31 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         }
         dialogBuilder.setView(dialogView)
         dialogBuilder.show()
+    }
+
+    private fun setupEditSpinners(dialogView: View) {
+        val iconsList = UiUtils.getIconsList(mContext)
+        val colorsList = UiUtils.getColors(mContext)
+
+        aIconsSpinner = dialogView.findViewById(R.id.a_icons)
+        bIconsSpinner = dialogView.findViewById(R.id.b_icons)
+
+        aColorsSpinner = dialogView.findViewById(R.id.a_colors)
+        bColorsSpinner = dialogView.findViewById(R.id.b_colors)
+
+        aIconsSpinner!!.adapter = IconsAdapter(mContext, iconsList)
+        aIconsSpinner!!.onItemSelectedListener = this
+
+        aColorsSpinner!!.adapter = ColorsAdapter(mContext, colorsList)
+        aColorsSpinner!!.setSelection(2)
+        aColorsSpinner!!.onItemSelectedListener = this
+
+        bIconsSpinner!!.adapter = IconsAdapter(mContext, iconsList)
+        bIconsSpinner!!.setSelection(1)
+        bIconsSpinner!!.onItemSelectedListener = this
+
+        bColorsSpinner!!.adapter = ColorsAdapter(mContext, colorsList)
+        bColorsSpinner!!.onItemSelectedListener = this
     }
 
     override fun openOpinionScreen(opinion: Opinion, opinionItemTv: View, opinionItemFrame: View) {
@@ -351,12 +391,14 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             mViewModel.addDecision(it)
             mViewModel.updateIssue(mIssue)
             clearCallback()
+            val action = IssueDetailsFragmentDirections.actionEditIssueFragmentToDecisionDetailsFragment(
+                it.id,
+                it.title
+            )
+            action.isNew = true
             findNavController()
                 .navigate(
-                    IssueDetailsFragmentDirections.actionEditIssueFragmentToDecisionDetailsFragment(
-                        it.id,
-                        it.title
-                    )
+                    action
                 )
         }
     }
@@ -396,6 +438,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     override fun onShowcaseViewShow(showcaseView: ShowcaseView?) {}
 
     override fun onShowcaseViewHide(showcaseView: ShowcaseView?) {
+
         nextInstruction()
     }
 
@@ -444,8 +487,24 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         mViewModel.updateIssue(mIssue)
     }
 
+
     override fun taskCheckedChanged() {
         mViewModel.updateIssue(mIssue)
+    }
+
+    //Spinners listener
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val colors = UiUtils.getColors(mContext)
+        val icons = UiUtils.getIconsNames()
+        when (parent){
+            aIconsSpinner -> mIssue.optionAIconName = icons[position]
+            bIconsSpinner -> mIssue.optionBIconName = icons[position]
+            aColorsSpinner -> mIssue.optionAColor = colors[position]
+            bColorsSpinner -> mIssue.optionBColor = colors[position]
+        }
     }
 
 

@@ -21,11 +21,13 @@ import dar.life.helpers.simplifydecisions.R;
 public class TransparentSpotlight extends androidx.appcompat.widget.AppCompatImageView {
     private final Paint mPaint;
     private final PorterDuffXfermode mPorterDuffMode;
+    private final Context mContext;
     private RectF circleRect;
     private int radius;
 
     public TransparentSpotlight(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPorterDuffMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
@@ -42,7 +44,7 @@ public class TransparentSpotlight extends androidx.appcompat.widget.AppCompatIma
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if(circleRect != null) {
-            mPaint.setColor(getResources().getColor(android.R.color.black));
+            mPaint.setColor(ContextCompat.getColor(mContext, android.R.color.black));
             mPaint.setStyle(Paint.Style.FILL);
             canvas.drawPaint(mPaint);
 

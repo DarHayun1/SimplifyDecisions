@@ -32,8 +32,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.marcinmoskala.arcseekbar.ProgressListener
-import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_CATEGORY
-import dar.life.helpers.simplifydecisions.Constants.Companion.NEW_CATEGORY
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_CATEGORY
+import dar.life.helpers.simplifydecisions.Constants.NEW_CATEGORY
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
@@ -380,20 +380,22 @@ class OpinionDetailsFragment : Fragment(),
     }
 
     private fun backPressed() {
-        AlertDialog.Builder(mContext)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setTitle(getString(R.string.alertdialog_title))
-            .setMessage(resources.getString(R.string.unsaved_progress_message))
-            .setPositiveButton(
-                resources.getString(R.string.save_button_text)){ _, _ ->
-                saveClicked()
-            }
-            .setNegativeButton(
-                resources.getString(R.string.ignore_button_text)){ _, _ ->
-                clearCallback()
-                findNavController().popBackStack()
-            }
-            .show()
+            AlertDialog.Builder(mContext)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle(getString(R.string.alertdialog_title))
+                .setMessage(resources.getString(R.string.unsaved_progress_message))
+                .setPositiveButton(
+                    resources.getString(R.string.save_button_text)
+                ) { _, _ ->
+                    saveClicked()
+                }
+                .setNegativeButton(
+                    resources.getString(R.string.ignore_button_text)
+                ) { _, _ ->
+                    clearCallback()
+                    findNavController().popBackStack()
+                }
+                .show()
     }
 
     private fun clearCallback() {

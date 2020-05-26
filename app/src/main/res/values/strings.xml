@@ -39,9 +39,9 @@
     <string name="opinions_bottom_drawer_nav">opinions_bottom_drawer_trans</string>
     <string name="new_issue_title_hint">New Issue Title</string>
     <string name="edit_issue_title">Edit issue title</string>
-    <string name="create_a_decision">Create a decision</string>
+    <string name="make_a_decision">Make a decision</string>
     <string name="collaborate_title">Collaborate</string>
-    <string name="edit_opinion_title">Edit opinion title</string>
+    <string name="edit_opinion_title">Rename</string>
     <string name="edit_title_label">Edit Title</string>
 
     <string name="edit_issue_title_label">Edit Issue Title</string>
@@ -61,14 +61,23 @@
     <string name="noIssueTitle">Unnamed Issue</string>
     <string name="unfinished_tasks">Unfinished Tasks</string>
     <string name="alertdialog_title">Warning</string>
-    <string name="unsaved_progress_message">There is unsaved progress</string>
+    <string name="unsaved_progress_message">Are you sure?\nAll unsaved progress will be lost</string>
     <string name="ignore_button_text">IGNORE</string>
     <string name="game_changer_imp">Game Changer</string>
     <string name="high_imp">High</string>
     <string name="medium_imp">Medium</string>
     <string name="low_imp">Low</string>
-
-
+    <string name="demo_date_text">12 Mar 2020 15:30</string>
+    <string name="add_to_my_calender">Add to my calender</string>
+    <string name="first_dilemma_title">New Dilemma</string>
+    <string name="first_dilemma_text">Try adding a new dilemma</string>
+    <string name="first_goal_title">Add the first goal</string>
+    <string name="first_goal_text">"Setting goals will help you commit to the decision
+        \nKeeping your goals measurable and relatively simple is the key to success"</string>
+    <string name="add_a_reminder">Add a reminder</string>
+    <string name="channel_name">decisions_channel</string>
+    <string name="channel_description">reminders channel</string>
+    <string name="action_goal_reminded">action_goal_reminded</string>
     <array name="instructions_issue_details_title">
         <item>New Argument</item>
         <item>Don\'t forgot this option (;</item>
@@ -79,5 +88,7 @@
             \nTry it!</item>
         <item></item>
     </array>
+
+
 
 </resources>

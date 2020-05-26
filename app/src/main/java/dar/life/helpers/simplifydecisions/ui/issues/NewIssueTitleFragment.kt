@@ -1,7 +1,6 @@
 package dar.life.helpers.simplifydecisions.ui.issues
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.view.LayoutInflater
@@ -17,13 +16,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_A_ICON
-import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_B_ICON
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.databinding.FragmentNewIssueTitleBinding
+import dar.life.helpers.simplifydecisions.ui.UiUtils
+import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.getColors
 
 
-class NewIssueTitleFragment : Fragment() {
+class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
 
     private lateinit var mContext: Context
     private var _binding: FragmentNewIssueTitleBinding? = null
@@ -114,51 +113,40 @@ class NewIssueTitleFragment : Fragment() {
     }
 
     private fun initSpinners() {
-        val iconsList = getIconsList()
-        binding.spinner1.adapter = IconsAdapter(mContext, iconsList)
-        binding.spinner2.adapter = IconsAdapter(mContext, iconsList)
-        binding.spinner2.setSelection(1)
+        val iconsList = UiUtils.getIconsList(mContext)
+        val colorsList = getColors(mContext)
+        binding.aIconsSpinner.adapter = IconsAdapter(mContext, iconsList)
+        binding.aIconsSpinner.onItemSelectedListener = this
 
-        binding.spinner1.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                mIssue?.optionAIconName = getIconsNames()[position]
-            }
+        binding.aColorsSpinner.adapter = ColorsAdapter(mContext, colorsList)
+        binding.aColorsSpinner.setSelection(2)
+        binding.aColorsSpinner.onItemSelectedListener = this
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
+        binding.bIconsSpinner.adapter = IconsAdapter(mContext, iconsList)
+        binding.bIconsSpinner.setSelection(1)
+        binding.bIconsSpinner.onItemSelectedListener = this
 
-        binding.spinner2.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                mIssue?.optionBIconName = getIconsNames()[position]
-            }
+        binding.bColorsSpinner.adapter = ColorsAdapter(mContext, colorsList)
+        binding.bColorsSpinner.onItemSelectedListener = this
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
+
+
     }
 
-    private fun getIconsList(): MutableList<Drawable> {
-        return getIconsNames().map {
-            mContext.getDrawable(
-                mContext.resources.getIdentifier(it, "drawable", mContext.packageName)
-            )!!
-        }.toMutableList()
+    /**
+     * spinners interface
+     */
+    override fun onNothingSelected(parent: AdapterView<*>?) {
     }
-    private fun getIconsNames(): List<String>{
-        return listOf(
-            DEFAULT_A_ICON,
-            DEFAULT_B_ICON,
-            "temp_logo"
-        )
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val colors = getColors(mContext)
+        when (parent){
+            binding.aIconsSpinner -> mIssue?.optionAIconName = UiUtils.getIconsNames()[position]
+            binding.bIconsSpinner -> mIssue?.optionBIconName = UiUtils.getIconsNames()[position]
+            binding.aColorsSpinner -> mIssue?.optionAColor = colors[position]
+            binding.bColorsSpinner -> mIssue?.optionBColor = colors[position]
+        }
     }
 
 }

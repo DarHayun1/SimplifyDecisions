@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -12,9 +13,10 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import dar.life.helpers.simplifydecisions.Constants
 import dar.life.helpers.simplifydecisions.R
 
 
@@ -46,6 +48,7 @@ class UiUtils {
                     })
             }
         }
+
         // Returns true if the edit is done
         fun handleEditTitleClick(
             context: Context,
@@ -86,6 +89,34 @@ class UiUtils {
             } else {
                 drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
             }
+        }
+
+        fun getColors(context: Context): List<Int> {
+            return listOf(
+                ContextCompat.getColor(context, R.color.app_turquoise),
+                Color.parseColor(Constants.DEFAULT_A_COLOR),
+                ContextCompat.getColor(context, R.color.colorPrimary),
+                ContextCompat.getColor(context, R.color.app_purple),
+                Color.parseColor(Constants.DEFAULT_B_COLOR),
+                ContextCompat.getColor(context, R.color.app_yellow_dark),
+                ContextCompat.getColor(context, R.color.app_grey)
+            )
+        }
+
+        fun getIconsList(context: Context): MutableList<Drawable> {
+            return getIconsNames().map {
+                context.getDrawable(
+                    context.resources.getIdentifier(it, "drawable", context.packageName)
+                )!!
+            }.toMutableList()
+        }
+
+        fun getIconsNames(): List<String> {
+            return listOf(
+                Constants.DEFAULT_A_ICON,
+                Constants.DEFAULT_B_ICON,
+                "temp_logo"
+            )
         }
     }
 

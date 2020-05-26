@@ -11,18 +11,19 @@ class IssuesViewModel(application: Application) : AndroidViewModel(application) 
 
     var lastUsedIssue: Issue? = null
     var lastUsedOpinion: Opinion? = null
-    private val mDecisionsRepository = AppRepository.getInstance(application)
+    private val mDecisionsRepository =
+        AppRepository.getInstance(application.applicationContext)
 
     fun getAllIssues(): LiveData<List<Issue>> = mDecisionsRepository.allIssues
 
     fun getAllActiveIssues(): LiveData<List<Issue>> = mDecisionsRepository.allActiveIssues
 
-    fun addNewIssue(issue: Issue = Issue("New Issue")){
+    fun addNewIssue(issue: Issue = Issue("New Issue")) {
         mDecisionsRepository.addNewIssue(issue)
         lastUsedIssue = issue
     }
 
-    fun getIssueById(id: Int): LiveData<Issue?>{
+    fun getIssueById(id: Int): LiveData<Issue?> {
         return mDecisionsRepository.getIssue(id)
     }
 

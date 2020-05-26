@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <DatePicker
+        android:id="@+id/due_date_picker"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:calendarViewShown="true"
+        android:spinnersShown="false" />
+
+    <Button
+        android:id="@+id/date_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set" />
+
+</LinearLayout>

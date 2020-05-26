@@ -69,19 +69,10 @@
                         android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:layout_marginBottom="@dimen/menu_vert_margin"
-                    android:orientation="horizontal">
-
-                    <Spinner
-                        android:id="@+id/spinner1"
-                        android:layout_width="104dp"
-                        android:dropDownWidth="64dp"
-                        android:layout_height="match_parent" />
-
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <EditText
                         android:id="@+id/first_option_et"
                         android:layout_width="match_parent"
@@ -89,7 +80,42 @@
                         android:layout_gravity="center_vertical"
                         android:inputType="textPersonName"
                         android:hint="@string/option_a_name_hint" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:layout_marginBottom="@dimen/menu_vert_margin"
+                        android:orientation="horizontal">
+
+                        <Spinner
+                            android:id="@+id/a_icons_spinner"
+                            android:layout_width="104dp"
+                            android:dropDownWidth="64dp"
+                            android:layout_height="match_parent" />
+
+                        <Spinner
+                            android:id="@+id/a_colors_spinner"
+                            android:layout_width="104dp"
+                            android:layout_height="match_parent"
+                            android:dropDownWidth="64dp"/>
+
+
+                    </LinearLayout>
+
                 </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/second_option_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:inputType="textPersonName"
+                    android:hint="@string/option_a_name_hint" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -98,20 +124,21 @@
                     android:orientation="horizontal">
 
                     <Spinner
-                        android:id="@+id/spinner2"
-                        android:dropDownWidth="64dp"
+                        android:id="@+id/b_icons_spinner"
                         android:layout_width="104dp"
+                        android:dropDownWidth="64dp"
                         android:layout_height="match_parent" />
 
-                    <EditText
-                        android:id="@+id/second_option_et"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:inputType="textPersonName"
-                        android:hint="@string/option_b_name_hint" />
+                    <Spinner
+                        android:id="@+id/b_colors_spinner"
+                        android:layout_width="104dp"
+                        android:layout_height="match_parent"
+                        android:dropDownWidth="64dp"/>
+
 
                 </LinearLayout>
+
+            </LinearLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/new_issue_next_fab"

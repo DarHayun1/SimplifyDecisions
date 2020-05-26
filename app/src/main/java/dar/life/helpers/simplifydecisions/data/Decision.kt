@@ -23,7 +23,7 @@ data class Decision(
 
     @TypeConverters(DateConverter::class)
     var date: LocalDateTime = LocalDateTime.now()
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     var id: Int = date.toEpochSecond(ZoneOffset.UTC).toInt()
     @TypeConverters(GoalsConverter::class)
     var goals: MutableList<Goal> = mutableListOf()

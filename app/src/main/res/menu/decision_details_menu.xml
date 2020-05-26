@@ -10,6 +10,6 @@
         android:id="@+id/action_collaborate_decision"
         android:icon="@android:drawable/ic_menu_share"
         android:title="@string/collaborate_title"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="never" />
 
 </menu>

@@ -7,12 +7,13 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_A_COLOR
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_A_ICON
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_B_COLOR
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_B_ICON
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_CATEGORY
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_A_COLOR
-import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_A_ICON
-import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_B_COLOR
-import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_B_ICON
-import dar.life.helpers.simplifydecisions.Constants.Companion.DEFAULT_CATEGORY
+
 import dar.life.helpers.simplifydecisions.repository.DateConverter
 import dar.life.helpers.simplifydecisions.repository.OpinionConverter
 import java.time.LocalDateTime
@@ -57,6 +58,10 @@ data class Issue(
             var optionA: String = "Option A"
             var optionB: String = "Option B"
             when (template){
+                "new" -> {
+                    optionA = "Yes"
+                    optionB = "No"
+                }
                 "car" -> {
                     optionA = "Car #1"
                     optionB = "Car #2"
@@ -77,10 +82,11 @@ data class Issue(
                     optionA = "Travel to A"
                     optionB = "Travel to B"
                 }
-                "new" -> {
-                    optionA = "Yes"
-                    optionB = "No"
+                "diet" -> {
+                    optionA = "Diet #1"
+                    optionB = "Diet #2"
                 }
+
             }
             return Issue("", optionAName = optionA, optionBName = optionB)
         }
@@ -106,5 +112,7 @@ data class Issue(
         else
             opinions[category] = mutableListOf(opinion)
     }
+
+    fun hasTasks(): Boolean = opinions.flatMap { it.value }.flatMap { it.tasks }.isNotEmpty()
 
 }

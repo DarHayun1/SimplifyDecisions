@@ -1,6 +1,6 @@
 package dar.life.helpers.simplifydecisions.repository;
 
-import android.app.Application;
+import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Room;
@@ -12,12 +12,14 @@ import java.util.List;
 
 import dar.life.helpers.simplifydecisions.data.Decision;
 import dar.life.helpers.simplifydecisions.data.Issue;
+import dar.life.helpers.simplifydecisions.data.ReminderObj;
 
 public class AppRepository {
 
     private static AppRepository sInstance;
     private final IssuesDao mIssuesDao;
     private final DecisionsDao mDecisionsDao;
+    private final RemindersDao mRemindersDao;
 
     private final LiveData<List<Issue>> mIssues;
     private final LiveData<List<Issue>> mActiveIssues;
@@ -26,36 +28,35 @@ public class AppRepository {
 
 
 
-    private AppRepository(Application application) {
+    private AppRepository(Context context) {
 
         IssuesDatabase db = Room.databaseBuilder(
-                application.getApplicationContext(),
+                context.getApplicationContext(),
                 IssuesDatabase.class, IssuesDatabase.DB_NAME
         ).build();
 
         mIssuesDao = db.issuesDao();
         mDecisionsDao = db.decisionsDao();
-
+        mRemindersDao = db.remindersDao();
 
         mActiveIssues = mIssuesDao.getAllActiveIssues();
         mIssues = mIssuesDao.getAllIssues();
 
         mDecisions = mDecisionsDao.getAllDecisions();
 
-
     }
 
     /**
      * Creating an instance only once in an app lifetime. performed in a synced way.
      *
-     * @param application = the App reference.
-     * @return The repository singleton instance.
+     *
+     * @param context@return The repository singleton instance.
      */
-    public static AppRepository getInstance(Application application) {
+    public static AppRepository getInstance(Context context) {
         if (sInstance == null) {
             synchronized (AppRepository.class) {
                 if (sInstance == null)
-                    sInstance = new AppRepository(application);
+                    sInstance = new AppRepository(context);
             }
         }
         return sInstance;
@@ -90,7 +91,6 @@ public class AppRepository {
 
     public void addNewDecision(@NotNull Decision decision) {
         AppExecutors.getInstance().diskIO().execute(() -> mDecisionsDao.addNewDecision(decision));
-
     }
 
     public LiveData<Decision> getDecision(int id) {
@@ -99,5 +99,13 @@ public class AppRepository {
 
     public void updateDecision(@NotNull Decision decision) {
         AppExecutors.getInstance().diskIO().execute(() -> mDecisionsDao.updateDecision(decision));
+    }
+
+    public void addNewReminder(@NotNull ReminderObj reminder) {
+        AppExecutors.getInstance().diskIO().execute(() -> mRemindersDao.addNewReminder(reminder));
+    }
+
+    public @Nullable ReminderObj getReminderById(int id) {
+        return mRemindersDao.getReminderById(id);
     }
 }
