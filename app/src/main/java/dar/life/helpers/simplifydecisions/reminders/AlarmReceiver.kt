@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import dar.life.helpers.simplifydecisions.Constants
+import dar.life.helpers.simplifydecisions.Constants.REMINDER_ID_KEY
 import dar.life.helpers.simplifydecisions.NotificationsHelper
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.repository.AppExecutors
@@ -13,30 +15,37 @@ import dar.life.helpers.simplifydecisions.ui.decisions.DecisionDetailsFragment.C
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.d("remindernot", "onRecive with $context and ${intent?.extras?.get(REMINDER_ID)}")
+        Log.d("notification", "onReceive")
+
         if (context != null && intent != null && intent.action != null) {
-            Log.d("remindernot", "onRecive2 with ${intent.action}")
 
             if (intent.action!!.equals(
                     context.getString(R.string.action_goal_reminded),
                     true
                 )
             ) {
-                Log.d("remindernot", "onRecive3")
                 if (intent.extras != null) {
-                    Log.d("remindernot", "on4")
+                    val keyId = intent.getLongExtra(REMINDER_ID_KEY, 0)
+                    Log.d("notification", "keyid: $keyId")
                     AppExecutors.getInstance().diskIO().execute{
-                        val reminder =
-                            AppRepository.getInstance(context).getReminderById(
-                                Integer.valueOf(intent.type!!)
-                            )
-                        Log.d("remindernot", "AlarmReciver, $reminder")
+                        val decisions =
+                            AppRepository.getInstance(context).allDecisionsNow
+                        val reminder = decisions.flatMap { decision -> decision.goals }
+                            .map { goal -> goal.reminder }
+                            .find { it.id == Integer.valueOf(intent.type!!).toLong()}
+                        decisions.forEach{
+                            decision ->
+                            decision.goals.forEach{goal ->
+                                Log.d("notification", "${goal.reminder}")
+                            }
+                        }
                         AppExecutors.getInstance().mainThread().execute{
                             if (reminder != null) {
                                 NotificationsHelper.createNotification(
                                     context,
                                     reminder.title,
-                                    reminder.text
+                                    reminder.text,
+                                    reminder.id
                                 )
                             }
                         }

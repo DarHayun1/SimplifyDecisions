@@ -42,6 +42,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
         }
 
     private fun backPressed() {
+
         mBackPressedCallback.remove()
     }
 
@@ -86,8 +87,8 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
         mDecisionsViewModel = ViewModelProvider(this).get(DecisionsViewModel::class.java)
 
         initViews()
-        requireActivity().onBackPressedDispatcher
-            .addCallback(mBackPressedCallback)
+//        requireActivity().onBackPressedDispatcher
+//            .addCallback(mBackPressedCallback)
 
     }
 

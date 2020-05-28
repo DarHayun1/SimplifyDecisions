@@ -26,9 +26,4 @@ class DecisionsViewModel(application: Application) : AndroidViewModel(applicatio
         repository.addNewDecision(decision)
     }
 
-    fun addNewReminder(reminder: ReminderObj) {
-        Log.d("remindernot", "Repo/addReminder, $reminder")
-        repository.addNewReminder(reminder)
-    }
-
 }

@@ -4,12 +4,16 @@
     <dimen name="menu_item_size">64dp</dimen>
     <dimen name="menu_margin">24dp</dimen>
     <dimen name="fab_size">56dp</dimen>
-    <dimen name="list_item_vert_pad">6dp</dimen>
-    <dimen name="list_item_hor_pad">8dp</dimen>
+    <dimen name="list_item_vert_pad">18dp</dimen>
+    <dimen name="list_item_hor_pad">@dimen/activity_horizontal_margin</dimen>
     <dimen name="top_header_margin">80dp</dimen>
     <dimen name="grid_item_height">64dp</dimen>
     <dimen name="issue_title_icon_size">24dp</dimen>
     <dimen name="issue_title_text_size">28sp</dimen>
+
+    <dimen name="headline_text_size">28sp</dimen>
+    <dimen name="subheadline_text_size">22sp</dimen>
+    <dimen name="content_text_size">18sp</dimen>
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -31,4 +35,5 @@
     <dimen name="label_to_text_marg">4dp</dimen>
     <dimen name="radius">50dp</dimen>
     <dimen name="switch_icon_size">36dp</dimen>
+    <dimen name="bottom_drawer_min_height">96dp</dimen>
 </resources>

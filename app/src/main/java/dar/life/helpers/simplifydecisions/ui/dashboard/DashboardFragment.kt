@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import dar.life.helpers.simplifydecisions.Constants.REMINDER_ID_KEY
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.databinding.DashboardFragmentBinding
 
@@ -65,8 +67,36 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val intent = requireActivity().intent
         mViewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
+        if (intent.hasExtra(REMINDER_ID_KEY)) {
+            navigateToRemindedDecision(intent.getLongExtra(REMINDER_ID_KEY, -1))
+            intent.removeExtra(REMINDER_ID_KEY)
+        }
 
+    }
+
+    private fun navigateToRemindedDecision(reminderId: Long) {
+
+        mViewModel.getAllDecisions().observe(viewLifecycleOwner, Observer { decisions ->
+            val decision = decisions.find { decision ->
+                decision.goals.map { goal ->
+                    goal.reminder
+                }.any { reminder -> reminder.id == reminderId }
+            }
+
+            decision?.let {
+                val action =
+                    DashboardFragmentDirections.actionDashboardFragmentToDecisionDetailsFragment(
+                        decision.id, decision.title
+                    )
+                action.reminderId = reminderId
+                val extras = FragmentNavigatorExtras(
+                    binding.dashboardBackground to getString(R.string.bot_drawer_trans_name)
+                )
+                findNavController().navigate(action, extras)
+            }
+        })
     }
 
     override fun onDestroyView() {

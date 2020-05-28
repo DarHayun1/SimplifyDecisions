@@ -22,48 +22,47 @@
             android:id="@+id/goal_title_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/goal_title_tv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Goal title"/>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/due_date_frame"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/goal_title_frame">
-
-        <TextView
-            android:id="@+id/due_date_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="due date: " />
-
-        <TextView
-            android:id="@+id/due_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/label_to_text_marg"
-            android:text="Wed, Mar 18 1992" />
-
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/goal_item_extra_info"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="12dp"
         android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@+id/due_date_frame"
-        app:layout_constraintTop_toBottomOf="@+id/due_date_frame">
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/goal_title_frame"
+        app:layout_constraintTop_toBottomOf="@+id/goal_title_frame">
 
+
+        <LinearLayout
+            android:id="@+id/due_date_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/goal_title_frame">
+
+            <TextView
+                android:id="@+id/due_date_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="due date: " />
+
+            <TextView
+                android:id="@+id/due_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/label_to_text_marg"
+                android:text="Wed, Mar 18 1992" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/reminder_frame_1"
@@ -80,66 +79,21 @@
 
             <TextView
                 android:id="@+id/first_reminder_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:drawableTint="@color/app_grey"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Add a reminder" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/reminder_frame_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:tint="@color/app_grey"
-                app:srcCompat="@android:drawable/ic_popup_reminder" />
 
             <TextView
-                android:id="@+id/second_reminder_title"
-                android:layout_width="wrap_content"
+                android:id="@+id/first_reminder_date"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:drawableTint="@color/app_grey"
-                android:gravity="center_vertical"
-                android:text="Add a reminder" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/reminder_frame_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:tint="@color/app_grey"
-                app:srcCompat="@android:drawable/ic_popup_reminder" />
-
-            <TextView
-                android:id="@+id/third_reminder_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:drawableTint="@color/app_grey"
-                android:gravity="center_vertical"
-                android:text="Add a reminder" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:gravity="end" />
 
 
         </LinearLayout>

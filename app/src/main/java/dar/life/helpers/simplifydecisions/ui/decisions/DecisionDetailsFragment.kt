@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -103,6 +102,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this)
             .get(DecisionsViewModel::class.java)
+        requireActivity().onBackPressedDispatcher
+            .addCallback(mBackPressedCallback)
         initToolbar()
         initViews()
         if (mFirstTime)
@@ -246,7 +247,12 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
         binding.decisionDetailsToolbarTitle.text = decision.title
 
+        decision.goals.find { it.expanded = false
+            it.reminder.id == args.reminderId}
+            ?.let { goal -> goal.expanded = true }
         (binding.goalsRv.adapter as GoalsAdapter).goalsList = decision.goals
+
+
     }
 
     override fun onNewGoalRequest() {
@@ -255,7 +261,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     }
 
     private fun openEditGoalDialog(goalPos: Int = -1) {
-        Log.d("FULLCHECK", "openEditGoalDialog ${mDecision?.goals.toString()}")
         val dialogBuilder: AlertDialog = AlertDialog.Builder(mContext).create()
         var goal = Goal("New Goal")
         val dialogView = layoutInflater.inflate(R.layout.edit_goal_layout, null)
@@ -272,16 +277,9 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         val cancelBtn: Button = dialogView.findViewById(R.id.edit_goal_cancel_button)
         val saveBtn: Button = dialogView.findViewById(R.id.edit_goal_save_button)
 
-        val secondReminderFrame: View = dialogView.findViewById(R.id.edit_reminder_frame2)
-        val thirdReminderFrame: View = dialogView.findViewById(R.id.edit_reminder_frame3)
-
-        val firstReminderTv: TextView = dialogView.findViewById(R.id.edit_reminder_title1)
-        val secondReminderTv: TextView = dialogView.findViewById(R.id.edit_reminder_title2)
-        val thirdReminderTv: TextView = dialogView.findViewById(R.id.edit_reminder_title3)
+        val firstReminderEt: EditText = dialogView.findViewById(R.id.edit_reminder_title1)
 
         val firstDateTv: TextView = dialogView.findViewById(R.id.edit_reminder_date1)
-        val secondDateTv: TextView = dialogView.findViewById(R.id.edit_reminder_date2)
-        val thirdDateTv: TextView = dialogView.findViewById(R.id.edit_reminder_date3)
 
         var isReminderSet = false
         cancelBtn.setOnClickListener {
@@ -301,54 +299,25 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                     )
             }
 
-            if (goal.reminders[0].isActive) {
+            if (goal.reminder.isActive) {
                 isReminderSet = true
-                firstReminderTv.text = goal.reminders[0].title
-                firstDateTv.text = goal.reminders[0].time.format(
+                firstReminderEt.setText(goal.reminder.title)
+                firstDateTv.text = goal.reminder.time.format(
                     ofLocalizedDateTime(FormatStyle.SHORT)
                 )
-                UiUtils.fadeInViews(secondReminderFrame)
-                if (goal.reminders[1].isActive) {
-                    secondReminderTv.text = goal.reminders[1].title
-                    secondDateTv.text = goal.reminders[1].time.format(
-                        ofLocalizedDateTime(FormatStyle.SHORT)
-                    )
-                    UiUtils.fadeInViews(thirdReminderFrame)
-                }
-                if (goal.reminders[2].isActive) {
-                    thirdReminderTv.text = goal.reminders[2].title
-                    thirdDateTv.text = goal.reminders[2].time.format(
-                        ofLocalizedDateTime(FormatStyle.SHORT)
-                    )
-                }
             }
             firstDateTv.setOnClickListener { tv ->
                 openDateTimePicker(
-                    goal.reminders.getOrNull(0),
-                    tv as TextView,
-                    secondReminderFrame
+                    goal.reminder,
+                    tv as TextView
                 )
                 isReminderSet = true
-            }
-            secondDateTv.setOnClickListener { tv ->
-                openDateTimePicker(
-                    goal.reminders.getOrNull(1),
-                    tv as TextView,
-                    thirdReminderFrame
-                )
-            }
-            thirdDateTv.setOnClickListener { tv ->
-                openDateTimePicker(
-                    goal.reminders.getOrNull(2),
-                    tv as TextView,
-                    null
-                )
             }
         }
         saveBtn.setOnClickListener {
 
             if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength) {
-                saveGoal(goalPos, textInputLayout, dueDateCb, dueDateCal, isReminderSet )
+                saveGoal(textInputLayout, firstReminderEt, dueDateCb, dueDateCal, isReminderSet, goal )
                 dialogBuilder.dismiss()
             } else {
                 Toast.makeText(
@@ -381,13 +350,14 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     }
 
     private fun saveGoal(
-        goalPos: Int,
         textInputLayout: TextInputLayout,
+        reminderEt: EditText,
         dueDateCb: CheckBox,
         dueDateCal: Calendar,
-        reminderSet: Boolean) {
-        val goal = mDecision!!.goals[0]
-        goal.reminders[0].title = textInputLayout.editText?.text.toString()
+        reminderSet: Boolean,
+        goal: Goal) {
+        goal.name = textInputLayout.editText?.text.toString()
+        goal.reminder.title = reminderEt.text.toString()
         if (dueDateCb.isChecked) {
             goal.epochDueDate =
                 dueDateCal.time.toInstant()
@@ -396,9 +366,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                     .toEpochDay()
         } else
             goal.epochDueDate = null
-        viewModel.addNewReminder(goal.reminders[0])
         viewModel.updateDecision(mDecision!!)
-        if (reminderSet) AlarmScheduler.scheduleAlarmsForReminder(mContext, goal.reminders[0])
+        if (reminderSet) AlarmScheduler.scheduleAlarmsForReminder(mContext, goal.reminder)
         (binding.goalsRv.adapter as GoalsAdapter).goalsList = mDecision!!.goals
         binding.goalsRv.adapter?.notifyDataSetChanged()
     }
@@ -433,8 +402,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     private fun openDateTimePicker(
         reminderObj: ReminderObj?,
-        dateTimeView: TextView,
-        nextReminderView: View?
+        dateTimeView: TextView
     ) {
         val dialogView = View.inflate(activity, R.layout.date_time_picker, null)
         val alertDialog =
@@ -460,10 +428,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                         calendar.toInstant(),
                         TimeZone.getDefault().toZoneId()
                     )
-                Log.d("remindernot", "decisionDetails/timeset, $reminderObj")
                 dateTimeView.text =
                     reminderObj?.time?.format(ofLocalizedDate(FormatStyle.SHORT))
-                nextReminderView?.let { it1 -> UiUtils.fadeInViews(it1) }
                 alertDialog.dismiss()
             }
         alertDialog.setView(dialogView)

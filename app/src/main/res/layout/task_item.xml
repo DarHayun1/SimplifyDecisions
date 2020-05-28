@@ -13,6 +13,7 @@
         <CheckBox
             android:id="@+id/checkBox"
             style="@style/TextAppearance.AppCompat.Large"
+            android:fontFamily="@font/assistant_regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false" />
@@ -20,6 +21,7 @@
         <EditText
             android:id="@+id/task_item_et"
             style="@style/TextAppearance.AppCompat.Large"
+            android:fontFamily="@font/assistant_regular"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -41,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:text="/@"
+        android:fontFamily="@font/assistant_light"
         android:visibility="gone"/>
 
 

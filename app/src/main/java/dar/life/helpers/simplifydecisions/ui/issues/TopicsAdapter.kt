@@ -1,13 +1,16 @@
 package dar.life.helpers.simplifydecisions.ui.issues
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
+import dar.life.helpers.simplifydecisions.ui.UiUtils
 
 class TopicsAdapter(val mContext: Context, val mCallBack: OnTemplateClickedListener):
     RecyclerView.Adapter<TopicsAdapter.TopicsVH>() {
@@ -26,7 +29,9 @@ class TopicsAdapter(val mContext: Context, val mCallBack: OnTemplateClickedListe
         val drawId = mContext.resources.getIdentifier("${topics[position]}_icon" ,
             "drawable", mContext.packageName)
         try {
-            mContext.getDrawable(drawId)?.let { holder.bindItem(it) }
+            mContext.getDrawable(drawId)?.let { holder.bindItem(it)
+            if (position == itemCount-1) UiUtils
+                .setColorFilter(it, ContextCompat.getColor(mContext, R.color.app_green_light))}
         }catch (e: android.content.res.Resources.NotFoundException){}
         holder.itemView.setOnClickListener{
             mCallBack.onTemplateClicked(topics[position])

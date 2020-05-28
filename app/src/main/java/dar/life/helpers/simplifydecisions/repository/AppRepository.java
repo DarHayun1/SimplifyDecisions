@@ -19,7 +19,6 @@ public class AppRepository {
     private static AppRepository sInstance;
     private final IssuesDao mIssuesDao;
     private final DecisionsDao mDecisionsDao;
-    private final RemindersDao mRemindersDao;
 
     private final LiveData<List<Issue>> mIssues;
     private final LiveData<List<Issue>> mActiveIssues;
@@ -37,7 +36,6 @@ public class AppRepository {
 
         mIssuesDao = db.issuesDao();
         mDecisionsDao = db.decisionsDao();
-        mRemindersDao = db.remindersDao();
 
         mActiveIssues = mIssuesDao.getAllActiveIssues();
         mIssues = mIssuesDao.getAllIssues();
@@ -72,6 +70,10 @@ public class AppRepository {
         return mDecisions;
     }
 
+    public List<Decision> getAllDecisionsNow() {
+        return mDecisionsDao.getAllDecisionsNow();
+    }
+
     @NotNull
     public LiveData<List<Issue>> getAllActiveIssues() {
         return mActiveIssues;
@@ -99,13 +101,5 @@ public class AppRepository {
 
     public void updateDecision(@NotNull Decision decision) {
         AppExecutors.getInstance().diskIO().execute(() -> mDecisionsDao.updateDecision(decision));
-    }
-
-    public void addNewReminder(@NotNull ReminderObj reminder) {
-        AppExecutors.getInstance().diskIO().execute(() -> mRemindersDao.addNewReminder(reminder));
-    }
-
-    public @Nullable ReminderObj getReminderById(int id) {
-        return mRemindersDao.getReminderById(id);
     }
 }

@@ -13,6 +13,9 @@ interface DecisionsDao {
     @Query("SELECT * FROM decisions ORDER BY date DESC")
     fun getAllDecisions(): LiveData<List<Decision>>
 
+    @Query("SELECT * FROM decisions ORDER BY date DESC")
+    fun getAllDecisionsNow(): List<Decision>
+
     @Query("SELECT * FROM decisions WHERE id = :requestedId")
     fun getDecisionById(requestedId: Int): LiveData<Decision>
 

@@ -1,8 +1,8 @@
 package dar.life.helpers.simplifydecisions
 
 object Constants {
-        const val CHANNEL_ID: String = "notif_channel_id"
-
+        const val REMINDER_ACTION: String = "reminder_action"
+        const val REMINDER_ID_KEY: String = "reminder_id_key"
         const val CAL_EVENT_TYPE: String = "vnd.android.cursor.item/event"
         const val DEFAULT_CATEGORY: String = "General"
         const val NEW_CATEGORY: String = "New"

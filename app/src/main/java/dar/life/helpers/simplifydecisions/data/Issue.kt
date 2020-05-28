@@ -25,7 +25,6 @@ data class Issue(
     var optionAName: String = "Option A",
     var optionBName: String = "Option B",
     var description: String? = null,
-    var type: String = TYPE_YES_NO,
     var isActive: Boolean = true
 ) {
 
@@ -51,17 +50,11 @@ data class Issue(
 
     companion object{
         val DEFAULT_ISSUE: Issue = Issue(title = "", description = null)
-        const val TYPE_YES_NO = "Yes/No Question"
-        const val TYPE_MULTIPLE_OPTIONS = "Multiple Options Dilemma"
 
         fun fromTemplate(template: String): Issue{
-            var optionA: String = "Option A"
-            var optionB: String = "Option B"
+            var optionA = "Option A"
+            var optionB = "Option B"
             when (template){
-                "new" -> {
-                    optionA = "Yes"
-                    optionB = "No"
-                }
                 "car" -> {
                     optionA = "Car #1"
                     optionB = "Car #2"
@@ -85,6 +78,10 @@ data class Issue(
                 "diet" -> {
                     optionA = "Diet #1"
                     optionB = "Diet #2"
+                }
+                "yes_no" -> {
+                    optionA = "Yes"
+                    optionB = "No"
                 }
 
             }

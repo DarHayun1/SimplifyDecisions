@@ -10,11 +10,8 @@ data class Goal(var name: String) {
     //Saved as an epochday but represents a LocalDate
     var epochDueDate: Long? = null
 
-    val reminders: MutableList<ReminderObj> = mutableListOf(
-        ReminderObj.emptyObj(),
-        ReminderObj.emptyObj(),
-        ReminderObj.emptyObj()
-    )
+
+    var reminder: ReminderObj = ReminderObj.emptyObj()
 
     var expanded: Boolean = false
 

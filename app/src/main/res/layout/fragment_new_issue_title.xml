@@ -7,6 +7,8 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
     android:paddingTop="@dimen/top_padding_templates"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
     tools:context=".ui.issues.NewIssueTitleFragment">
 
 

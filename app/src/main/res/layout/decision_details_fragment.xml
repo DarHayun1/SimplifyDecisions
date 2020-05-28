@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
     tools:context=".ui.decisions.DecisionDetailsFragment">
 
     <androidx.appcompat.widget.Toolbar

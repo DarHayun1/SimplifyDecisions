@@ -8,17 +8,29 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionOverflowButtonStyle">@style/AppTheme.OverFlow</item>
-        <item name="android:listDivider">@color/app_yellow</item>
+        <item name="android:listDivider">@color/trans_white</item>
     </style>
 
     <style name="AppTheme.OverFlow">
         <item name="android:src">@drawable/dark_menu_button24</item>
     </style>
 
-    <style name="header_text_style">
-        <item name="android:textSize">26sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+    <style name="headline_text_style">
+        <item name="android:textSize">@dimen/headline_text_size</item>
+        <item name="android:fontFamily">@font/assistant_semibold</item>
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+    </style>
+
+    <style name="subheadline_text_style">
+        <item name="android:textSize">@dimen/subheadline_text_size</item>
+        <item name="android:fontFamily">@font/assistant_regular</item>
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+    </style>
+
+    <style name="content_text_style">
+        <item name="android:textSize">@dimen/content_text_size</item>
+        <item name="android:fontFamily">@font/assistant_light</item>
+        <item name="android:textColor">@android:color/primary_text_dark</item>
     </style>
 
     <style name="WhiteRadioButton" parent="Theme.AppCompat.Light.DarkActionBar">

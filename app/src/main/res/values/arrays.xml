@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="topics">
-        <item>new</item>
         <item>work</item>
         <item>love</item>
         <item>diet</item>
         <item>car</item>
         <item>purchase</item>
+        <item>food</item>
         <item>vacation</item>
+        <item>yes_no</item>
+        <item>new</item>
     </string-array>
 </resources>

@@ -78,7 +78,6 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
                 descriptionTv.visibility = GONE
             else
                 descriptionTv.text = item.description
-            type.text = item.type
             title.transitionName = item.id.toString()
         }
     }

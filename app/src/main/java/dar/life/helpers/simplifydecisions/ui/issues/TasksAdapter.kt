@@ -40,7 +40,6 @@ class TasksAdapter(
     override fun getItemCount(): Int = tasks.size
 
     override fun onBindViewHolder(holder: TaskVH, position: Int) {
-        Log.d("AAAAA", "onBind - $position,\n ${tasks[position]}")
         holder.bindItem(tasks[position])
         if (taskOnEdit && position == tasks.size - 1) {
             !taskOnEdit
@@ -52,7 +51,6 @@ class TasksAdapter(
         }
 
         holder.editText.setOnEditorActionListener { _, actionId, _ ->
-            Log.d("TASK", "editor $tasks $position $actionId")
             if (actionId == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
                 holder.editText.isCursorVisible = false
                 val imm: InputMethodManager? =
@@ -110,7 +108,6 @@ class TasksAdapter(
             crossIfTChecked(task.isChecked)
 
             checkBox.setOnCheckedChangeListener { v, isChecked ->
-                Log.d("AAAAA", "checklistener - $adapterPosition")
                 if (v==checkBox) {
                     mCallback.onCheckedChanged(adapterPosition, isChecked)
                     crossIfTChecked(isChecked)

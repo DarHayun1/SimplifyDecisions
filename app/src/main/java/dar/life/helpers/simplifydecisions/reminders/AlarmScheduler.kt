@@ -55,7 +55,6 @@ object AlarmScheduler {
      * @param reminder ReminderData to use for the alarm
      */
     fun scheduleAlarmsForReminder(context: Context, reminder: ReminderObj) {
-        Log.d("remindernot", "scheduleAlarm, ${reminder.time}")
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         // get the PendingIntent for the alarm
         val alarmIntent = createPendingIntent(context, reminder)
@@ -74,10 +73,11 @@ object AlarmScheduler {
         alarmIntent: PendingIntent?,
         alarmMgr: AlarmManager
     ) {
+        Log.d("notification", "scheduleAlarm, $reminderData")
+
         val cal = GregorianCalendar.from(
             ZonedDateTime.of(reminderData.time, ZoneId.systemDefault())
         )
-        Log.d("remindernot", "scheduleAlarm${Instant.ofEpochMilli(cal.timeInMillis)}")
         alarmMgr.set(
             AlarmManager.RTC_WAKEUP,
             cal.timeInMillis, alarmIntent
@@ -100,7 +100,6 @@ object AlarmScheduler {
           action = context.getString(R.string.action_goal_reminded)
           type = reminder.id.toString()
           putExtra(DecisionDetailsFragment.REMINDER_ID, reminder.id)
-            Log.d("remindernot", "the id: ${reminder.id}")
         }
 
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)

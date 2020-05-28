@@ -77,13 +77,10 @@ class GoalsAdapter(val mContext: Context, mCallback: OnGoalClickListener): Recyc
         val dueDateTv: TextView = itemView.findViewById(R.id.due_date)
 
         val extraInfoLayout: View = itemView.findViewById(R.id.goal_item_extra_info)
-        val firstReminderTv: TextView = itemView.findViewById(R.id.first_reminder_title)
-        val secondReminderTv: TextView = itemView.findViewById(R.id.second_reminder_title)
-        val thirdReminderTv: TextView = itemView.findViewById(R.id.third_reminder_title)
+        val reminderFrame: View = itemView.findViewById(R.id.reminder_frame_1)
+        val reminderTitleTv: TextView = itemView.findViewById(R.id.first_reminder_title)
+        val reminderTimeTv: TextView = itemView.findViewById(R.id.first_reminder_date)
 
-        val firstDateTv: TextView = itemView.findViewById(R.id.first_reminder_title)
-        val secondDateTv: TextView = itemView.findViewById(R.id.second_reminder_title)
-        val thirdDateTv: TextView = itemView.findViewById(R.id.third_reminder_title)
 
         fun populateView(goal: Goal) {
             titleTv.text = goal.name
@@ -96,23 +93,13 @@ class GoalsAdapter(val mContext: Context, mCallback: OnGoalClickListener): Recyc
                         FormatStyle.LONG))
                     View.VISIBLE
                 }
-            val numOfReminders = goal.reminders.size
-//            if (numOfReminders>0){
-//                firstReminderTv.text = goal.reminders[0].name
-//                firstDateTv.text = goal.reminders[0].time.format(
-//                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-//                if (numOfReminders>1){
-//                    secondReminderTv.text = goal.reminders[1].name
-//                    secondDateTv.text = goal.reminders[1].time.format(
-//                        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-//                    if (numOfReminders>2){
-//                        thirdReminderTv.text = goal.reminders[2].name
-//                        thirdDateTv.text = goal.reminders[2].time.format(
-//                            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-//                    }
-//                }
-//            }
-
+            if (goal.reminder.isActive){
+                reminderFrame.visibility = View.VISIBLE
+                reminderTimeTv.text = goal.reminder.time.format(DateTimeFormatter.ofLocalizedDate(
+                    FormatStyle.SHORT
+                ))
+                reminderTitleTv.text = goal.reminder.title
+            }
         }
 
 

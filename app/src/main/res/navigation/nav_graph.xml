@@ -17,6 +17,11 @@
         <action
             android:id="@+id/action_dashboardFragment_to_decisionsFragment"
             app:destination="@id/decisionsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_decisionDetailsFragment"
+            app:destination="@id/decisionDetailsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboardFragment" />
     </fragment>
     <fragment
         android:id="@+id/issuesFragment"
@@ -86,6 +91,10 @@
             android:name="isNew"
             app:argType="boolean"
             android:defaultValue="false" />
+        <argument
+            android:name="reminderId"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
     <fragment
         android:id="@+id/opinionDetailsFragment"

@@ -273,7 +273,6 @@ class OpinionDetailsFragment : Fragment(),
             )
         binding.tasksRv.adapter = mTasksAdapter
         binding.tasksRv.layoutManager = LinearLayoutManager(mContext, VERTICAL, false)
-        Log.d("ABCD2", mOpinion.toString())
         mTasksAdapter.setData(mOpinion!!.tasks)
         val swipeHandler = object : SwipeToDeleteCallback(mContext){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

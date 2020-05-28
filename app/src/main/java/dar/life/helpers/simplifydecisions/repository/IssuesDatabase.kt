@@ -12,8 +12,6 @@ import dar.life.helpers.simplifydecisions.data.ReminderObj
 abstract class IssuesDatabase : RoomDatabase() {
     abstract fun issuesDao(): IssuesDao
     abstract fun decisionsDao(): DecisionsDao
-    abstract fun remindersDao(): RemindersDao
-
 
     companion object {
         @Volatile private var instance: IssuesDatabase? = null

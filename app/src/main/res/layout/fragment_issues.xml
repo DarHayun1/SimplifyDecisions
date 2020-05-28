@@ -8,6 +8,19 @@
     android:background="@color/colorPrimaryDark"
     tools:context=".ui.issues.IssuesFragment">
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:textAlignment="viewStart"
+        android:fontFamily="@font/assistant_semibold"
+        android:textSize="36dp"
+        android:text="Dilemmas"
+        android:textColor="@android:color/white" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/issues_rv"
         android:layout_width="match_parent"
