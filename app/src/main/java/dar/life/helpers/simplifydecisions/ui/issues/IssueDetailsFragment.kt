@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -136,16 +137,18 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             duration = 0
             start()
         }
-        binding.switchBtn.setOnClickListener {
+        binding.switchModeBtn.setOnClickListener {
             if (binding.compareOptionsFrame.isVisible) {
                 switchToTasks()
             } else {
-                switchToComare()
+                switchToCompare()
             }
         }
     }
 
-    private fun switchToComare() {
+    private fun switchToCompare() {
+        binding.switchModeBtn.rotation = 180f
+        binding.switchModeBtn.animate().rotationBy(-180F).start()
         ObjectAnimator.ofFloat(
             binding.unfinishedTasksFrame,
             "translationX",
@@ -168,6 +171,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun switchToTasks() {
+        binding.switchModeBtn.rotation = 0f
+        binding.switchModeBtn.animate().rotationBy(180f).start()
         ObjectAnimator.ofFloat(
             binding.compareOptionsFrame,
             "translationX",
@@ -176,6 +181,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             duration = 600
             start()
         }
+
         UiUtils.fadeOutViews(binding.compareOptionsFrame, binding.optionsHeaders.root)
 
         ObjectAnimator.ofFloat(

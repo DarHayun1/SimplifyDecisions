@@ -10,11 +10,11 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 
 @Entity(tableName = "reminders")
-data class ReminderObj(var title: String) {
+data class ReminderObj(var title: String, var isActive: Boolean = false) {
 
     companion object {
         fun emptyObj(): ReminderObj{
-            return ReminderObj("")
+            return ReminderObj("", isActive = false)
         }
     }
 
@@ -23,7 +23,6 @@ data class ReminderObj(var title: String) {
     var id = Instant.now().epochSecond
     @TypeConverters(DateConverter::class)
     var time: LocalDateTime = LocalDateTime.now()
-    var isActive = false
     var text: String = ""
 
     fun toIntReminderObj(): IntReminderObj = IntReminderObj(

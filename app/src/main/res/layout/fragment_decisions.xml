@@ -8,6 +8,17 @@
     android:background="@color/colorPrimaryDark"
     tools:context=".ui.decisions.DecisionsFragment">
 
+    <TextView
+        android:id="@+id/decisions_headline_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="36dp"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:textAlignment="viewStart"
+        style="@style/headline_text_style"
+        android:text="@string/decisions_headline"
+        android:textColor="@android:color/white" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/decisions_rv"
         android:layout_width="match_parent"
@@ -58,7 +69,7 @@
             android:layout_marginBottom="40dp"
             android:backgroundTint="@color/colorAccent"
             android:clickable="true"
-            android:src="@android:drawable/ic_input_add"
+            android:src="@drawable/ic_plus_new"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/decisions_bottom_drawer" />

@@ -21,16 +21,48 @@
         <item name="android:textColor">@android:color/primary_text_dark</item>
     </style>
 
-    <style name="subheadline_text_style">
-        <item name="android:textSize">@dimen/subheadline_text_size</item>
-        <item name="android:fontFamily">@font/assistant_regular</item>
+    <style name="headline_text_style_light" parent="headline_text_style">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="subheadline1_text_style">
+        <item name="android:textSize">@dimen/subheadline1_text_size</item>
+        <item name="android:fontFamily">@font/assistant_semibold</item>
         <item name="android:textColor">@android:color/primary_text_dark</item>
+    </style>
+
+    <style name="subheadline1_text_style_light" parent="subheadline1_text_style">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="subheadline2_text_style">
+        <item name="android:textSize">@dimen/subheadline2_text_size</item>
+        <item name="android:fontFamily">@font/assistant_semibold</item>
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+    </style>
+
+    <style name="subheadline2_text_style_light" parent="subheadline2_text_style">
+        <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 
     <style name="content_text_style">
         <item name="android:textSize">@dimen/content_text_size</item>
+        <item name="android:fontFamily">@font/assistant_regular</item>
+        <item name="android:textColor">@android:color/secondary_text_dark</item>
+    </style>
+
+    <style name="content_text_style_light" parent="content_text_style">
+        <item name="android:textColor">@android:color/secondary_text_light</item>
+    </style>
+
+    <style name="small_content_text_style">
+        <item name="android:textSize">@dimen/small_content_text_size</item>
         <item name="android:fontFamily">@font/assistant_light</item>
         <item name="android:textColor">@android:color/primary_text_dark</item>
+    </style>
+
+    <style name="small_content_text_style_light" parent="small_content_text_style">
+        <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 
     <style name="WhiteRadioButton" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -38,10 +70,7 @@
         <item name="colorControlActivated">@android:color/white</item>
     </style>
     
-    <style name="opinionItemTextStyle">
-        <item name="background">@android:color/transparent</item>
-        <item name="android:textColor">@android:color/primary_text_dark</item>
-        <item name="android:textSize">@dimen/opinion_item_text_size</item>
+    <style name="opinionItemTextStyle" parent="subheadline2_text_style">
         <item name="android:gravity">center</item>
         <item name="android:textAlignment">center</item>
         <item name="android:lines">2</item>
@@ -124,6 +153,10 @@
     <style name="CustomText" parent="TextAppearance.ShowcaseView.Detail.Light">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="TaskItemTitleText" parent="content_text_style">
         <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 

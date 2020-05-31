@@ -5,11 +5,12 @@
     <color name="colorPrimaryDark">@color/app_blue_dark</color>
     <color name="textLogo_color">#231f20</color>
 
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccent">@color/app_green_light</color>
     <color name="colorPositive">#1BDD23</color>
     <color name="colorNegative">#DA2121</color>
 
     <color name="light_text_second">#B0B0B0</color>
+    <color name="secondary_text">@android:color/secondary_text_light</color>
 
     <color name="prioRed">#E74C3C</color>
     <color name="prioOrange">#E67E22</color>

@@ -11,9 +11,11 @@
     <dimen name="issue_title_icon_size">24dp</dimen>
     <dimen name="issue_title_text_size">28sp</dimen>
 
-    <dimen name="headline_text_size">28sp</dimen>
-    <dimen name="subheadline_text_size">22sp</dimen>
+    <dimen name="headline_text_size">34sp</dimen>
+    <dimen name="subheadline1_text_size">28sp</dimen>
+    <dimen name="subheadline2_text_size">20sp</dimen>
     <dimen name="content_text_size">18sp</dimen>
+    <dimen name="small_content_text_size">16sp</dimen>
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -36,4 +38,6 @@
     <dimen name="radius">50dp</dimen>
     <dimen name="switch_icon_size">36dp</dimen>
     <dimen name="bottom_drawer_min_height">96dp</dimen>
+    <dimen name="bottom_drawer_top_padd">20dp</dimen>
+    <dimen name="warn_icon_size">12dp</dimen>
 </resources>

@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="16dp"
+        android:paddingVertical="36dp"
         android:orientation="vertical">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/edit_opinion_toolbar"
@@ -29,7 +30,7 @@
             android:background="@android:color/transparent">
 
             <TextView
-                style="@style/ToolbarTitleStyle"
+                style="@style/headline_text_style"
                 android:id="@+id/opinion_details_toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -43,9 +44,8 @@
             <TextView
                 android:id="@+id/related_issue_label"
                 android:textAlignment="textStart"
-                android:textSize="16sp"
+                style="@style/small_content_text_style"
                 android:text="@string/related_issue_label_text"
-                android:textColor="@android:color/primary_text_dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -74,7 +74,7 @@
         android:layout_weight="1"
         android:animateLayoutChanges="true"
         android:paddingHorizontal="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/bottom_drawer_top_padd"
         android:layout_marginTop="@dimen/bottom_drawer_vert_margin"
         android:background="@drawable/bottom_drawer_background">
 
@@ -86,17 +86,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/category_label"
+                style="@style/subheadline2_text_style_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="@string/category_label" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="Category:" />
 
                 <Spinner
                     android:id="@+id/category_spinner"
@@ -106,6 +107,7 @@
 
                 <EditText
                     android:id="@+id/new_category_et"
+                    style="@style/subheadline2_text_style_light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -113,13 +115,14 @@
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:maxLines="1"
+
                     android:visibility="invisible" />
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/importance_label"
-                style="@style/TextAppearance.AppCompat.Medium"
+                style="@style/subheadline2_text_style_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -166,7 +169,7 @@
         android:id="@+id/tasks_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/TextAppearance.AppCompat.Medium"
+        style="@style/subheadline2_text_style_light"
         android:layout_gravity="start"
         android:layout_marginTop="8dp"
         android:text="@string/tasks_label"
@@ -188,13 +191,13 @@
 
         <TextView
             android:id="@+id/add_task_btn"
+            style="@style/Widget.AppCompat.TextView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/task_item_height"
-            android:text="@string/add_new_task_text"
-            android:gravity="center_vertical"
-            android:clickable="true"
             android:background="?android:attr/selectableItemBackgroundBorderless"
-            style="@style/TextAppearance.AppCompat.Medium"/>
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:text="@string/add_new_task_text" />
     </LinearLayout>
 
         </LinearLayout>

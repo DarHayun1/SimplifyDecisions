@@ -29,9 +29,15 @@ class TopicsAdapter(val mContext: Context, val mCallBack: OnTemplateClickedListe
         val drawId = mContext.resources.getIdentifier("${topics[position]}_icon" ,
             "drawable", mContext.packageName)
         try {
-            mContext.getDrawable(drawId)?.let { holder.bindItem(it)
-            if (position == itemCount-1) UiUtils
-                .setColorFilter(it, ContextCompat.getColor(mContext, R.color.app_green_light))}
+            mContext.getDrawable(drawId)?.let {
+                holder.bindItem(it)
+                if (position == itemCount - 1)
+                    UiUtils
+                        .setColorFilter(
+                            it,
+                            ContextCompat.getColor(mContext, R.color.app_green_light)
+                        )
+            }
         }catch (e: android.content.res.Resources.NotFoundException){}
         holder.itemView.setOnClickListener{
             mCallBack.onTemplateClicked(topics[position])

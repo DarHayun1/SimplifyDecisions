@@ -28,6 +28,7 @@ import dar.life.helpers.simplifydecisions.databinding.DecisionDetailsFragmentBin
 import dar.life.helpers.simplifydecisions.reminders.AlarmScheduler
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -247,12 +248,30 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
         binding.decisionDetailsToolbarTitle.text = decision.title
 
-        decision.goals.find { it.expanded = false
+        //If the user navigated from a reminder it will expand, otherwise, the first
+        val remindersGoal = decision.goals.find { it.expanded = false
             it.reminder.id == args.reminderId}
-            ?.let { goal -> goal.expanded = true }
+            if (remindersGoal != null){
+                remindersGoal.expanded = true
+            }else{
+                expandNextGoal(decision.goals)
+            }
         (binding.goalsRv.adapter as GoalsAdapter).goalsList = decision.goals
 
 
+    }
+
+    private fun expandNextGoal(goals: MutableList<Goal>) {
+        goals.forEach{
+            it.expanded = false
+        }
+        goals.sortBy {
+            it.epochDueDate ?:
+            LocalDate.now().plusYears(5).toEpochDay()}
+        goals.firstOrNull { goal ->
+            goal.epochDueDate!=null &&
+                LocalDate.ofEpochDay(goal.epochDueDate!!).isAfter(LocalDate.now()) }
+            ?.let { it.expanded = true }
     }
 
     override fun onNewGoalRequest() {
@@ -369,7 +388,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         viewModel.updateDecision(mDecision!!)
         if (reminderSet) AlarmScheduler.scheduleAlarmsForReminder(mContext, goal.reminder)
         (binding.goalsRv.adapter as GoalsAdapter).goalsList = mDecision!!.goals
-        binding.goalsRv.adapter?.notifyDataSetChanged()
     }
 
     private fun pickADueDate(

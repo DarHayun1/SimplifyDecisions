@@ -11,7 +11,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@drawable/rounded_corners_category"
         android:elevation="10dp"
-        style="@style/TextAppearance.AppCompat.Large"
+        style="@style/subheadline2_text_style_light"
         android:textAllCaps="true"
         android:textAlignment="center"
         android:text="@string/default_category"
@@ -67,6 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    style="@style/small_content_text_style"
                     android:text="@string/default_tasks_left_text" />
 
             </LinearLayout>
@@ -96,6 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    style="@style/small_content_text_style"
                     android:text="@string/default_tasks_left_text" />
 
             </LinearLayout>

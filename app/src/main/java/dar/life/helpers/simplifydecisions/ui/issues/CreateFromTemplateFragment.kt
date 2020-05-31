@@ -43,6 +43,7 @@ class CreateFromTemplateFragment : Fragment(), OnTemplateClickedListener {
         _binding = FragmentCreateFromTemplateBinding.inflate(layoutInflater, container,
             false)
         initRV()
+        binding.noTemplateBtn.setOnClickListener{onTemplateClicked(getString(R.string.new_template))}
         return binding.root
     }
 

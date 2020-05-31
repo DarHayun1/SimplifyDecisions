@@ -25,8 +25,21 @@
 
         <TextView
             android:id="@+id/goal_title_tv"
-            android:layout_width="wrap_content"
+            style="@style/content_text_style_light"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/due_date_passed_iv"
+            android:layout_width="@dimen/warn_icon_size"
+            android:layout_height="@dimen/warn_icon_size"
+            android:tint="@color/app_yellow_dark"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            app:srcCompat="@android:drawable/ic_dialog_alert"
+            android:contentDescription="@string/due_date_passed_contentdesc" />
     </LinearLayout>
 
     <LinearLayout
@@ -53,6 +66,7 @@
                 android:id="@+id/due_date_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/small_content_text_style_light"
                 android:text="due date: " />
 
             <TextView
@@ -60,6 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/label_to_text_marg"
+                style="@style/small_content_text_style_light"
                 android:text="Wed, Mar 18 1992" />
 
         </LinearLayout>
@@ -69,7 +84,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginVertical="4dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -84,7 +100,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="Add a reminder" />
+                android:text="Add a reminder"
+                style="@style/small_content_text_style_light"/>
 
             <TextView
                 android:id="@+id/first_reminder_date"
@@ -93,7 +110,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
-                android:gravity="end" />
+                android:gravity="end"
+                style="@style/small_content_text_style_light"/>
 
 
         </LinearLayout>
