@@ -5,12 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.amlcurran.showcaseview.ShowcaseView
 import com.github.amlcurran.showcaseview.targets.ViewTarget
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Decision
@@ -28,7 +31,6 @@ import dar.life.helpers.simplifydecisions.databinding.DecisionDetailsFragmentBin
 import dar.life.helpers.simplifydecisions.reminders.AlarmScheduler
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
-import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -39,6 +41,7 @@ import java.util.*
 
 class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
+    private lateinit var mDecisionLiveData: LiveData<Decision>
     private lateinit var mShowcaseView: ShowcaseView
     private var mFirstTime: Boolean = false
     private var mDialogView: View? = null
@@ -139,9 +142,11 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     }
 
     private fun initViews() {
-        viewModel.getDecisionById(args.decisionId)
-            .observe(viewLifecycleOwner, Observer {
+        mDecisionLiveData = viewModel.getDecisionById(args.decisionId)
+
+        mDecisionLiveData.observe(viewLifecycleOwner, Observer {
                 it?.let {
+                    Log.d("DONECHECK", "decision changed: $it")
                     mDecision = it
                     populateUi(it)
                 }
@@ -233,6 +238,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     private fun backPressed() {
         if (!hideHelpIfShown()) {
+            mDecision?.let {
+                Log.i("DONECHECK", it.goals.toString())
+                mDecisionLiveData.removeObservers(viewLifecycleOwner)
+                viewModel.updateDecision(it) }
             clearCallback()
             findNavController().popBackStack()
         }
@@ -248,14 +257,16 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
         binding.decisionDetailsToolbarTitle.text = decision.title
 
-        //If the user navigated from a reminder it will expand, otherwise, the first
-        val remindersGoal = decision.goals.find { it.expanded = false
-            it.reminder.id == args.reminderId}
+        if (viewModel.isFirstInit()){
+            //If the user navigated from a reminder it will expand, otherwise, the first
+            val remindersGoal = decision.goals.find { it.expanded = false
+                it.reminder.id == args.reminderId}
             if (remindersGoal != null){
                 remindersGoal.expanded = true
             }else{
                 expandNextGoal(decision.goals)
             }
+        }
         (binding.goalsRv.adapter as GoalsAdapter).goalsList = decision.goals
 
 
@@ -277,6 +288,30 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     override fun onNewGoalRequest() {
         hideHelpIfShown()
         openEditGoalDialog()
+    }
+
+    override fun onGoalChecked(goal: Goal) {
+        if (goal.isDone)
+            goalCompleted(goal)
+    }
+
+    override fun onEditGoalRequest(position: Int) {
+        openEditGoalDialog(position)
+    }
+
+    override fun deleteGoal(goal: Goal) {
+        mDecision?.let {
+            it.goals.remove(goal)
+        }
+    }
+
+    private fun goalCompleted(goal: Goal) {
+    Snackbar.make(
+                binding.root,
+                "Congratulations! \"${goal.name}\" Completed!",
+                Snackbar.LENGTH_LONG
+            )
+            .show()
     }
 
     private fun openEditGoalDialog(goalPos: Int = -1) {

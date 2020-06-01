@@ -31,5 +31,8 @@ data class Decision(
     @Ignore
     var expanded: Boolean = false
 
+    override fun toString(): String {
+        return "Decision - title: $title, goals:$goals"
+    }
 
 }

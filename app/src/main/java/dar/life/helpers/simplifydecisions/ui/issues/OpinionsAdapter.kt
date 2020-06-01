@@ -39,8 +39,8 @@ class OpinionsAdapter(private val mContext: Context,
             entry.value.partition { it.isOfFirstOption }
         for (i in 0 until max(first.size, second.size)) {
 
-            val a = if (i < first.size) first[i] else null
-            val b = if (i < (second.size)) second[i] else null
+            val a = first.getOrNull(i)
+            val b = second.getOrNull(i)
             val category = if (i == 0) cat else null
             if (a != null || b != null) mOpinionsRaws.add(OpinionsRaw(a, category, b))
         }

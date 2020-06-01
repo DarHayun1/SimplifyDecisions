@@ -15,8 +15,10 @@ data class Goal(var name: String) {
 
     var expanded: Boolean = false
 
+    var isDone: Boolean = false
+
     override fun toString(): String {
-        return "$name, dueDate: $epochDueDate"
+        return "$name, dueDate: $epochDueDate, isDone: $isDone"
     }
 
 }

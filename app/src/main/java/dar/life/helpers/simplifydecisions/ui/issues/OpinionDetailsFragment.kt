@@ -274,12 +274,23 @@ class OpinionDetailsFragment : Fragment(),
         binding.tasksRv.adapter = mTasksAdapter
         binding.tasksRv.layoutManager = LinearLayoutManager(mContext, VERTICAL, false)
         mTasksAdapter.setData(mOpinion!!.tasks)
-        val swipeHandler = object : SwipeToDeleteCallback(mContext){
+        addSwipeSupport()
+        binding.addTaskBtn.setOnClickListener{
+            mOpinion?.tasks?.let{
+                it.add(Task(""))
+                mTasksAdapter.newTaskAdded(it)
+            }
+        }
+
+    }
+
+    private fun addSwipeSupport() {
+        val swipeHandler = object : SwipeToDeleteCallback(mContext) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val deletedIndex = viewHolder.adapterPosition
                 val deletedTask = mOpinion?.tasks!![deletedIndex]
                 mTasksAdapter.removeAt(viewHolder.adapterPosition)
-                mIssue?.let { viewModel.updateIssue(it)}
+                mIssue?.let { viewModel.updateIssue(it) }
                 val snackbar: Snackbar = Snackbar
                     .make(
                         binding.tasksRv,
@@ -293,20 +304,15 @@ class OpinionDetailsFragment : Fragment(),
                 snackbar.show()
             }
 
-            override fun onMove(rv: RecyclerView, vh1: RecyclerView.ViewHolder,
-                                vh2: RecyclerView.ViewHolder): Boolean {
+            override fun onMove(
+                rv: RecyclerView, vh1: RecyclerView.ViewHolder,
+                vh2: RecyclerView.ViewHolder
+            ): Boolean {
                 return false
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(binding.tasksRv)
-        binding.addTaskBtn.setOnClickListener{
-            mOpinion?.tasks?.let{
-                it.add(Task(""))
-                mTasksAdapter.newTaskAdded(it)
-            }
-        }
-
     }
 
     private fun setupImportanceBar() {
@@ -375,7 +381,6 @@ class OpinionDetailsFragment : Fragment(),
 
     override fun onCheckedChanged(pos: Int, checked: Boolean) {
         mOpinion?.checkTask(pos, checked)
-
     }
 
     private fun backPressed() {

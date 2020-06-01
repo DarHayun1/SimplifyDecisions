@@ -29,23 +29,27 @@ class UiUtils {
         fun fadeInViews(vararg views: View) {
             views
                 .forEach { view: View ->
-                    view.alpha = 0f
-                    view.visibility = View.VISIBLE
-                    view.animate().alpha(1f).setDuration(shortAnimationDuration)
-                        .setListener(null)
+                    if (view.visibility != View.VISIBLE) {
+                        view.alpha = 0f
+                        view.visibility = View.VISIBLE
+                        view.animate().alpha(1f).setDuration(shortAnimationDuration)
+                            .setListener(null)
+                    }
                 }
         }
 
         fun fadeOutViews(vararg views: View) {
             views.forEach { view: View ->
-                view.animate()
-                    .alpha(0f)
-                    .setDuration(shortAnimationDuration)
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            view.visibility = View.GONE
-                        }
-                    })
+                if (view.visibility == View.VISIBLE) {
+                    view.animate()
+                        .alpha(0f)
+                        .setDuration(shortAnimationDuration)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                view.visibility = View.GONE
+                            }
+                        })
+                }
             }
         }
 

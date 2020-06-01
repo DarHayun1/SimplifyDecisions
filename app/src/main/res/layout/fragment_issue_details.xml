@@ -102,12 +102,14 @@
                     android:visibility="invisible"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingTop="@dimen/bottom_drawer_top_padd"
                     android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/unfinished_tasks"
-                        style="@style/TextAppearance.AppCompat.Large"
+                        style="@style/subheadline1_text_style_light"
                         android:fontFamily="@font/assistant_bold"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"

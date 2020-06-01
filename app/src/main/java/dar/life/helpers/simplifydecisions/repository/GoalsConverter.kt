@@ -24,14 +24,21 @@ class GoalsConverter {
         return gson.toJson(intList)
     }
 
-    data class IntGoal(var title: String) {
-        lateinit var intReminder: IntReminderObj
+    data class IntGoal(
+        val title: String,
+        val isDone: Boolean = false,
+        val expanded: Boolean = false,
         var epochDd: Long? = null
+    ) {
+        lateinit var intReminder: IntReminderObj
 
         companion object {
             fun fromGoalList(goals: MutableList<Goal>?): MutableList<IntGoal> =
-                goals?.map{ goal -> IntGoal(goal.name).apply {
-                    epochDd = goal.epochDueDate
+                goals?.map{ goal -> IntGoal(
+                    goal.name,
+                    goal.isDone,
+                    goal.expanded,
+                epochDd = goal.epochDueDate).apply {
                     intReminder = goal.reminder.toIntReminderObj()
                 }
                 }?.toMutableList()
@@ -41,7 +48,9 @@ class GoalsConverter {
                 intGoals.map{
                         intGoal -> Goal(intGoal.title).apply {
                     epochDueDate = intGoal.epochDd
+                    isDone = intGoal.isDone
                     reminder = intGoal.intReminder.toReminderObj()
+                    expanded = intGoal.expanded
                     }
                 }.toMutableList()
         }

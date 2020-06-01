@@ -31,12 +31,6 @@ class TopicsAdapter(val mContext: Context, val mCallBack: OnTemplateClickedListe
         try {
             mContext.getDrawable(drawId)?.let {
                 holder.bindItem(it)
-                if (position == itemCount - 1)
-                    UiUtils
-                        .setColorFilter(
-                            it,
-                            ContextCompat.getColor(mContext, R.color.app_green_light)
-                        )
             }
         }catch (e: android.content.res.Resources.NotFoundException){}
         holder.itemView.setOnClickListener{

@@ -25,7 +25,7 @@
     <dimen name="drawer_logo_size">96dp</dimen>
     <dimen name="large_logo_width">140dp</dimen>
     <dimen name="bottom_drawer_top_pad">32dp</dimen>
-    <dimen name="bottom_drawer_vert_margin">16dp</dimen>
+        <dimen name="bottom_drawer_vert_margin">20dp</dimen>
     <dimen name="menu_vert_margin">8dp</dimen>
     <dimen name="logo_hor_margin">112dp</dimen>
     <dimen name="text_logo_hor_margin">88dp</dimen>
@@ -38,6 +38,6 @@
     <dimen name="radius">50dp</dimen>
     <dimen name="switch_icon_size">36dp</dimen>
     <dimen name="bottom_drawer_min_height">96dp</dimen>
-    <dimen name="bottom_drawer_top_padd">20dp</dimen>
+    <dimen name="bottom_drawer_top_padd">18dp</dimen>
     <dimen name="warn_icon_size">12dp</dimen>
 </resources>

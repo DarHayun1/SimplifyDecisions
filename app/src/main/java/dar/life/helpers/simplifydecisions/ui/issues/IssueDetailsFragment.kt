@@ -412,6 +412,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private fun handleCollaborateClick() {
         val instructions = getInstructions()
         mInstructionsCurrentPos = 0
+        if (isCompareScreen())
         mShowcaseView = ShowcaseView.Builder(activity)
             .withHoloShowcase()
             .setShowcaseEventListener(this)
@@ -422,6 +423,10 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             .setContentText(instructions[0].text.trimMargin())
             .build()
         mShowcaseView.hideButton()
+    }
+
+    private fun isCompareScreen(): Boolean {
+        return binding.compareOptionsFrame.visibility == View.VISIBLE
     }
 
     private fun backPressed() {
@@ -454,7 +459,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private fun nextInstruction() {
         mInstructionsCurrentPos++
         mViewModel.issueDetailsInstruc?.let {
-            if (it.size > mInstructionsCurrentPos) {
+            if (it.size > mInstructionsCurrentPos && isHelpMode) {
                 mShowcaseView = ShowcaseView.Builder(activity)
                     .withHoloShowcase()
                     .setShowcaseEventListener(this)
@@ -465,8 +470,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                     .setContentText(it[mInstructionsCurrentPos].text.trimMargin())
                     .build()
                 mShowcaseView.hideButton()
-            } else {
-                isHelpMode
             }
         }
     }

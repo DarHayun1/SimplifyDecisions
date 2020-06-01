@@ -83,6 +83,10 @@
     <string name="issues_headline">Dilemmas</string>
     <string name="new_template">new</string>
     <string name="due_date_passed_contentdesc">due date passed</string>
+    <string name="edit_label">Edit</string>
+    <string name="delete_label">Delete</string>
+    <string name="goal_mark_done">Mark Done</string>
+    <string name="goal_mark_unfinished">Mark Unfinished</string>
     <array name="instructions_issue_details_title">
         <item>New Argument</item>
         <item>Don\'t forgot this option (;</item>

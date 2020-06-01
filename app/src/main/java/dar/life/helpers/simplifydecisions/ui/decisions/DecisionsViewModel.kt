@@ -10,6 +10,7 @@ import dar.life.helpers.simplifydecisions.repository.AppRepository
 
 class DecisionsViewModel(application: Application) : AndroidViewModel(application) {
 
+    private var openedDecision: Decision? = null
     var lastUsedDecision: Decision? = null
     private val repository = AppRepository.getInstance(application.applicationContext)
 
@@ -24,6 +25,15 @@ class DecisionsViewModel(application: Application) : AndroidViewModel(applicatio
     fun addNewDecision(decision: Decision){
         lastUsedDecision = decision
         repository.addNewDecision(decision)
+    }
+
+    fun isFirstInit(): Boolean {
+        if (openedDecision != lastUsedDecision) {
+            openedDecision = lastUsedDecision
+            return true
+        }
+        return false
+
     }
 
 }

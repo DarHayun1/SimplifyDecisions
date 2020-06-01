@@ -37,7 +37,7 @@
 
     <style name="subheadline2_text_style">
         <item name="android:textSize">@dimen/subheadline2_text_size</item>
-        <item name="android:fontFamily">@font/assistant_semibold</item>
+        <item name="android:fontFamily">@font/assistant_regular</item>
         <item name="android:textColor">@android:color/primary_text_dark</item>
     </style>
 
@@ -52,6 +52,16 @@
     </style>
 
     <style name="content_text_style_light" parent="content_text_style">
+        <item name="android:textColor">@android:color/secondary_text_light</item>
+    </style>
+
+    <style name="big_content_text_style" parent="content_text_style">
+        <item name="android:textSize">@dimen/subheadline2_text_size</item>
+        <item name="android:fontFamily">@font/assistant_regular</item>
+        <item name="android:textColor">@android:color/secondary_text_dark</item>
+    </style>
+
+    <style name="big_content_text_style_light" parent="big_content_text_style">
         <item name="android:textColor">@android:color/secondary_text_light</item>
     </style>
 
