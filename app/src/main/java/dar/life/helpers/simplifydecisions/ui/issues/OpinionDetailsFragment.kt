@@ -41,6 +41,8 @@ import dar.life.helpers.simplifydecisions.data.Opinion.Companion.HIGH_IMPORTANCE
 import dar.life.helpers.simplifydecisions.data.Opinion.Companion.MEDIUM_IMPORTANCE
 import dar.life.helpers.simplifydecisions.data.Opinion.Task
 import dar.life.helpers.simplifydecisions.databinding.FragmentOpinionDetailsBinding
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 /**
@@ -55,6 +57,9 @@ class OpinionDetailsFragment : Fragment(),
                 backPressed()
             }
         }
+
+    val mTimer = Timer("importanceHelper", false)
+
 
     private var isNewOpinion: Boolean = false
 

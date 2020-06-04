@@ -56,9 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/label_to_text_marg"
-                android:textSize="16sp"
-                android:textColor="@android:color/primary_text_dark"
-
+                style="@style/small_content_text_style"
                 app:layout_constraintStart_toEndOf="@id/related_issue_label"
                 app:layout_constraintTop_toTopOf="@id/related_issue_label"/>
 

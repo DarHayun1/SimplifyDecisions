@@ -7,5 +7,5 @@ interface OnGoalClickListener {
     fun onGoalChecked(goal: Goal)
     fun onEditGoalRequest(position: Int)
     fun goalDeleted(goal: Goal)
-    fun goalExpanded()
+    fun goalExpanded(goal: Goal)
 }

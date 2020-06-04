@@ -89,6 +89,7 @@
     <string name="goal_mark_unfinished">Mark Unfinished</string>
     <string name="Help">help_title</string>
     <string name="default_importance_score">50</string>
+    <string name="due_date">Due Date</string>
     <array name="instructions_issue_details_title">
         <item>New Argument</item>
         <item>Don\'t forgot this option (;</item>

@@ -10,13 +10,18 @@
     android:orientation="vertical"
     tools:context=".ui.decisions.DecisionDetailsFragment">
 
+    <LinearLayout
+        android:id="@+id/top_drawer_decision_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/toolbar_vert_pad"
+        android:orientation="vertical">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/decision_details_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:elevation="@dimen/toolbar_elevation"
-        android:paddingVertical="@dimen/toolbar_vert_pad"
         android:clipChildren="false"
         android:clipToPadding="false"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,11 +41,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-        android:textColor="@android:color/primary_text_dark"
-        android:textSize="18sp"
+        style="@style/small_content_text_style"
         app:layout_constraintStart_toStartOf="@+id/decision_title_et_layout"
         app:layout_constraintTop_toBottomOf="@+id/decision_title_et_layout" />
 
+    </LinearLayout>
     <LinearLayout
         android:transitionName="@string/bot_drawer_trans_name"
         android:layout_width="match_parent"

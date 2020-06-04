@@ -41,6 +41,7 @@ import java.util.*
 
 class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
+    private var mSnackbar: Snackbar? = null
     private lateinit var mDecisionLiveData: LiveData<Decision>
     private lateinit var mShowcaseView: ShowcaseView
     private var mFirstTime: Boolean = false
@@ -148,15 +149,19 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         mDecisionLiveData = viewModel.getDecisionById(args.decisionId)
 
         mDecisionLiveData.observe(viewLifecycleOwner, Observer {
-                it?.let {
-                    Log.d("DONECHECK", "decision changed: $it")
-                    mDecision = it
-                    if (cancelUiUpdate)
-                        cancelUiUpdate = false
-                    else
-                        populateUi(it)
-                }
-            })
+            it?.let {
+                mDecision = it
+                Log.w(
+                    "doneandexpand",
+                    "decision updated, canceledUpdate: $cancelUiUpdate, ${mDecision!!.goals}"
+                )
+
+                if (cancelUiUpdate)
+                    cancelUiUpdate = false
+                else
+                    populateUi(it)
+            }
+        })
         setupGoals()
     }
 
@@ -245,9 +250,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     private fun backPressed() {
         if (!hideHelpIfShown()) {
             mDecision?.let {
-                Log.i("DONECHECK", it.goals.toString())
+                Log.w("DONECHECK", it.goals.toString())
                 mDecisionLiveData.removeObservers(viewLifecycleOwner)
-                viewModel.updateDecision(it) }
+                viewModel.updateDecision(it)
+            }
             clearCallback()
             findNavController().popBackStack()
         }
@@ -263,13 +269,15 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
         binding.decisionDetailsToolbarTitle.text = decision.title
 
-        if (viewModel.isFirstInit()){
+        if (viewModel.isFirstInit()) {
             //If the user navigated from a reminder it will expand, otherwise, the first
-            val remindersGoal = decision.goals.find { it.expanded = false
-                it.reminder.id == args.reminderId}
-            if (remindersGoal != null){
+            val remindersGoal = decision.goals.find {
+                it.expanded = false
+                it.reminder.id == args.reminderId
+            }
+            if (remindersGoal != null) {
                 remindersGoal.expanded = true
-            }else{
+            } else {
                 expandNextGoal(decision.goals)
             }
         }
@@ -279,15 +287,16 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     }
 
     private fun expandNextGoal(goals: MutableList<Goal>) {
-        goals.forEach{
+        goals.forEach {
             it.expanded = false
         }
         goals.sortBy {
-            it.epochDueDate ?:
-            LocalDate.now().plusYears(5).toEpochDay()}
+            it.epochDueDate ?: LocalDate.now().plusYears(5).toEpochDay()
+        }
         goals.firstOrNull { goal ->
-            goal.epochDueDate!=null &&
-                LocalDate.ofEpochDay(goal.epochDueDate!!).isAfter(LocalDate.now()) }
+            goal.epochDueDate != null &&
+                    LocalDate.ofEpochDay(goal.epochDueDate!!).isAfter(LocalDate.now())
+        }
             ?.let { it.expanded = true }
     }
 
@@ -298,7 +307,20 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     override fun onGoalChecked(goal: Goal) {
         cancelUiUpdate = true
-        viewModel.updateDecision(mDecision!!)
+        Log.e(
+            "doneandexpand",
+            "Fragment onGoalChecked. goal: $goal\ndecisionGs: ${mDecision!!.goals}"
+        )
+        Log.e(
+            "doneandexpand",
+            "Fragment onGoalChecked.2 isEqual: ${mDecision!!.goals.contains(goal)}"
+        )
+        viewModel.updateDecision(mDecision!!
+            .also {
+                it.goals.find {
+                    it == goal
+                }?.isDone = goal.isDone
+            })
         if (goal.isDone)
             goalCompleted(goal)
     }
@@ -309,24 +331,37 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     override fun goalDeleted(goal: Goal) {
         cancelUiUpdate = true
-        Log.d("DeleteBug2", "goal: ")
-        viewModel.updateDecision(mDecision!!.apply {goals.remove(goal)})
+        Log.w("DeleteBug2", "goal: ")
+        viewModel.updateDecision(mDecision!!.apply { goals.remove(goal) })
 
     }
 
-    override fun goalExpanded() {
+    override fun goalExpanded(goal: Goal) {
+        Log.w("doneandexpand", "goalExpended(frag) decision: ${mDecision!!.goals}")
         cancelUiUpdate = true
-        viewModel.updateDecision(mDecision!!)
+        viewModel.updateDecision(mDecision!!.also { decision ->
+            decision.goals.find { it == goal }
+                ?.also {
+                    it.expanded = goal.expanded
+                    it.isDone = goal.isDone
+                }
+        })
 
     }
 
     private fun goalCompleted(goal: Goal) {
-    Snackbar.make(
-                binding.root,
-                "Congratulations! \"${goal.name}\" Completed!",
-                Snackbar.LENGTH_LONG
-            )
-            .show()
+        Log.w("Snackush", goal.toString())
+        if (mSnackbar != null && mSnackbar!!.isShown)
+            return
+        mSnackbar = Snackbar.make(
+            binding.root,
+            "Congratulations! \"${goal.name}\" Completed!",
+            Snackbar.LENGTH_LONG
+        )
+            .also { it.show() }
+        if (!mSnackbar!!.isShown)
+            mSnackbar!!.show()
+
     }
 
     private fun openEditGoalDialog(goalPos: Int = -1) {
@@ -340,7 +375,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
         val dueDateCb: CheckBox = dialogView.findViewById(R.id.due_date_cb)
         val dueDateTv: TextView = dialogView.findViewById(R.id.edit_goal_due_date_tv)
-        var dueDateCal: Calendar = Calendar.getInstance()
+        val localWeekFromNow = LocalDate.now().plusWeeks(1)
+        var dueDateCal: Calendar = GregorianCalendar.from(
+            localWeekFromNow
+                .atStartOfDay(ZoneId.systemDefault()))
         val addToCalBtn: View = dialogView.findViewById(R.id.edit_goal_to_cal_tv)
 
         val cancelBtn: Button = dialogView.findViewById(R.id.edit_goal_cancel_button)
@@ -354,25 +392,27 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         cancelBtn.setOnClickListener {
             dialogBuilder.dismiss()
         }
-        mDecision?.let {decision ->
+        mDecision?.let { decision ->
             goal = decision.goals.getOrElse(goalPos) {
                 decision.goals.add(0, goal)
-                goal }
+                goal
+            }
 
             textInputLayout.editText?.setText(goal.name)
 
-            goal.epochDueDate?.let { epochDay ->
+            if (goal.epochDueDate != null) {
                 dueDateCal =
                     GregorianCalendar.from(
-                        LocalDate.ofEpochDay(epochDay).atStartOfDay(ZoneId.systemDefault())
+                        LocalDate.ofEpochDay(goal.epochDueDate!!)
+                            .atStartOfDay(ZoneId.systemDefault())
                     )
-                dueDateTv.text = dueDateCal.time.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                    .format(ofLocalizedDate(FormatStyle.SHORT))
                 dueDateCb.isChecked = true
                 UiUtils.fadeInViews(dueDateTv, addToCalBtn)
             }
+            dueDateTv.text = dueDateCal.time.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+                .format(ofLocalizedDate(FormatStyle.SHORT))
 
             if (goal.reminder.isActive) {
                 isReminderSet = true
@@ -390,22 +430,16 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             }
         }
         saveBtn.setOnClickListener {
-
-            if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength) {
-                saveGoal(textInputLayout, firstReminderEt, dueDateCb, dueDateCal, isReminderSet, goal )
-                dialogBuilder.dismiss()
-            } else {
-                Toast.makeText(
-                    mContext,
-                    "Title length is limited to max ${textInputLayout.counterMaxLength}" +
-                            " characters", Toast.LENGTH_SHORT
-                ).show()
-            }
+            editGoalSaveClicked(
+                textInputLayout, firstReminderEt, dueDateCb,
+                dueDateCal, isReminderSet, goal, dialogBuilder
+            )
         }
         dueDateCb.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
+            if (isChecked) {
+                pickADueDate(dueDateCal, dueDateTv)
                 UiUtils.fadeInViews(dueDateTv, addToCalBtn)
-            else
+            } else
                 UiUtils.fadeOutViews(dueDateTv, addToCalBtn)
         }
         dueDateTv.setOnClickListener {
@@ -416,12 +450,41 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, dueDateCal.timeInMillis)
                 .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
-                .putExtra(CalendarContract.Events.TITLE, textInputLayout.editText?.text.toString())
+                .putExtra(CalendarContract.Events.TITLE,
+                    "${getString(R.string.due_date)} - ${textInputLayout.editText?.text}")
 
             startActivity(intent)
         }
         dialogBuilder.setView(dialogView)
         dialogBuilder.show()
+    }
+
+    private fun editGoalSaveClicked(
+        textInputLayout: TextInputLayout,
+        firstReminderEt: EditText,
+        dueDateCb: CheckBox,
+        dueDateCal: Calendar,
+        isReminderSet: Boolean,
+        goal: Goal,
+        dialogBuilder: AlertDialog
+    ) {
+        if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength) {
+            saveGoal(
+                textInputLayout,
+                firstReminderEt,
+                dueDateCb,
+                dueDateCal,
+                isReminderSet,
+                goal
+            )
+            dialogBuilder.dismiss()
+        } else {
+            Toast.makeText(
+                mContext,
+                "Title length is limited to max ${textInputLayout.counterMaxLength}" +
+                        " characters", Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun saveGoal(
@@ -430,7 +493,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         dueDateCb: CheckBox,
         dueDateCal: Calendar,
         reminderSet: Boolean,
-        goal: Goal) {
+        goal: Goal
+    ) {
         goal.name = textInputLayout.editText?.text.toString()
         goal.reminder.title = reminderEt.text.toString()
         if (dueDateCb.isChecked) {

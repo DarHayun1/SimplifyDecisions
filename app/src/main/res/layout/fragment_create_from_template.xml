@@ -30,8 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/from_template_label"
-            android:textSize="18sp"
-            android:textColor="@color/light_text_second" />
+            style="@style/content_text_style" />
 
 
         <ScrollView

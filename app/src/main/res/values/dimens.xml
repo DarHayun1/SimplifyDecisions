@@ -43,4 +43,5 @@
     <dimen name="importance_icon_size">25dp</dimen>
     <dimen name="opinion_item_top_pad">8dp</dimen>
     <dimen name="toolbar_vert_pad">36dp</dimen>
+    <dimen name="edit_goal_headline_vert_pad">12dp</dimen>
 </resources>

@@ -420,6 +420,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun handleToDecisionClick() {
+        //TODO: Select
         mIssue.toDecision().also {
             mViewModel.addDecision(it)
             mViewModel.updateIssue(mIssue)

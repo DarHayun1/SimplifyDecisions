@@ -20,13 +20,14 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): RecyclerView.Adapter<GoalsAdapter.GoalVH>() {
+class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
+    RecyclerView.Adapter<GoalsAdapter.GoalVH>() {
 
     var goalsList: MutableList<Goal> = mutableListOf()
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     //Holding the list position of the current expanded item
     var expandedPos: Int = -1
@@ -47,6 +48,7 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
         setUpExpandOption(goal, holder, position)
         setupMoreOptions(holder, goal, position)
     }
+
     private fun setupMoreOptions(
         holder: GoalVH,
         goal: Goal,
@@ -87,11 +89,12 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
     private fun setUpIsDone(goal: Goal, holder: GoalVH, position: Int) {
         holder.titleCb.isChecked = goal.isDone
         paintIfDone(holder, goal)
+        Log.d("doneandexpand", "done setUp goal: $goal, position: $position")
 
-        holder.titleCb.setOnCheckedChangeListener{
-                view, isChecked ->
+        holder.titleCb.setOnCheckedChangeListener { view, isChecked ->
             if (view == holder.titleCb) {
                 goal.isDone = isChecked
+                Log.d("doneandexpand", "done clickListener goal: $goal, position: $position")
                 mCallback.onGoalChecked(goal)
                 paintIfDone(holder, goal)
                 holder.warnIfDueDatePassed(goal, mContext)
@@ -120,9 +123,8 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
         goal: Goal,
         holder: GoalVH,
         position: Int
-    )
-    {
-        Log.d("expandbug", "expPos: $expandedPos, ${goal.expanded}, Goal: $goal")
+    ) {
+        Log.d("doneandexpand", "setUpExpand expandedPos: $expandedPos, goalexpanded?${goal.expanded}, Goal: $goal")
         if (goal.expanded) {
             expandedPos = position
             fadeInViews(holder.extraInfoLayout)
@@ -130,7 +132,8 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
             fadeOutViews(holder.extraInfoLayout)
         }
 
-            holder.itemView.setOnClickListener {
+        holder.itemView.setOnClickListener {
+            Log.i("doneandexpand", "goal: $goal clicklisten expanded:${goal.expanded}")
             if (goal.expanded) {
                 expandedPos = -1
                 goal.expanded = false
@@ -141,12 +144,12 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
                 }
                 goal.expanded = true
             }
-            mCallback.goalExpanded()
+            mCallback.goalExpanded(goal)
             notifyItemChanged(position)
-            }
+        }
     }
 
-    class GoalVH(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class GoalVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleCb: CheckBox = itemView.findViewById(R.id.goal_title_checkbox)
         val titleTv: TextView = itemView.findViewById(R.id.goal_title_tv)
         val warnIv: ImageView = itemView.findViewById(R.id.due_date_passed_iv)
@@ -195,11 +198,11 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
             warnIv.visibility = if (
                 !goal.isDone &&
                 goal.epochDueDate != null &&
-                goal.epochDueDate!! < LocalDate.now().toEpochDay()){
+                goal.epochDueDate!! < LocalDate.now().toEpochDay()
+            ) {
                 dueDateTv.setTextColor(ContextCompat.getColor(context, R.color.app_yellow_dark))
                 View.VISIBLE
-            }
-            else {
+            } else {
                 dueDateTv.setTextColor(ContextCompat.getColor(context, R.color.light_text_second))
                 View.GONE
             }

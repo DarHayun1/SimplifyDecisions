@@ -9,10 +9,15 @@
         android:orientation="vertical"
         tools:context=".ui.issues.IssueDetailsFragment">
 
+    <LinearLayout
+        android:id="@+id/top_drawer_issue_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/toolbar_vert_pad"
+        android:orientation="vertical">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/edit_issue_toolbar"
             app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            android:paddingVertical="@dimen/toolbar_vert_pad"
             android:elevation="@dimen/toolbar_elevation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,14 +36,14 @@
 
     <TextView
         android:id="@+id/issue_date_tv"
-        style="@style/content_text_style"
+        style="@style/small_content_text_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:gravity="top"
-        android:textColor="@color/trans_white"
         app:layout_constraintStart_toStartOf="@+id/issue_title_tv"
         app:layout_constraintTop_toBottomOf="@+id/issue_title_et_layout" />
+    </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
