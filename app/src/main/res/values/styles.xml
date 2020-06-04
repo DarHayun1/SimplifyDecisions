@@ -9,6 +9,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionOverflowButtonStyle">@style/AppTheme.OverFlow</item>
         <item name="android:listDivider">@color/trans_white</item>
+        <item name="android:actionMenuTextColor">@color/primary_text_dark</item>
     </style>
 
     <style name="AppTheme.OverFlow">
@@ -134,12 +135,12 @@
     </style>
 
     <style name="ShowcaseTheme" parent="ShowcaseView.Light">
-        <item name="sv_backgroundColor">@color/app_turquoise_trans</item>
+        <item name="sv_backgroundColor">@color/app_turquoise_trans_sc</item>
         <item name="sv_showcaseColor">@color/app_blue_light_trans</item>
         <item name="sv_buttonText">Got it!</item>
         <item name="sv_tintButtonColor">false</item>
-        <item name="sv_titleTextAppearance">@style/DarkTitle</item>
-        <item name="sv_detailTextAppearance">@style/CustomText</item>
+        <item name="sv_titleTextAppearance">@style/subheadline1_text_style_light</item>
+        <item name="sv_detailTextAppearance">@style/big_content_text_style_light</item>
     </style>
 
     <style name="CustomTitle" parent="TextAppearance.ShowcaseView.Title">
@@ -168,6 +169,14 @@
 
     <style name="TaskItemTitleText" parent="content_text_style">
         <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="OpinionItemImportance_icon" parent="small_content_text_style_light">
+        <item name="fontFamily">@font/assistant_regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:background">@drawable/round_icon_background</item>
+        <item name="android:gravity">center</item>
     </style>
 
 </resources>

@@ -41,7 +41,7 @@
     <string name="edit_issue_title">Edit issue title</string>
     <string name="make_a_decision">Make a decision</string>
     <string name="collaborate_title">Collaborate</string>
-    <string name="edit_opinion_title">Rename</string>
+    <string name="edit_opinion_title">Edit</string>
     <string name="edit_title_label">Edit Title</string>
 
     <string name="edit_issue_title_label">Edit Issue Title</string>
@@ -52,7 +52,7 @@
     <string name="new_opinion_item_text">+ new opinion</string>
     <string name="goals">Goals</string>
     <string name="add_a_goal">+ Add a goal</string>
-    <string name="edit_decision_title">Edit decision title</string>
+    <string name="edit_decision_title">Edit</string>
     <string name="edit_goal_info">Edit Goal info</string>
     <string name="goal_title">Goal title</string>
     <string name="bottom_Drawer_dash_transition">bottom_Drawer_dash_transition</string>
@@ -87,6 +87,8 @@
     <string name="delete_label">Delete</string>
     <string name="goal_mark_done">Mark Done</string>
     <string name="goal_mark_unfinished">Mark Unfinished</string>
+    <string name="Help">help_title</string>
+    <string name="default_importance_score">50</string>
     <array name="instructions_issue_details_title">
         <item>New Argument</item>
         <item>Don\'t forgot this option (;</item>

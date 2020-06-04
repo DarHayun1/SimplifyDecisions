@@ -6,7 +6,6 @@
     <dimen name="fab_size">56dp</dimen>
     <dimen name="list_item_vert_pad">18dp</dimen>
     <dimen name="list_item_hor_pad">@dimen/activity_horizontal_margin</dimen>
-    <dimen name="top_header_margin">80dp</dimen>
     <dimen name="grid_item_height">64dp</dimen>
     <dimen name="issue_title_icon_size">24dp</dimen>
     <dimen name="issue_title_text_size">28sp</dimen>
@@ -40,4 +39,8 @@
     <dimen name="bottom_drawer_min_height">96dp</dimen>
     <dimen name="bottom_drawer_top_padd">18dp</dimen>
     <dimen name="warn_icon_size">12dp</dimen>
+    <dimen name="opinion_item_center_mar">12dp</dimen>
+    <dimen name="importance_icon_size">25dp</dimen>
+    <dimen name="opinion_item_top_pad">8dp</dimen>
+    <dimen name="toolbar_vert_pad">36dp</dimen>
 </resources>

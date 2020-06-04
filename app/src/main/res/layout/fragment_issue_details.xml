@@ -12,7 +12,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/edit_issue_toolbar"
             app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            android:paddingVertical="36dp"
+            android:paddingVertical="@dimen/toolbar_vert_pad"
             android:elevation="@dimen/toolbar_elevation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,6 +86,8 @@
                         android:elevation="4dp"
                         android:paddingStart="@dimen/activity_horizontal_margin"
                         android:paddingEnd="@dimen/activity_horizontal_margin"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
                         android:paddingBottom="24dp" />
 
                     <View
@@ -119,6 +121,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="10dp">
+
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/all_tasks_rv"
                             android:layout_width="match_parent"

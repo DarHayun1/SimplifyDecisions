@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryTrans">#806200EE</color>
     <color name="colorPrimaryLight">#6200EE</color>
     <color name="colorPrimaryDark">@color/app_blue_dark</color>
     <color name="textLogo_color">#231f20</color>
@@ -9,8 +10,11 @@
     <color name="colorPositive">#1BDD23</color>
     <color name="colorNegative">#DA2121</color>
 
-    <color name="light_text_second">#B0B0B0</color>
-    <color name="secondary_text">@android:color/secondary_text_light</color>
+    <color name="light_text_second">#85000000</color>
+    <color name="secondary_text">#85FFFFFF</color>
+    <color name="primary_text_dark">@android:color/primary_text_dark</color>
+    <color name="primary_text_light">@android:color/primary_text_light</color>
+
 
     <color name="prioRed">#E74C3C</color>
     <color name="prioOrange">#E67E22</color>
@@ -20,17 +24,21 @@
     <color name="app_red_pink">#bf263a</color>
     <color name="app_red_dark">#941924</color>
     <color name="app_purple">#5b284a</color>
+    <color name="app_purple_trans">#805b284a</color>
     <color name="app_yellow">#ffd064</color>
     <color name="app_yellow_dark">#cf9b28</color>
+    <color name="app_yellow_dark_trans">#80cf9b28</color>
     <color name="app_green_light">#a4cf73</color>
     <color name="app_turquoise">#08b9ab</color>
+    <color name="app_turquoise_trans">#8008b9ab</color>
     <color name="app_blue_light">#d0eefc</color>
     <color name="app_grey">#58585a</color>
+    <color name="app_grey_trans">#8058585a</color>
     <color name="app_blue_dark">#223646</color>
     <color name="trans_white">#50FFFFFF</color>
 
     <color name="app_green_light_trans">#80a4cf73</color>
-    <color name="app_turquoise_trans">#8008b9ab</color>
+    <color name="app_turquoise_trans_sc">#8008b9ab</color>
     <color name="app_blue_light_trans">#80d0eefc</color>
 
 

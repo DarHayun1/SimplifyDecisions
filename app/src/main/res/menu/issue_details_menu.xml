@@ -6,13 +6,18 @@
         android:id="@+id/action_edit_issue_title"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/edit_issue_title"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_create_a_decision"
         android:icon="@mipmap/decide_foreground"
         android:iconTint="@android:color/darker_gray"
         android:title="@string/make_a_decision"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_help"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/Help"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_collaborate_issue"
         android:icon="@android:drawable/ic_menu_share"

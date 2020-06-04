@@ -103,7 +103,7 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
                 findNavController().navigate(
                     NewIssueTitleFragmentDirections.actionNewIssueTitleFragmentToEditIssueFragment(
                         it.id, it.title
-                    )
+                    ).also { it.isNew = true }
                 )
             }else
                 Toast.makeText(mContext,

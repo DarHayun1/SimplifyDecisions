@@ -14,9 +14,9 @@ data class Opinion(var title: String,
     companion object {
 
         const val LOW_IMPORTANCE = 0
-        const val MEDIUM_IMPORTANCE = 20
-        const val HIGH_IMPORTANCE = 40
-        const val GAME_CHANGER = 60
+        const val MEDIUM_IMPORTANCE = 25
+        const val HIGH_IMPORTANCE = 50
+        const val GAME_CHANGER = 75
 
     }
 

@@ -5,7 +5,7 @@
         android:id="@+id/action_edit_decision_title"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/edit_decision_title"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_collaborate_decision"
         android:icon="@android:drawable/ic_menu_share"

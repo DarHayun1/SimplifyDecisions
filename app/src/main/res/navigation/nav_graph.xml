@@ -66,6 +66,10 @@
             android:id="@+id/action_editIssueFragment_to_issuesFragment"
             app:destination="@id/issuesFragment"
             app:launchSingleTop="false" />
+        <argument
+            android:name="isNew"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/createFromTemplateFragment"

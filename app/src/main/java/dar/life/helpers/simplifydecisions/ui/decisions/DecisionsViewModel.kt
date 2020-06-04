@@ -19,6 +19,7 @@ class DecisionsViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.getDecision(id)
     }
     fun updateDecision(decision: Decision) {
+        Log.d("DeleteBug1", "decisiongoals: ${decision.goals}")
         repository.updateDecision(decision)
     }
 

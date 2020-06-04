@@ -47,6 +47,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     private var mDialogView: View? = null
     private lateinit var mContext: Context
 
+    private var cancelUiUpdate: Boolean = false
+
     private var mDecision: Decision?
         get() = viewModel.lastUsedDecision
         set(value) {
@@ -80,10 +82,9 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null
-            && args.isNew
-        )
+        if (savedInstanceState == null && args.isNew)
             mFirstTime = true
+        Log.d("savedis", savedInstanceState.toString())
         sharedElementEnterTransition =
             TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
     }
@@ -110,8 +111,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             .addCallback(mBackPressedCallback)
         initToolbar()
         initViews()
-        if (mFirstTime)
+        if (mFirstTime) {
             editDecisionTitle(true)
+            mFirstTime = false
+        }
     }
 
     private fun initToolbar() {
@@ -148,7 +151,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                 it?.let {
                     Log.d("DONECHECK", "decision changed: $it")
                     mDecision = it
-                    populateUi(it)
+                    if (cancelUiUpdate)
+                        cancelUiUpdate = false
+                    else
+                        populateUi(it)
                 }
             })
         setupGoals()
@@ -291,6 +297,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     }
 
     override fun onGoalChecked(goal: Goal) {
+        cancelUiUpdate = true
+        viewModel.updateDecision(mDecision!!)
         if (goal.isDone)
             goalCompleted(goal)
     }
@@ -299,10 +307,17 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         openEditGoalDialog(position)
     }
 
-    override fun deleteGoal(goal: Goal) {
-        mDecision?.let {
-            it.goals.remove(goal)
-        }
+    override fun goalDeleted(goal: Goal) {
+        cancelUiUpdate = true
+        Log.d("DeleteBug2", "goal: ")
+        viewModel.updateDecision(mDecision!!.apply {goals.remove(goal)})
+
+    }
+
+    override fun goalExpanded() {
+        cancelUiUpdate = true
+        viewModel.updateDecision(mDecision!!)
+
     }
 
     private fun goalCompleted(goal: Goal) {
@@ -351,6 +366,12 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                     GregorianCalendar.from(
                         LocalDate.ofEpochDay(epochDay).atStartOfDay(ZoneId.systemDefault())
                     )
+                dueDateTv.text = dueDateCal.time.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                    .format(ofLocalizedDate(FormatStyle.SHORT))
+                dueDateCb.isChecked = true
+                UiUtils.fadeInViews(dueDateTv, addToCalBtn)
             }
 
             if (goal.reminder.isActive) {

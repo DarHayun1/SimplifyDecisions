@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.transition.Slide
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
@@ -324,18 +323,19 @@ class OpinionDetailsFragment : Fragment(),
         binding.importanceSb.progress = mOpinion!!.importance
     }
 
-    private fun handlePbChange(it: Int) {
+    private fun handlePbChange(value: Int) {
         val impTextView = binding.importanceSbTv
+        binding.importanceSbNumTv.text = value.toString()
         when {
-            it >= GAME_CHANGER -> {
+            value >= GAME_CHANGER -> {
                 impTextView.text = getString(R.string.game_changer_imp)
                 impTextView.setTextColor(ContextCompat.getColor(mContext, R.color.app_purple))
             }
-            it >= HIGH_IMPORTANCE -> {
+            value >= HIGH_IMPORTANCE -> {
                 impTextView.text = getString(R.string.high_imp)
                 impTextView.setTextColor(ContextCompat.getColor(mContext, R.color.prioRed))
             }
-            it >= MEDIUM_IMPORTANCE -> {
+            value >= MEDIUM_IMPORTANCE -> {
                 impTextView.text = getString(R.string.medium_imp)
                 impTextView.setTextColor(ContextCompat.getColor(mContext, R.color.prioOrange))
             }

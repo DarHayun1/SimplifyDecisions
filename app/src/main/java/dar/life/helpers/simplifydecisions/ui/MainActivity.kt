@@ -2,6 +2,7 @@ package dar.life.helpers.simplifydecisions.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import dar.life.helpers.simplifydecisions.R
 
@@ -14,5 +15,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onBackPressed() {
+        Log.w("backSuprise", "backpressedActivity")
+        super.onBackPressed()
     }
 }

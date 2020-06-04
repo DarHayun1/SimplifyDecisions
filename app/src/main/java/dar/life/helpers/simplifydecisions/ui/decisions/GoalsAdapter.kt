@@ -47,7 +47,6 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
         setUpExpandOption(goal, holder, position)
         setupMoreOptions(holder, goal, position)
     }
-
     private fun setupMoreOptions(
         holder: GoalVH,
         goal: Goal,
@@ -71,7 +70,10 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
                         return@setOnMenuItemClickListener true
                     }
                     R.id.action_delete_goal -> {
-                        mCallback.deleteGoal(goal)
+                        goalsList.remove(goal)
+                        Log.d("DeleteBug1", "goal: $goal, list: $goalsList")
+                        notifyItemRemoved(position)
+                        mCallback.goalDeleted(goal)
                         return@setOnMenuItemClickListener true
                     }
                     else ->
@@ -90,9 +92,9 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
                 view, isChecked ->
             if (view == holder.titleCb) {
                 goal.isDone = isChecked
+                mCallback.onGoalChecked(goal)
                 paintIfDone(holder, goal)
                 holder.warnIfDueDatePassed(goal, mContext)
-                mCallback.onGoalChecked(goal)
             }
         }
     }
@@ -139,6 +141,7 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
                 }
                 goal.expanded = true
             }
+            mCallback.goalExpanded()
             notifyItemChanged(position)
             }
     }
@@ -197,7 +200,7 @@ class GoalsAdapter(val mContext: Context,val mCallback: OnGoalClickListener): Re
                 View.VISIBLE
             }
             else {
-                dueDateTv.setTextColor(ContextCompat.getColor(context, R.color.secondary_text))
+                dueDateTv.setTextColor(ContextCompat.getColor(context, R.color.light_text_second))
                 View.GONE
             }
         }

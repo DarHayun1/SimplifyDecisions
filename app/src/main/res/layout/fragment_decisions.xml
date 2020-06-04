@@ -12,7 +12,7 @@
         android:id="@+id/decisions_headline_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="36dp"
+        android:paddingVertical="@dimen/toolbar_vert_pad"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:textAlignment="viewStart"
         style="@style/headline_text_style"

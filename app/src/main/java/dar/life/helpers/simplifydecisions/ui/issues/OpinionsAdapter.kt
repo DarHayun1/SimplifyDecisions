@@ -1,13 +1,16 @@
 package dar.life.helpers.simplifydecisions.ui.issues
 
+import android.animation.ArgbEvaluator
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginTop
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
@@ -15,9 +18,11 @@ import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 import kotlin.math.max
 
-class OpinionsAdapter(private val mContext: Context,
-                      private val mCallback: OnOpinionRequest,
-                      private val baseIssue: Issue):
+class OpinionsAdapter(
+    private val mContext: Context,
+    private val mCallback: OnOpinionRequest,
+    private val baseIssue: Issue
+) :
     RecyclerView.Adapter<OpinionsAdapter.FactsVH>() {
 
     var mOpinionsRaws: MutableList<OpinionsRaw> = mutableListOf()
@@ -53,13 +58,13 @@ class OpinionsAdapter(private val mContext: Context,
     }
 
     override fun getItemCount(): Int =
-        mOpinionsRaws.size+1
+        mOpinionsRaws.size + 1
 
     override fun onBindViewHolder(holder: FactsVH, position: Int) {
         if (position != 0) {
             val listPosition = position - 1
             val opRaw = mOpinionsRaws[listPosition]
-            holder.bindItem(mOpinionsRaws[listPosition])
+            holder.bindItem(mOpinionsRaws[listPosition], mContext)
             holder.aFrame.background?.let {
                 UiUtils.setColorFilter(it, baseIssue.optionAColor)
             }
@@ -81,79 +86,124 @@ class OpinionsAdapter(private val mContext: Context,
                 holder.bFrame.transitionName = transitionBaseName + opinion.title + "frame"
 
             }
-        }else{
+        } else {
             holder.bindFirstItem(mContext)
-            holder.aFrame.setOnClickListener{
+            holder.aFrame.setOnClickListener {
                 mCallback.openNewOpinionScreen(true)
             }
-            holder.bFrame.setOnClickListener{
+            holder.bFrame.setOnClickListener {
                 mCallback.openNewOpinionScreen(false)
             }
         }
 
     }
 
-        private fun launchOpinionScreen(opinion: Opinion, titleView: View, frameView: View) {
-            mCallback.openOpinionScreen(opinion, titleView, frameView)
-        }
+    private fun launchOpinionScreen(opinion: Opinion, titleView: View, frameView: View) {
+        mCallback.openOpinionScreen(opinion, titleView, frameView)
+    }
 
-        class FactsVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val aFrame: View = itemView.findViewById(R.id.opinion_a_frame)
-            val aTv: TextView = itemView.findViewById(R.id.opinion_a_title)
-            val aTasksLeftTv: TextView = itemView.findViewById(R.id.a_tasks_left)
-            val bFrame: View = itemView.findViewById(R.id.opinion_b_frame)
-            val bTv: TextView = itemView.findViewById(R.id.opinion_b_title)
-            val bTasksLeftTv: TextView = itemView.findViewById(R.id.b_tasks_left)
-            val catTv: TextView = itemView.findViewById(R.id.category_tv)
-            val marginView: View = itemView.findViewById(R.id.margin_view)
+    class FactsVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val aFrame: View = itemView.findViewById(R.id.opinion_a_frame)
+        val aTv: TextView = itemView.findViewById(R.id.opinion_a_title)
+        val aTasksLeftTv: TextView = itemView.findViewById(R.id.a_tasks_left)
+        val bFrame: View = itemView.findViewById(R.id.opinion_b_frame)
+        val bTv: TextView = itemView.findViewById(R.id.opinion_b_title)
+        val bTasksLeftTv: TextView = itemView.findViewById(R.id.b_tasks_left)
+        val catTv: TextView = itemView.findViewById(R.id.category_tv)
+        val aImportanceIcon: TextView = itemView.findViewById(R.id.option_a_importance_tv)
+        val bImportanceIcon: TextView = itemView.findViewById(R.id.option_b_importance_tv)
 
-            fun bindItem(opRaw: OpinionsRaw) {
-                catTv.visibility = if (opRaw.category != null) {
-                    catTv.text = opRaw.category
-                    marginView.visibility = View.VISIBLE
-                    View.VISIBLE
-                } else
-                    View.INVISIBLE
+        fun bindItem(opRaw: OpinionsRaw, context: Context) {
+            catTv.visibility = if (opRaw.category != null) {
+                catTv.text = opRaw.category
+                View.VISIBLE
+            } else
+                INVISIBLE
 
-                aFrame.visibility = if (opRaw.firstOpinion != null) {
-                    aTv.text = opRaw.firstOpinion.title
-                    if (!opRaw.firstOpinion.isAFact) {
-                        aTasksLeftTv.text = opRaw.firstOpinion.tasksLeftText()
-                        aTasksLeftTv.visibility = View.VISIBLE
-                    }
-                    View.VISIBLE
-                } else
-                    View.INVISIBLE
-
-                bFrame.visibility = if (opRaw.secondOpinion != null) {
-                    bTv.text = opRaw.secondOpinion.title
-                    if (!opRaw.secondOpinion.isAFact) {
-                        bTasksLeftTv.text = opRaw.secondOpinion.tasksLeftText()
-                        bTasksLeftTv.visibility = View.VISIBLE
-                    }
-                    View.VISIBLE
-                } else
-                    View.INVISIBLE
+            aFrame.visibility = if (opRaw.firstOpinion != null) {
+                aTv.text = opRaw.firstOpinion.title
+                if (!opRaw.firstOpinion.isAFact) {
+                    aTasksLeftTv.text = opRaw.firstOpinion.tasksLeftText()
+                    aTasksLeftTv.visibility = View.VISIBLE
+                }
+                val importance = opRaw.firstOpinion.importance
+                setImportanceColor(aImportanceIcon, importance, context)
+                aImportanceIcon.text = importance.toString()
+                aImportanceIcon.visibility = View.VISIBLE
+                View.VISIBLE
+            } else {
+                aImportanceIcon.visibility = INVISIBLE
+                INVISIBLE
             }
 
-            fun bindFirstItem(context: Context){
-                aFrame.background =
-                    ContextCompat.getDrawable(context, R.drawable.add_opinion_item)
-                bFrame.background =
-                    ContextCompat.getDrawable(context, R.drawable.add_opinion_item)
-                catTv.visibility = View.GONE
-                aTv.setTextColor(Color.DKGRAY)
-                bTv.setTextColor(Color.DKGRAY)
-                aTasksLeftTv.visibility = View.GONE
-                bTasksLeftTv.visibility = View.GONE
-                aTv.text = context.getString(R.string.new_opinion_item_text)
-                bTv.text = context.getString(R.string.new_opinion_item_text)
+            bFrame.visibility = if (opRaw.secondOpinion != null) {
+                bTv.text = opRaw.secondOpinion.title
+                if (!opRaw.secondOpinion.isAFact) {
+                    bTasksLeftTv.text = opRaw.secondOpinion.tasksLeftText()
+                    bTasksLeftTv.visibility = View.VISIBLE
+                }
+                val importance = opRaw.secondOpinion.importance
+                setImportanceColor(bImportanceIcon, importance, context)
+                bImportanceIcon.text = importance.toString()
+                bImportanceIcon.visibility = View.VISIBLE
+                View.VISIBLE
+            } else {
+                bImportanceIcon.visibility = INVISIBLE
+                INVISIBLE
             }
         }
 
-        data class OpinionsRaw(
-            val firstOpinion: Opinion? = null,
-            val category: String? = null,
-            val secondOpinion: Opinion? = null
-        )
+        private fun setImportanceColor(view: TextView, importance: Int, context: Context) {
+            val background = view.background
+            view.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    if (importance < 50) R.color.primary_text_light else R.color.primary_text_dark
+                ))
+            view.alpha = 0.9f
+            val colorArray = context.resources.getIntArray(R.array.progressGradientColors)
+            if (importance in 0..100) {
+                var startColor = colorArray[(importance-1) / 25]
+                var endColor = colorArray[(importance - 1) / 25]
+                val resultColor = ArgbEvaluator().evaluate(
+                    ((importance - 1).toFloat() % 25 / 25),
+                    startColor,
+                    endColor
+                ) as Int
+                ColorUtils.setAlphaComponent(resultColor, 10)
+                UiUtils.setColorFilter(
+                    background,
+                    resultColor)
+            }
+        }
+
+        /**
+         * setting up the new option buttons
+         *
+         * @param context
+         */
+        fun bindFirstItem(context: Context) {
+            aFrame.elevation = 0f
+            bFrame.elevation = 0f
+            aFrame.background =
+                ContextCompat.getDrawable(context, R.drawable.add_opinion_item)
+            bFrame.background =
+                ContextCompat.getDrawable(context, R.drawable.add_opinion_item)
+            catTv.visibility = GONE
+            aImportanceIcon.visibility = GONE
+            bImportanceIcon.visibility = GONE
+            aTv.setTextColor(context.getColor(R.color.light_text_second))
+            bTv.setTextColor(context.getColor(R.color.light_text_second))
+            aTasksLeftTv.visibility = GONE
+            bTasksLeftTv.visibility = GONE
+            aTv.text = context.getString(R.string.new_opinion_item_text)
+            bTv.text = context.getString(R.string.new_opinion_item_text)
+        }
+    }
+
+    data class OpinionsRaw(
+        val firstOpinion: Opinion? = null,
+        val category: String? = null,
+        val secondOpinion: Opinion? = null
+    )
 }

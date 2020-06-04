@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="16dp"
-        android:paddingVertical="36dp"
+        android:paddingVertical="@dimen/toolbar_vert_pad"
         android:orientation="vertical">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/edit_opinion_toolbar"
@@ -144,21 +144,38 @@
             app:progressBackgroundColor="@android:color/darker_gray"
             app:progressBackgroundWidth="20dp"
             app:progress="40"
-            app:maxProgress="80"
+            app:maxProgress="100"
             app:progressWidth="30dp"/>
 
-        <TextView
-            android:id="@+id/importance_sb_tv"
-            style="@style/TextAppearance.AppCompat.Display1"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginHorizontal="80dp"
             android:layout_marginBottom="10dp"
-            android:fontFamily="sans-serif-black"
-            android:gravity="bottom|center_horizontal"
-            android:textAlignment="center"
-            android:textAllCaps="true" />
+            android:layout_marginHorizontal="80dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/subheadline1_text_style_light"
+                android:id="@+id/importance_sb_num_tv"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/importance_sb_tv"
+                style="@style/subheadline2_text_style_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="High"
+                android:textAlignment="center"
+                android:textAllCaps="true" />
+
+        </LinearLayout>
+
+
+
     </FrameLayout>
 
 

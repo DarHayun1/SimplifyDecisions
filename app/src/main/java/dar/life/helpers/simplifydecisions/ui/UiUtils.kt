@@ -99,8 +99,8 @@ class UiUtils {
             return listOf(
                 ContextCompat.getColor(context, R.color.app_turquoise),
                 Color.parseColor(Constants.DEFAULT_A_COLOR),
-                ContextCompat.getColor(context, R.color.colorPrimary),
-                ContextCompat.getColor(context, R.color.app_purple),
+                ContextCompat.getColor(context, R.color.colorPrimaryTrans),
+                ContextCompat.getColor(context, R.color.app_purple_trans),
                 Color.parseColor(Constants.DEFAULT_B_COLOR),
                 ContextCompat.getColor(context, R.color.app_yellow_dark),
                 ContextCompat.getColor(context, R.color.app_grey)

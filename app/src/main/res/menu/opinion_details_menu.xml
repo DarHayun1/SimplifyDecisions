@@ -6,12 +6,12 @@
         android:id="@+id/action_edit_opinion_title"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/edit_opinion_title"
-        app:showAsAction="withText|ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_save_opinion"
         android:enabled="true"
-        android:icon="@android:drawable/ic_menu_save"
         android:title="@string/save_menu_item"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always
+" />
 </menu>

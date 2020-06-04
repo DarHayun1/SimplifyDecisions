@@ -22,6 +22,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Transition
+import androidx.transition.Transition.TransitionListener
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener
 import com.github.amlcurran.showcaseview.ShowcaseView
 import com.github.amlcurran.showcaseview.targets.ViewTarget
@@ -30,14 +32,17 @@ import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.databinding.FragmentIssueDetailsBinding
+import dar.life.helpers.simplifydecisions.repository.AppExecutors
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListener,
-    IssueDetailsTaskChangedListener, AdapterView.OnItemSelectedListener {
+    IssueDetailsTaskChangedListener, AdapterView.OnItemSelectedListener, TransitionListener {
 
     private var aIconsSpinner: Spinner? = null
     private var aColorsSpinner: Spinner? = null
@@ -45,10 +50,10 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private var bColorsSpinner: Spinner? = null
     private val mBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            backPressed()
+            override fun handleOnBackPressed() {
+                backPressed()
+            }
         }
-    }
     private var mInstructionsCurrentPos: Int = -1
     private lateinit var mShowcaseView: ShowcaseView
     private val isHelpMode: Boolean
@@ -64,6 +69,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private var _binding: FragmentIssueDetailsBinding? = null
     private val binding get() = _binding!!
 
+    private var isFirstTime: Boolean = false
+
     private val args: IssueDetailsFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
@@ -76,6 +83,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition =
             TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
+        if (args.isNew && savedInstanceState == null)
+            isFirstTime = true
     }
 
     override fun onResume() {
@@ -90,7 +99,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     ): View? {
         _binding = FragmentIssueDetailsBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-
+        postponeEnterTransition()
         return binding.root
     }
 
@@ -117,10 +126,11 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                 populateUi(it)
             }
         })
-        postponeEnterTransition()
         requireActivity().onBackPressedDispatcher
             .addCallback(mBackPressedCallback)
+        Log.i("backSuprise", "addCallback")
         setupSwitchContent()
+
     }
 
     override fun onDestroyView() {
@@ -201,6 +211,10 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                 editIssueTitle()
                 true
             }
+            R.id.action_help -> {
+                beginHelpMode()
+                true
+            }
             R.id.action_create_a_decision -> {
                 handleToDecisionClick()
                 true
@@ -246,7 +260,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         setupCompareViews(issue)
         setupTasksView(issue)
 
-
     }
 
     private fun setupTasksView(issue: Issue) {
@@ -258,7 +271,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             binding.allTasksRv.adapter = adapter
             binding.allTasksRv.layoutManager =
                 LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
-        }else{
+        } else {
             binding.noTasksTv.visibility = View.VISIBLE
         }
 
@@ -275,10 +288,23 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             mIssue
         )
         binding.complexOpinionsRv.adapter = opinionsAdapter
-
         opinionsAdapter.setData(issue.opinions)
         binding.complexOpinionsRv.doOnPreDraw { startPostponedEnterTransition() }
+        Log.i("backSuprise", "startDelayed")
         linearLayoutManager.scrollToPositionWithOffset(1, 0)
+        if (isFirstTime)
+            guideNewIssue()
+    }
+
+    private fun guideNewIssue() {
+        Timer("helpMode", false).schedule(100) {
+            Log.i("backSuprise", "timedAction")
+            AppExecutors.getInstance().mainThread().execute {
+                requireActivity().onBackPressedDispatcher
+                    .addCallback(mBackPressedCallback)
+                beginHelpMode()
+            }
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -372,6 +398,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun clearCallback() {
+        Log.i("backSuprise", "removeCallback")
         mBackPressedCallback.remove()
     }
 
@@ -397,10 +424,11 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             mViewModel.addDecision(it)
             mViewModel.updateIssue(mIssue)
             clearCallback()
-            val action = IssueDetailsFragmentDirections.actionEditIssueFragmentToDecisionDetailsFragment(
-                it.id,
-                it.title
-            )
+            val action =
+                IssueDetailsFragmentDirections.actionEditIssueFragmentToDecisionDetailsFragment(
+                    it.id,
+                    it.title
+                )
             action.isNew = true
             findNavController()
                 .navigate(
@@ -409,20 +437,25 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         }
     }
 
-    private fun handleCollaborateClick() {
+    private fun beginHelpMode() {
         val instructions = getInstructions()
         mInstructionsCurrentPos = 0
-        if (isCompareScreen())
-        mShowcaseView = ShowcaseView.Builder(activity)
-            .withHoloShowcase()
-            .setShowcaseEventListener(this)
-            .hideOnTouchOutside()
-            .setStyle(R.style.ShowcaseTheme)
-            .setTarget(ViewTarget(binding.complexOpinionsRv[0].findViewById(R.id.opinion_a_frame)))
-            .setContentTitle(instructions[0].title)
-            .setContentText(instructions[0].text.trimMargin())
-            .build()
-        mShowcaseView.hideButton()
+        if (isCompareScreen()) {
+            mShowcaseView = ShowcaseView.Builder(activity)
+                .withHoloShowcase()
+                .setShowcaseEventListener(this)
+                .hideOnTouchOutside()
+                .setStyle(R.style.ShowcaseTheme)
+                .setTarget(ViewTarget(binding.complexOpinionsRv[0].findViewById(R.id.opinion_a_frame)))
+                .setContentTitle(instructions[0].title)
+                .setContentText(instructions[0].text.trimMargin())
+                .build()
+            mShowcaseView.hideButton()
+        }
+    }
+
+    private fun handleCollaborateClick() {
+        Toast.makeText(mContext, "Upcoming feature (: ", Toast.LENGTH_SHORT).show()
     }
 
     private fun isCompareScreen(): Boolean {
@@ -430,7 +463,9 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun backPressed() {
+        Log.i("backSuprise", "backPressed")
         if (isHelpMode) {
+            Log.i("backSuprise", "backPressed1111")
             mShowcaseView.setOnShowcaseEventListener(OnShowcaseEventListener.NONE)
             mShowcaseView.hide()
             mShowcaseView.isEnabled = false
@@ -508,12 +543,33 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val colors = UiUtils.getColors(mContext)
         val icons = UiUtils.getIconsNames()
-        when (parent){
+        when (parent) {
             aIconsSpinner -> mIssue.optionAIconName = icons[position]
             bIconsSpinner -> mIssue.optionBIconName = icons[position]
             aColorsSpinner -> mIssue.optionAColor = colors[position]
             bColorsSpinner -> mIssue.optionBColor = colors[position]
         }
+    }
+
+    override fun onTransitionEnd(transition: Transition) {
+        Log.d("firstcheck", "transEnd")
+        if (isFirstTime)
+            beginHelpMode()
+    }
+
+    override fun onTransitionResume(transition: Transition) {
+    }
+
+    override fun onTransitionPause(transition: Transition) {
+    }
+
+    override fun onTransitionCancel(transition: Transition) {
+    }
+
+    override fun onTransitionStart(transition: Transition) {
+        Log.d("firstcheck", "transStart")
+        if (isFirstTime)
+            beginHelpMode()
     }
 
 
