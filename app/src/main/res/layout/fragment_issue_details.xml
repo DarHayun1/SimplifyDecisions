@@ -60,7 +60,7 @@
                 android:src="?attr/actionModeCloseDrawable"
                 android:tint="@color/trans_white"
                 android:layoutDirection="rtl"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <include

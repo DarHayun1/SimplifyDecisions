@@ -1,21 +1,20 @@
 package dar.life.helpers.simplifydecisions.ui.issues
 
-import android.animation.ArgbEvaluator
 import android.content.Context
-import android.graphics.Color
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.INVISIBLE
+import android.view.View.*
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.ui.UiUtils
+import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.setImportanceColor
 import kotlin.math.max
 
 class OpinionsAdapter(
@@ -64,7 +63,7 @@ class OpinionsAdapter(
         if (position != 0) {
             val listPosition = position - 1
             val opRaw = mOpinionsRaws[listPosition]
-            holder.bindItem(mOpinionsRaws[listPosition], mContext)
+            holder.bindItem(opRaw, mContext)
             holder.aFrame.background?.let {
                 UiUtils.setColorFilter(it, baseIssue.optionAColor)
             }
@@ -87,7 +86,7 @@ class OpinionsAdapter(
 
             }
         } else {
-            holder.bindFirstItem(mContext)
+            holder.bindFirstItem(mContext, baseIssue)
             holder.aFrame.setOnClickListener {
                 mCallback.openNewOpinionScreen(true)
             }
@@ -105,9 +104,11 @@ class OpinionsAdapter(
     class FactsVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val aFrame: View = itemView.findViewById(R.id.opinion_a_frame)
         val aTv: TextView = itemView.findViewById(R.id.opinion_a_title)
+        val aIv: ImageView = itemView.findViewById(R.id.option_a_add_iv)
         val aTasksLeftTv: TextView = itemView.findViewById(R.id.a_tasks_left)
         val bFrame: View = itemView.findViewById(R.id.opinion_b_frame)
         val bTv: TextView = itemView.findViewById(R.id.opinion_b_title)
+        val bIv: ImageView = itemView.findViewById(R.id.option_b_add_iv)
         val bTasksLeftTv: TextView = itemView.findViewById(R.id.b_tasks_left)
         val catTv: TextView = itemView.findViewById(R.id.category_tv)
         val aImportanceIcon: TextView = itemView.findViewById(R.id.option_a_importance_tv)
@@ -151,30 +152,10 @@ class OpinionsAdapter(
                 bImportanceIcon.visibility = INVISIBLE
                 INVISIBLE
             }
-        }
-
-        private fun setImportanceColor(view: TextView, importance: Int, context: Context) {
-            val background = view.background
-            view.setTextColor(
-                ContextCompat.getColor(
-                    context,
-                    if (importance < 50) R.color.primary_text_light else R.color.primary_text_dark
-                ))
-            view.alpha = 0.9f
-            val colorArray = context.resources.getIntArray(R.array.progressGradientColors)
-            if (importance in 0..100) {
-                var startColor = colorArray[(importance-1) / 25]
-                var endColor = colorArray[(importance - 1) / 25]
-                val resultColor = ArgbEvaluator().evaluate(
-                    ((importance - 1).toFloat() % 25 / 25),
-                    startColor,
-                    endColor
-                ) as Int
-                ColorUtils.setAlphaComponent(resultColor, 10)
-                UiUtils.setColorFilter(
-                    background,
-                    resultColor)
-            }
+            aIv.visibility = GONE
+            aTv.textAlignment = TEXT_ALIGNMENT_CENTER
+            bIv.visibility = GONE
+            bTv.textAlignment = TEXT_ALIGNMENT_CENTER
         }
 
         /**
@@ -182,7 +163,10 @@ class OpinionsAdapter(
          *
          * @param context
          */
-        fun bindFirstItem(context: Context) {
+        fun bindFirstItem(
+            context: Context,
+            baseIssue: Issue
+        ) {
             aFrame.elevation = 0f
             bFrame.elevation = 0f
             aFrame.background =
@@ -193,10 +177,18 @@ class OpinionsAdapter(
             aImportanceIcon.visibility = GONE
             bImportanceIcon.visibility = GONE
             aTv.setTextColor(context.getColor(R.color.light_text_second))
+            UiUtils.setColorFilter(aIv.drawable.mutate(), baseIssue.optionAColor)
             bTv.setTextColor(context.getColor(R.color.light_text_second))
+            UiUtils.setColorFilter(bIv.drawable.mutate(), baseIssue.optionBColor)
+            bIv.visibility = VISIBLE
+            aIv.visibility = VISIBLE
             aTasksLeftTv.visibility = GONE
             bTasksLeftTv.visibility = GONE
+            aTv.setLines(1)
+            bTv.setLines(1)
+            aTv.textAlignment = TEXT_ALIGNMENT_TEXT_START
             aTv.text = context.getString(R.string.new_opinion_item_text)
+            bTv.textAlignment = TEXT_ALIGNMENT_TEXT_START
             bTv.text = context.getString(R.string.new_opinion_item_text)
         }
     }

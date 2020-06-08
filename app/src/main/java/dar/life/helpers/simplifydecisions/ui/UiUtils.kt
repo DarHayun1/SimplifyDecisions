@@ -2,6 +2,7 @@ package dar.life.helpers.simplifydecisions.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.animation.ArgbEvaluator
 import android.content.Context
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -14,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dar.life.helpers.simplifydecisions.Constants
@@ -121,6 +123,30 @@ class UiUtils {
                 Constants.DEFAULT_B_ICON,
                 "temp_logo"
             )
+        }
+
+        fun setImportanceColor(view: TextView, importance: Int, context: Context) {
+            val background = view.background
+            view.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    if (importance < 50) R.color.primary_text_light else R.color.primary_text_dark
+                ))
+            view.alpha = 0.9f
+            val colorArray = context.resources.getIntArray(R.array.progressGradientColors)
+            if (importance in 0..100) {
+                val startColor = colorArray[(importance-1) / 25]
+                val endColor = colorArray[(importance - 1) / 25]
+                val resultColor = ArgbEvaluator().evaluate(
+                    ((importance - 1).toFloat() % 25 / 25),
+                    startColor,
+                    endColor
+                ) as Int
+                ColorUtils.setAlphaComponent(resultColor, 10)
+                setColorFilter(
+                    background,
+                    resultColor)
+            }
         }
     }
 

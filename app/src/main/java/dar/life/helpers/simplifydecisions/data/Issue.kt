@@ -2,7 +2,6 @@ package dar.life.helpers.simplifydecisions.data
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
@@ -95,10 +94,11 @@ data class Issue(
         else
             context.getString(R.string.noIssueTitle)
     }
-    fun toDecision(): Decision {
+    fun toDecision(isOpinionA: Boolean): Decision {
         isActive = false
-        return Decision(title, description, opinions, id)
-            .also { it.goals.addAll(listOf(Goal("do that"), Goal("do this"))) }
+        val decisionName = if (isOpinionA) optionAName else optionBName
+        return Decision(decisionName, description, opinions, id)
+
     }
 
     fun changeOpinionCategory(opinion: Opinion, category: String) {
@@ -111,5 +111,14 @@ data class Issue(
     }
 
     fun hasTasks(): Boolean = opinions.flatMap { it.value }.flatMap { it.tasks }.isNotEmpty()
+
+    fun getOptionsScores(): Pair<Int, Int> {
+        val (first, second) =
+            opinions?.flatMap { it.value }.partition { it.isOfFirstOption }
+        return Pair(
+            first.sumBy { it.importance },
+            second.sumBy { it.importance }
+        )
+    }
 
 }

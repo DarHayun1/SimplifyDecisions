@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="6dp"
+    tools:showIn="@layout/fragment_opinion_details">
+
+    <com.marcinmoskala.arcseekbar.ArcSeekBar
+        android:id="@+id/importance_sb"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        app:maxProgress="100"
+        app:progress="40"
+        app:progressBackgroundColor="@android:color/darker_gray"
+        app:progressBackgroundWidth="20dp"
+        app:progressWidth="30dp"
+        app:roundEdges="true"
+        app:thumb="@drawable/small_logo_indicator" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginBottom="80dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/importance_sb_num_tv"
+            style="@style/subheadline1_text_style_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/importance_sb_tv"
+            style="@style/subheadline2_text_style_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High"
+            android:textAlignment="center"
+            android:textAllCaps="true" />
+
+    </LinearLayout>
+
+
+</FrameLayout>

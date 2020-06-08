@@ -112,10 +112,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             .addCallback(mBackPressedCallback)
         initToolbar()
         initViews()
-        if (mFirstTime) {
-            editDecisionTitle(true)
-            mFirstTime = false
-        }
     }
 
     private fun initToolbar() {
@@ -160,6 +156,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                     cancelUiUpdate = false
                 else
                     populateUi(it)
+                if (mFirstTime) {
+                    editDecisionTitle(true)
+                    mFirstTime = false
+                }
             }
         })
         setupGoals()
@@ -195,6 +195,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         val saveBtn: Button = dialogView.findViewById(R.id.et_save_button)
 
         textInputLayout.hint = getString(R.string.decision_title_hint)
+        println(mDecision)
         textInputLayout.editText?.setText(mDecision?.title)
         cancelBtn.setOnClickListener {
             dialogBuilder.dismiss()

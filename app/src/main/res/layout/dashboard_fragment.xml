@@ -25,16 +25,18 @@
 
     <ImageView
         android:id="@+id/decisions_btn"
+
         android:layout_width="@dimen/menu_item_size"
         android:layout_height="@dimen/menu_item_size"
-        android:layout_marginStart="@dimen/menu_margin"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/menu_item_ripple"
         android:clickable="true"
+        android:elevation="8dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/decision_icon"
-        android:tint="@color/colorPrimaryDark"
+        android:src="@drawable/decision_icon_white"
+        android:tint="@color/trans_white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dashboard_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/dashboard_logo"
         app:layout_constraintVertical_bias="0.657" />
 
@@ -42,14 +44,15 @@
         android:id="@+id/issues_btn"
         android:layout_width="@dimen/menu_item_size"
         android:layout_height="@dimen/menu_item_size"
-        android:layout_marginEnd="@dimen/menu_margin"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/menu_item_ripple"
         android:clickable="true"
+        android:elevation="8dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/decisions_temp_logo"
-        android:tint="@color/colorPrimaryDark"
+        android:src="@drawable/issues_icon_white"
+        android:tint="@color/trans_white"
         app:layout_constraintBottom_toBottomOf="@+id/decisions_btn"
-        app:layout_constraintEnd_toStartOf="@+id/dashboard_logo"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/decisions_btn" />
 
     <ImageView
@@ -65,4 +68,11 @@
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="@+id/dashboard_logo"
         app:layout_constraintTop_toBottomOf="@+id/dashboard_logo" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 </androidx.constraintlayout.widget.ConstraintLayout>

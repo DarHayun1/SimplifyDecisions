@@ -9,10 +9,10 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_create_a_decision"
-        android:icon="@mipmap/decide_foreground"
+        android:icon="@drawable/decision_icon_white"
         android:iconTint="@android:color/darker_gray"
         android:title="@string/make_a_decision"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_help"
         android:icon="@android:drawable/ic_menu_info_details"

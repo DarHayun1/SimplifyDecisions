@@ -35,6 +35,7 @@ import dar.life.helpers.simplifydecisions.databinding.FragmentIssueDetailsBindin
 import dar.life.helpers.simplifydecisions.repository.AppExecutors
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
+import kotlinx.android.synthetic.main.decisions_list_item.*
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
@@ -420,8 +421,40 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun handleToDecisionClick() {
-        //TODO: Select
-        mIssue.toDecision().also {
+        val alertDialog = AlertDialog.Builder(mContext).create()
+        val dialogView = layoutInflater.inflate(R.layout.pick_an_option_layout, null)
+        val optionAFrame: View = dialogView.findViewById(R.id.pick_option_a_btn_cl)
+        val optionBFrame: View = dialogView.findViewById(R.id.pick_option_b_btn_cl)
+        val optionAScore: TextView = dialogView.findViewById(R.id.option_a_points_tv)
+        val optionBScore: TextView = dialogView.findViewById(R.id.option_b_points_tv)
+        optionAFrame.background?.let {
+            UiUtils.setColorFilter(it, mIssue.optionAColor)
+        }
+        optionAFrame.setOnClickListener{
+            alertDialog.dismiss()
+            openNewDecision(true)}
+        optionBFrame.background?.let {
+            UiUtils.setColorFilter(it, mIssue.optionBColor)
+        }
+        val (firstScore, secondScore) = mIssue.getOptionsScores()
+        optionAScore.apply {
+            text = firstScore.toString()
+            UiUtils.setImportanceColor(this, firstScore, mContext)
+            }
+        optionBScore.apply {
+            text = secondScore.toString()
+            UiUtils.setImportanceColor(this, firstScore, mContext)
+        }
+        optionBFrame.setOnClickListener{
+            alertDialog.dismiss()
+            openNewDecision(false)}
+        alertDialog.setView(dialogView)
+        alertDialog.show()
+
+    }
+
+    private fun openNewDecision(isOpinionA: Boolean) {
+        mIssue.toDecision(isOpinionA).also {
             mViewModel.addDecision(it)
             mViewModel.updateIssue(mIssue)
             clearCallback()

@@ -21,6 +21,7 @@
     <color name="prioYellow">#F1C40F</color>
 
     <color name="app_red_light">#ec1f25</color>
+    <color name="app_red_light_trans">#80ec1f25</color>
     <color name="app_red_pink">#bf263a</color>
     <color name="app_red_dark">#941924</color>
     <color name="app_purple">#5b284a</color>

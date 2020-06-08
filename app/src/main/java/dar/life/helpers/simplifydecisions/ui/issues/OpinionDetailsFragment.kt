@@ -10,14 +10,12 @@ import android.view.*
 import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -30,7 +28,9 @@ import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
+import com.marcinmoskala.arcseekbar.ArcSeekBar
 import com.marcinmoskala.arcseekbar.ProgressListener
+import com.skydoves.expandablelayout.ExpandableLayout
 import dar.life.helpers.simplifydecisions.Constants.DEFAULT_CATEGORY
 import dar.life.helpers.simplifydecisions.Constants.NEW_CATEGORY
 import dar.life.helpers.simplifydecisions.R
@@ -42,7 +42,6 @@ import dar.life.helpers.simplifydecisions.data.Opinion.Companion.MEDIUM_IMPORTAN
 import dar.life.helpers.simplifydecisions.data.Opinion.Task
 import dar.life.helpers.simplifydecisions.databinding.FragmentOpinionDetailsBinding
 import java.util.*
-import kotlin.concurrent.schedule
 
 
 /**
@@ -50,6 +49,12 @@ import kotlin.concurrent.schedule
  */
 class OpinionDetailsFragment : Fragment(),
     OnTaskTextChangedListener {
+
+    private lateinit var newCategoryEt: EditText
+    private lateinit var categorySpinner: Spinner
+    private lateinit var importanceSb: ArcSeekBar
+    private lateinit var importanceSbNumTv: TextView
+    private lateinit var importanceSbTv:TextView
 
     private val mBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
@@ -90,7 +95,25 @@ class OpinionDetailsFragment : Fragment(),
     ): View? {
         _binding = FragmentOpinionDetailsBinding.inflate(layoutInflater, container, false)
         setHasOptionsMenu(true)
+        initExpandedViews()
         return binding.root
+    }
+
+    private fun initExpandedViews() {
+        binding.expandableCategory.let {expLayout ->
+            expLayout.parentLayout.setOnClickListener{ expandOrCollapse(expLayout) }}
+        binding.expandableImportance.let {expLayout ->
+            expLayout.parentLayout.setOnClickListener{ expandOrCollapse(expLayout) }}
+        newCategoryEt = binding.expandableCategory.secondLayout.findViewById(R.id.new_category_et)
+        categorySpinner = binding.expandableCategory.secondLayout.findViewById(R.id.category_spinner)
+        importanceSb = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb)
+        importanceSbNumTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb_num_tv)
+        importanceSbTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb_tv)
+    }
+
+    private fun expandOrCollapse(expLayout: ExpandableLayout) {
+        if (expLayout.isExpanded) expLayout.collapse()
+        else expLayout.expand()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -180,9 +203,13 @@ class OpinionDetailsFragment : Fragment(),
         alertDialog.setView(dialogView)
         alertDialog.show()
 
+        showKeyboard(binding.opinionDetailsToolbarTitle)
+    }
+
+    private fun showKeyboard(target: View) {
         val imm =
             mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        imm!!.showSoftInput(binding.opinionDetailsToolbarTitle, InputMethodManager.SHOW_IMPLICIT)
+        imm!!.showSoftInput(target, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun initViews() {
@@ -201,7 +228,7 @@ class OpinionDetailsFragment : Fragment(),
             if (category == "")
                 category = DEFAULT_CATEGORY
             it.changeOpinionCategory(mOpinion!!, category)
-            mOpinion?.importance = binding.importanceSb.progress
+            mOpinion?.importance = importanceSb.progress
             viewModel.updateIssue(mIssue!!)
         }
         clearCallback()
@@ -229,11 +256,11 @@ class OpinionDetailsFragment : Fragment(),
     private fun initCategorySpinner() {
         val categories =
             mIssue!!.opinions.keys.toMutableList().apply { add(NEW_CATEGORY) }
-        binding.categorySpinner.adapter =
+        categorySpinner.adapter =
             ArrayAdapter(mContext,
                 android.R.layout.simple_spinner_dropdown_item,
                 categories)
-        binding.categorySpinner.onItemSelectedListener = object :
+        categorySpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -243,11 +270,11 @@ class OpinionDetailsFragment : Fragment(),
             ) {
                 val tempCategory = parent.getItemAtPosition(position) as String
                 category = if (tempCategory == NEW_CATEGORY) {
-                    binding.newCategoryEt.visibility = View.VISIBLE
-                    binding.newCategoryEt.text.toString()
+                    newCategoryEt.visibility = View.VISIBLE
+                    newCategoryEt.text.toString()
                 }
                 else {
-                    binding.newCategoryEt.visibility = View.INVISIBLE
+                    newCategoryEt.visibility = View.INVISIBLE
                     tempCategory
                 }
             }
@@ -255,12 +282,12 @@ class OpinionDetailsFragment : Fragment(),
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        binding.newCategoryEt.addTextChangedListener(onTextChanged = {
+        newCategoryEt.addTextChangedListener(onTextChanged = {
             text, _, _, _ ->
             category = text.toString()
         })
         val cat = mIssue!!.opinions.toList().first { it.second.contains(mOpinion) }.first
-        binding.categorySpinner.setSelection(categories.indexOf(cat))
+        categorySpinner.setSelection(categories.indexOf(cat))
     }
 
     private fun initToolbar() {
@@ -280,12 +307,18 @@ class OpinionDetailsFragment : Fragment(),
         mTasksAdapter.setData(mOpinion!!.tasks)
         addSwipeSupport()
         binding.addTaskBtn.setOnClickListener{
-            mOpinion?.tasks?.let{
-                it.add(Task(""))
-                mTasksAdapter.newTaskAdded(it)
-            }
+            addNewTask()
         }
 
+    }
+
+    private fun addNewTask() {
+        mOpinion?.tasks?.let {
+            it.add(Task(""))
+            mTasksAdapter.newTaskAdded(it)
+            val imm =
+                mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        }
     }
 
     private fun addSwipeSupport() {
@@ -322,15 +355,15 @@ class OpinionDetailsFragment : Fragment(),
     private fun setupImportanceBar() {
         val intArray =
             resources.getIntArray(R.array.progressGradientColors)
-        binding.importanceSb.setProgressGradient(*intArray)
-        binding.importanceSb.onProgressChangedListener = ProgressListener{handlePbChange(it)}
+        importanceSb.setProgressGradient(*intArray)
+        importanceSb.onProgressChangedListener = ProgressListener{handlePbChange(it)}
 
-        binding.importanceSb.progress = mOpinion!!.importance
+        importanceSb.progress = mOpinion!!.importance
     }
 
     private fun handlePbChange(value: Int) {
-        val impTextView = binding.importanceSbTv
-        binding.importanceSbNumTv.text = value.toString()
+        val impTextView = importanceSbTv
+        importanceSbNumTv.text = value.toString()
         when {
             value >= GAME_CHANGER -> {
                 impTextView.text = getString(R.string.game_changer_imp)

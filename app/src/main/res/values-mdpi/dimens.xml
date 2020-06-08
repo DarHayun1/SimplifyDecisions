@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="menu_logo_size">72dp</dimen>
-    <dimen name="menu_item_size">48dp</dimen>
+    <dimen name="menu_item_size">56dp</dimen>
     <dimen name="menu_margin">18dp</dimen>
     <dimen name="fab_size">56dp</dimen>
     <dimen name="list_item_vert_pad">14dp</dimen>
@@ -18,4 +18,5 @@
     <dimen name="small_content_text_size">14sp</dimen>
 
     <dimen name="toolbar_vert_pad">22dp</dimen>
+    <dimen name="pick_option_icon_height">124dp</dimen>
 </resources>

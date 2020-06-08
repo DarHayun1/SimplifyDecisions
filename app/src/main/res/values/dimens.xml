@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="menu_logo_size">96dp</dimen>
-    <dimen name="menu_item_size">64dp</dimen>
+    <dimen name="menu_item_size">128dp</dimen>
     <dimen name="menu_margin">24dp</dimen>
     <dimen name="fab_size">56dp</dimen>
     <dimen name="list_item_vert_pad">18dp</dimen>
@@ -40,8 +40,10 @@
     <dimen name="bottom_drawer_top_padd">18dp</dimen>
     <dimen name="warn_icon_size">12dp</dimen>
     <dimen name="opinion_item_center_mar">12dp</dimen>
-    <dimen name="importance_icon_size">25dp</dimen>
+    <dimen name="importance_icon_size">28dp</dimen>
     <dimen name="opinion_item_top_pad">8dp</dimen>
     <dimen name="toolbar_vert_pad">36dp</dimen>
     <dimen name="edit_goal_headline_vert_pad">12dp</dimen>
+    <dimen name="pick_option_iv_height">96dp</dimen>
+    <dimen name="pick_option_icon_height">140dp</dimen>
 </resources>

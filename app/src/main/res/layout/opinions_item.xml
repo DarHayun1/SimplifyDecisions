@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/opinion_item_top_pad"
@@ -34,27 +35,29 @@
     <TextView
         android:id="@+id/option_a_importance_tv"
         style="@style/OpinionItemImportance_icon"
+        android:background="@drawable/round_icon_background"
         android:layout_width="@dimen/importance_icon_size"
         android:layout_height="@dimen/importance_icon_size"
         android:layout_marginStart="@dimen/opinion_item_center_mar"
         android:text="@string/default_importance_score"
-        app:layout_constraintBottom_toTopOf="@id/linearLayout"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout"
-        app:layout_constraintTop_toTopOf="@id/linearLayout" />
+        app:layout_constraintBottom_toTopOf="@id/opinions_ll"
+        app:layout_constraintStart_toStartOf="@+id/opinions_ll"
+        app:layout_constraintTop_toTopOf="@id/opinions_ll" />
 
     <TextView
         android:id="@+id/option_b_importance_tv"
         style="@style/OpinionItemImportance_icon"
+        android:background="@drawable/round_icon_background"
         android:layout_width="@dimen/importance_icon_size"
         android:layout_height="@dimen/importance_icon_size"
         android:text="@string/default_importance_score"
         android:layout_marginEnd="@dimen/opinion_item_center_mar"
-        app:layout_constraintBottom_toTopOf="@id/linearLayout"
-        app:layout_constraintEnd_toEndOf="@id/linearLayout"
-        app:layout_constraintTop_toTopOf="@id/linearLayout" />
+        app:layout_constraintBottom_toTopOf="@id/opinions_ll"
+        app:layout_constraintEnd_toEndOf="@id/opinions_ll"
+        app:layout_constraintTop_toTopOf="@id/opinions_ll" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/opinions_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -77,26 +80,43 @@
                 android:background="@drawable/grid_item_ripple"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/opinion_a_title"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="4dp"
-                    android:layout_gravity="center"
-                    style="@style/opinionItemTextStyle" />
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:id="@+id/option_a_add_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="12dp"
+                        android:visibility="visible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/opinion_a_title"
+                        app:srcCompat="@android:drawable/ic_input_add" />
+
+                    <TextView
+                        android:id="@+id/opinion_a_title"
+                        style="@style/opinionItemTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:paddingHorizontal="8dp" />
+                </LinearLayout>
                 <TextView
-                    android:visibility="invisible"
                     android:id="@+id/a_tasks_left"
+                    style="@style/small_content_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    style="@style/small_content_text_style"
-                    android:text="@string/default_tasks_left_text" />
-
+                    android:text="@string/default_tasks_left_text"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/opinion_a_title" />
             </LinearLayout>
-
-            <LinearLayout
+        <LinearLayout
                 android:id="@+id/opinion_b_frame"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -107,23 +127,40 @@
                 android:clickable="true"
                 android:background="@drawable/grid_item_ripple"
                 android:orientation="vertical">
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/option_b_add_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="12dp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/opinion_b_title"
+                    app:srcCompat="@android:drawable/ic_input_add" />
 
                 <TextView
                     android:id="@+id/opinion_b_title"
-                    android:layout_width="match_parent"
+                    style="@style/opinionItemTextStyle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="4dp"
                     android:layout_gravity="center"
-                    style="@style/opinionItemTextStyle" />
-
+                    android:layout_weight="1"
+                    android:paddingHorizontal="8dp" />
+            </LinearLayout>
                 <TextView
-                    android:visibility="invisible"
                     android:id="@+id/b_tasks_left"
+                    style="@style/small_content_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    style="@style/small_content_text_style"
-                    android:text="@string/default_tasks_left_text" />
+                    android:text="@string/default_tasks_left_text"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
             </LinearLayout>
 
