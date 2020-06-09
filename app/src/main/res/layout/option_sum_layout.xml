@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/pick_option_container"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="@drawable/pick_option_background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/pick_option_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/pick_option_icon_height"
+        android:layout_marginHorizontal="36dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:paddingVertical="@dimen/toolbar_vert_pad"
+        android:src="@drawable/angel_icon" />
+
+    <TextView
+        android:id="@+id/pick_option_tv"
+        style="@style/subheadline2_text_style_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:gravity="center"
+        android:lines="2"
+        android:text="@string/option_a_btn_text" />
+
+    <TextView
+        android:id="@+id/option_points_tv"
+        style="@style/OpinionItemImportance_icon"
+        android:layout_width="@dimen/importance_icon_size"
+        android:layout_height="@dimen/importance_icon_size"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/round_icon_background"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/default_score" />
+
+    <TextView
+        android:id="@+id/option_opinion_1"
+        style="@style/content_text_style_light"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:textAlignment="center"
+        android:layout_marginTop="12dp"
+        android:maxLines="2"
+        android:text="" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/option_opinion_2"
+        style="@style/content_text_style_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
+        android:maxLines="2"
+        android:textAlignment="center"
+        android:text=""
+/>
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/option_opinion_3"
+        style="@style/content_text_style_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginVertical="4dp"
+        android:maxLines="2"
+        android:text=""
+/>
+
+</LinearLayout>

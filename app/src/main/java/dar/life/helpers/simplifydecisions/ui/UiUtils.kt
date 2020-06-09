@@ -132,7 +132,7 @@ class UiUtils {
                     context,
                     if (importance < 50) R.color.primary_text_light else R.color.primary_text_dark
                 ))
-            view.alpha = 0.9f
+            background.alpha = 220
             val colorArray = context.resources.getIntArray(R.array.progressGradientColors)
             if (importance in 0..100) {
                 val startColor = colorArray[(importance-1) / 25]

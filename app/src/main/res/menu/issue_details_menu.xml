@@ -3,16 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="bottom">
     <item
-        android:id="@+id/action_edit_issue_title"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:title="@string/edit_issue_title"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_create_a_decision"
         android:icon="@drawable/decision_icon_white"
         android:iconTint="@android:color/darker_gray"
         android:title="@string/make_a_decision"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_edit_issue_title"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/edit_issue_title"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_help"
         android:icon="@android:drawable/ic_menu_info_details"

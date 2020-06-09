@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="pick_option_icon_height">140dp</dimen>
+    <dimen name="toolbar_vert_pad">36dp</dimen>
+    <dimen name="menu_logo_size">96dp</dimen>
+    <dimen name="menu_item_size">128dp</dimen>
+    <dimen name="menu_margin">24dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="list_item_vert_pad">18dp</dimen>
+    <dimen name="list_item_hor_pad">@dimen/activity_horizontal_margin</dimen>
+    <dimen name="grid_item_height">64dp</dimen>
+    <dimen name="issue_title_icon_size">24dp</dimen>
+    <dimen name="issue_title_text_size">28sp</dimen>
+
+    <dimen name="headline_text_size">34sp</dimen>
+    <dimen name="subheadline1_text_size">28sp</dimen>
+    <dimen name="subheadline2_text_size">20sp</dimen>
+    <dimen name="content_text_size">18sp</dimen>
+    <dimen name="small_content_text_size">16sp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+</resources>

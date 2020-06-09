@@ -35,7 +35,7 @@ import dar.life.helpers.simplifydecisions.databinding.FragmentIssueDetailsBindin
 import dar.life.helpers.simplifydecisions.repository.AppExecutors
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
-import kotlinx.android.synthetic.main.decisions_list_item.*
+import dar.life.helpers.simplifydecisions.ui.customview.OptionSumView
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
@@ -45,6 +45,7 @@ import kotlin.concurrent.schedule
 class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListener,
     IssueDetailsTaskChangedListener, AdapterView.OnItemSelectedListener, TransitionListener {
 
+    private lateinit var decisionIcon: MenuItem
     private var aIconsSpinner: Spinner? = null
     private var aColorsSpinner: Spinner? = null
     private var bIconsSpinner: Spinner? = null
@@ -106,6 +107,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.issue_details_menu, menu)
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -298,6 +300,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun guideNewIssue() {
+        isFirstTime = false
         Timer("helpMode", false).schedule(100) {
             Log.i("backSuprise", "timedAction")
             AppExecutors.getInstance().mainThread().execute {
@@ -347,6 +350,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun setupEditSpinners(dialogView: View) {
+        val iconsNames = UiUtils.getIconsNames()
         val iconsList = UiUtils.getIconsList(mContext)
         val colorsList = UiUtils.getColors(mContext)
 
@@ -355,20 +359,22 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
         aColorsSpinner = dialogView.findViewById(R.id.a_colors)
         bColorsSpinner = dialogView.findViewById(R.id.b_colors)
-
+        mIssue.optionAColor
         aIconsSpinner!!.adapter = IconsAdapter(mContext, iconsList)
         aIconsSpinner!!.onItemSelectedListener = this
+        aIconsSpinner!!.setSelection(iconsNames.indexOf(mIssue.optionAIconName))
 
         aColorsSpinner!!.adapter = ColorsAdapter(mContext, colorsList)
-        aColorsSpinner!!.setSelection(2)
+        aColorsSpinner!!.setSelection(colorsList.indexOf(mIssue.optionAColor))
         aColorsSpinner!!.onItemSelectedListener = this
 
         bIconsSpinner!!.adapter = IconsAdapter(mContext, iconsList)
-        bIconsSpinner!!.setSelection(1)
+        bIconsSpinner!!.setSelection(iconsNames.indexOf(mIssue.optionBIconName))
         bIconsSpinner!!.onItemSelectedListener = this
 
         bColorsSpinner!!.adapter = ColorsAdapter(mContext, colorsList)
         bColorsSpinner!!.onItemSelectedListener = this
+        bColorsSpinner!!.setSelection(colorsList.indexOf(mIssue.optionBColor))
     }
 
     override fun openOpinionScreen(opinion: Opinion, opinionItemTv: View, opinionItemFrame: View) {
@@ -421,33 +427,63 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun handleToDecisionClick() {
+        if (isHelpMode) {
+            mShowcaseView.hide()
+            return
+        }
         val alertDialog = AlertDialog.Builder(mContext).create()
         val dialogView = layoutInflater.inflate(R.layout.pick_an_option_layout, null)
-        val optionAFrame: View = dialogView.findViewById(R.id.pick_option_a_btn_cl)
-        val optionBFrame: View = dialogView.findViewById(R.id.pick_option_b_btn_cl)
-        val optionAScore: TextView = dialogView.findViewById(R.id.option_a_points_tv)
-        val optionBScore: TextView = dialogView.findViewById(R.id.option_b_points_tv)
-        optionAFrame.background?.let {
-            UiUtils.setColorFilter(it, mIssue.optionAColor)
-        }
-        optionAFrame.setOnClickListener{
-            alertDialog.dismiss()
-            openNewDecision(true)}
-        optionBFrame.background?.let {
-            UiUtils.setColorFilter(it, mIssue.optionBColor)
-        }
+
+        val optionBSumView: OptionSumView = dialogView.findViewById(R.id.pick_option_b_sumview)
+        val optionASumView: OptionSumView = dialogView.findViewById(R.id.pick_option_a_sumview)
+
         val (firstScore, secondScore) = mIssue.getOptionsScores()
-        optionAScore.apply {
-            text = firstScore.toString()
-            UiUtils.setImportanceColor(this, firstScore, mContext)
+
+//            UiUtils.setImportanceColor(this, firstScore, mContext)
+
+        var (firstOpinions, secondOpinions) =
+            mIssue.opinions.flatMap { it.value }.partition { it.isOfFirstOption }
+        firstOpinions.sortedByDescending { it.importance }
+        secondOpinions.sortedByDescending { it.importance }
+
+        optionASumView.apply {
+            setBackgroudColor(mIssue.optionAColor)
+            setOnClickListener {
+                alertDialog.dismiss()
+                openNewDecision(true)
             }
-        optionBScore.apply {
-            text = secondScore.toString()
-            UiUtils.setImportanceColor(this, firstScore, mContext)
+            setData(
+                mContext.getDrawable(
+                    mContext.resources.getIdentifier(
+                        mIssue.optionAIconName, "drawable", mContext.packageName
+                    )
+                ),
+                mIssue.optionAName,
+                firstScore,
+                firstOpinions.getOrNull(0),
+                firstOpinions.getOrNull(1),
+                firstOpinions.getOrNull(2)
+            )
         }
-        optionBFrame.setOnClickListener{
-            alertDialog.dismiss()
-            openNewDecision(false)}
+        optionBSumView.apply {
+            setBackgroudColor(mIssue.optionBColor)
+            setOnClickListener {
+                alertDialog.dismiss()
+                openNewDecision(false)
+            }
+            setData(
+                mContext.getDrawable(
+                    mContext.resources.getIdentifier(
+                        mIssue.optionBIconName, "drawable", mContext.packageName
+                    )
+                ),
+                mIssue.optionBName,
+                secondScore,
+                secondOpinions.getOrNull(0),
+                secondOpinions.getOrNull(1),
+                secondOpinions.getOrNull(2)
+            )
+        }
         alertDialog.setView(dialogView)
         alertDialog.show()
 
@@ -472,9 +508,10 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun beginHelpMode() {
+        isFirstTime = false
         val instructions = getInstructions()
         mInstructionsCurrentPos = 0
-        if (isCompareScreen()) {
+        if (!isCompareScreen()) switchToCompare()
             mShowcaseView = ShowcaseView.Builder(activity)
                 .withHoloShowcase()
                 .setShowcaseEventListener(this)
@@ -485,7 +522,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                 .setContentText(instructions[0].text.trimMargin())
                 .build()
             mShowcaseView.hideButton()
-        }
     }
 
     private fun handleCollaborateClick() {
@@ -533,7 +569,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                     .withHoloShowcase()
                     .setShowcaseEventListener(this)
                     .setStyle(R.style.ShowcaseTheme)
-                    .setTarget(ViewTarget(binding.complexOpinionsRv[0].findViewById(R.id.opinion_b_frame)))
+                    .setTarget( ViewTarget(binding.editIssueToolbar.findViewById(R.id.action_create_a_decision)))
                     .hideOnTouchOutside()
                     .setContentTitle(it[mInstructionsCurrentPos].title)
                     .setContentText(it[mInstructionsCurrentPos].text.trimMargin())
@@ -554,7 +590,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                 Instruction(
                     resources.getStringArray(R.array.instructions_issue_details_title)[1],
                     resources.getStringArray(R.array.instructions_issue_details_body)[1],
-                    binding.complexOpinionsRv[0].findViewById(R.id.opinion_b_frame)
+                    null
                 )
             )
         }
@@ -586,7 +622,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     override fun onTransitionEnd(transition: Transition) {
-        Log.d("firstcheck", "transEnd")
         if (isFirstTime)
             beginHelpMode()
     }
@@ -601,9 +636,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     override fun onTransitionStart(transition: Transition) {
-        Log.d("firstcheck", "transStart")
-        if (isFirstTime)
-            beginHelpMode()
     }
 
 

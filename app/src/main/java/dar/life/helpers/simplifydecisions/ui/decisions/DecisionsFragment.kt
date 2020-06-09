@@ -18,9 +18,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.github.amlcurran.showcaseview.ShowcaseView
+import com.github.amlcurran.showcaseview.targets.ViewTarget
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Decision
 import dar.life.helpers.simplifydecisions.databinding.FragmentDecisionsBinding
+import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import kotlinx.android.synthetic.main.fragment_decisions.*
 import kotlinx.android.synthetic.main.fragment_issues.*
@@ -31,6 +34,8 @@ import kotlinx.android.synthetic.main.fragment_issues.*
  * create an instance of this fragment.
  */
 class DecisionsFragment : Fragment(), OnDetailsRequest {
+
+    private lateinit var mShowcaseView: ShowcaseView
 
     private lateinit var mDecisionsViewModel: DecisionsViewModel
     private lateinit var mContext: Context
@@ -105,6 +110,8 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
 
         mDecisionsViewModel.getAllDecisions().observe(viewLifecycleOwner, Observer {
             rvAdapter.decisions = it
+            if (it.isEmpty())
+                startInstructions()
         })
         binding.addDecisionFab.setOnClickListener {
             newDecisionRequest()
@@ -151,5 +158,33 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
             fragmentNavigatorExtras
         )
     }
+
+    private fun hideHelpIfShown(): Boolean {
+        if (isHelpMode()) {
+            mShowcaseView.hide()
+            return true
+        }
+        return false
+    }
+
+    private fun isHelpMode() = this::mShowcaseView.isInitialized && mShowcaseView.isShown
+
+    private fun startInstructions() {
+        val instruction = getInstruction()
+        mShowcaseView = ShowcaseView.Builder(activity)
+            .withHoloShowcase()
+            .hideOnTouchOutside()
+            .setStyle(R.style.ShowcaseTheme)
+            .setTarget(ViewTarget(instruction.view))
+            .setContentTitle(instruction.title)
+            .setContentText(instruction.text.trimMargin())
+            .build()
+        mShowcaseView.hideButton()
+    }
+
+    private fun getInstruction(): Instruction = Instruction(
+        getString(R.string.first_decision_title),
+        getString(R.string.first_decision_text),
+        binding.addDecisionFab)
 }
 

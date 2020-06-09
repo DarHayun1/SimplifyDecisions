@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -9,7 +8,7 @@
     <TextView
         android:id="@+id/pick_option_header_tv"
         style="@style/headline_text_style_light"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingVertical="@dimen/edit_goal_headline_vert_pad"
@@ -21,140 +20,23 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/pick_option_a_btn_cl"
+        <dar.life.helpers.simplifydecisions.ui.customview.OptionSumView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/pick_option_background"
-            android:elevation="14dp"
-            android:padding="8dp">
+            android:layout_marginVertical="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:id="@+id/pick_option_a_sumview"/>
 
-            <ImageView
-                android:id="@+id/pick_option_a_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/pick_option_icon_height"
-                android:layout_gravity="bottom"
-                android:layout_marginHorizontal="36dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:clickable="true"
-                android:paddingVertical="@dimen/toolbar_vert_pad"
-                android:src="@drawable/angel_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/pick_option_a_tv"
-                style="@style/subheadline2_text_style_light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:clickable="true"
-                android:gravity="center"
-                android:lines="2"
-                android:text="@string/option_a_btn_text"
-                app:layout_constraintEnd_toEndOf="@+id/pick_option_a_iv"
-                app:layout_constraintStart_toStartOf="@+id/pick_option_a_iv"
-                app:layout_constraintTop_toBottomOf="@+id/pick_option_a_iv" />
-
-            <TextView
-                android:id="@+id/option_a_points_tv"
-                style="@style/OpinionItemImportance_icon"
-                android:layout_width="@dimen/importance_icon_size"
-                android:layout_height="@dimen/importance_icon_size"
-                android:layout_marginTop="@dimen/list_item_vert_pad"
-                android:background="@drawable/round_icon_background"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="Importa"
-                app:layout_constraintEnd_toEndOf="@+id/pick_option_a_tv"
-                app:layout_constraintStart_toStartOf="@+id/pick_option_a_tv"
-                app:layout_constraintTop_toBottomOf="@+id/pick_option_a_tv" />
-
-            <TextView
-                android:id="@+id/option_a_num_opinions_tv"
-                style="@style/content_text_style_light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/list_item_vert_pad"
-                android:maxLines="1"
-                android:text="TextView"
-                app:layout_constraintEnd_toEndOf="@+id/pick_option_a_tv"
-                app:layout_constraintStart_toStartOf="@+id/pick_option_a_tv"
-                app:layout_constraintTop_toBottomOf="@+id/option_a_points_tv" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/pick_option_b_btn_cl"
+        <dar.life.helpers.simplifydecisions.ui.customview.OptionSumView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/pick_option_background"
-            android:elevation="14dp"
-            android:padding="8dp">
-
-            <ImageView
-                android:id="@+id/pick_option_b_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/pick_option_icon_height"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:background="@android:color/transparent"
-                android:clickable="true"
-                android:paddingVertical="@dimen/toolbar_vert_pad"
-                android:src="@drawable/devil_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/option_b_points_tv"
-                style="@style/content_text_style_light"
-                android:layout_width="@dimen/importance_icon_size"
-                android:layout_height="@dimen/importance_icon_size"
-                android:layout_marginTop="@dimen/list_item_vert_pad"
-                android:background="@drawable/round_icon_background"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pick_option_b_tv" />
-
-            <TextView
-                android:id="@+id/option_b_num_opinions_tv"
-                style="@style/content_text_style_light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/list_item_vert_pad"
-                android:maxLines="1"
-                android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/option_b_points_tv" />
-
-            <TextView
-                android:id="@+id/pick_option_b_tv"
-                style="@style/subheadline2_text_style_light"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:clickable="true"
-                android:gravity="center"
-                android:lines="2"
-                android:text="@string/option_b_btn_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pick_option_b_iv" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginVertical="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:id="@+id/pick_option_b_sumview"/>
 
     </LinearLayout>
 

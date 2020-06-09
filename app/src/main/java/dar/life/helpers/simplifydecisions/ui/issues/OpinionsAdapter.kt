@@ -152,6 +152,8 @@ class OpinionsAdapter(
                 bImportanceIcon.visibility = INVISIBLE
                 INVISIBLE
             }
+            aTv.visibility = VISIBLE
+            bTv.visibility = VISIBLE
             aIv.visibility = GONE
             aTv.textAlignment = TEXT_ALIGNMENT_CENTER
             bIv.visibility = GONE
@@ -184,12 +186,8 @@ class OpinionsAdapter(
             aIv.visibility = VISIBLE
             aTasksLeftTv.visibility = GONE
             bTasksLeftTv.visibility = GONE
-            aTv.setLines(1)
-            bTv.setLines(1)
-            aTv.textAlignment = TEXT_ALIGNMENT_TEXT_START
-            aTv.text = context.getString(R.string.new_opinion_item_text)
-            bTv.textAlignment = TEXT_ALIGNMENT_TEXT_START
-            bTv.text = context.getString(R.string.new_opinion_item_text)
+            aTv.visibility = GONE
+            bTv.visibility = GONE
         }
     }
 

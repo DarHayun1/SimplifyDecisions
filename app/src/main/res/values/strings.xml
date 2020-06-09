@@ -38,7 +38,7 @@
     <string name="opinion_title">Opinion Title</string>
     <string name="opinions_bottom_drawer_nav">opinions_bottom_drawer_trans</string>
     <string name="new_issue_title_hint">New Issue Title</string>
-    <string name="edit_issue_title">Edit issue title</string>
+    <string name="edit_issue_title">Edit</string>
     <string name="make_a_decision">Make a decision</string>
     <string name="collaborate_title">Collaborate</string>
     <string name="edit_opinion_title">Edit</string>
@@ -70,7 +70,10 @@
     <string name="demo_date_text">12 Mar 2020 15:30</string>
     <string name="add_to_my_calender">Add to my calender</string>
     <string name="first_dilemma_title">New Dilemma</string>
+    <string name="first_decision_title">New Decision</string>
     <string name="first_dilemma_text">Try adding a new dilemma</string>
+    <string name="first_decision_text">Commit to your decision, set goals and share your success!
+        \nNot sure yet? Go back and create a dilemma</string>
     <string name="first_goal_title">Add the first goal</string>
     <string name="first_goal_text">"Setting goals will help you commit to the decision
         \nKeeping your goals measurable and relatively simple is the key to success"</string>
@@ -92,15 +95,16 @@
     <string name="due_date">Due Date</string>
     <string name="option_a_btn_text">Option A</string>
     <string name="option_b_btn_text">Option B</string>
+    <string name="default_score">0</string>
     <array name="instructions_issue_details_title">
         <item>New Argument</item>
-        <item>Don\'t forgot this option (;</item>
+        <item>Take your time</item>
     </array>
     <array name="instructions_issue_details_body">
         <item>Add an argument in favor one of the options
             \nDifferent arguments can have different impact on the decision
             \nTry it!</item>
-        <item></item>
+        <item>When you are ready click here to take a decision and commit to it</item>
     </array>
 
 
