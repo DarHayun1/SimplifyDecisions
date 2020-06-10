@@ -13,6 +13,8 @@ import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeInViews
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeOutViews
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class IssuesAdapter(private val mContext: Context, private val mCallback: OnDetailsRequest) :
     RecyclerView.Adapter<IssuesAdapter.IssueVH>() {
@@ -68,16 +70,16 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
 
     class IssueVH(itemView: View) : RecyclerView.ViewHolder(itemView){
         val title: TextView = itemView.findViewById(R.id.issue_item_title_tv)
-        val descriptionTv: TextView = itemView.findViewById(R.id.issue_item_desc_tv)
-        val type: TextView = itemView.findViewById(R.id.issue_type_tv)
+        val dateTv: TextView = itemView.findViewById(R.id.issue_item_date_tv)
+        val numOfOpinionsTv: TextView = itemView.findViewById(R.id.issue_item_num_of_opinions)
         val extraInfoLayout: View = itemView.findViewById(R.id.issue_item_extra_info)
 
         fun bindItem(item: Issue, context: Context) {
             title.text = item.displayedTitle(context)
-            if (item.description == null || item.description!!.isEmpty())
-                descriptionTv.visibility = GONE
-            else
-                descriptionTv.text = item.description
+            dateTv.text = item.date.format(
+                DateTimeFormatter.ofLocalizedDate(
+                    FormatStyle.LONG))
+            numOfOpinionsTv.text = item.opinions.flatMap { it.value }.size.toString()
             title.transitionName = item.id.toString()
         }
     }

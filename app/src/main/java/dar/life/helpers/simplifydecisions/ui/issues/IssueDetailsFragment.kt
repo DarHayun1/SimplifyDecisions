@@ -45,6 +45,7 @@ import kotlin.concurrent.schedule
 class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListener,
     IssueDetailsTaskChangedListener, AdapterView.OnItemSelectedListener, TransitionListener {
 
+    private var isNewUser: Boolean = false
     private lateinit var decisionIcon: MenuItem
     private var aIconsSpinner: Spinner? = null
     private var aColorsSpinner: Spinner? = null
@@ -71,7 +72,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private var _binding: FragmentIssueDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private var isFirstTime: Boolean = false
+    private var isNewIssue: Boolean = false
 
     private val args: IssueDetailsFragmentArgs by navArgs()
 
@@ -86,7 +87,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         sharedElementEnterTransition =
             TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
         if (args.isNew && savedInstanceState == null)
-            isFirstTime = true
+            isNewIssue = true
     }
 
     override fun onResume() {
@@ -128,6 +129,9 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                 mIssue = it
                 populateUi(it)
             }
+        })
+        mViewModel.getAllIssues().observe(viewLifecycleOwner, Observer {
+            isNewUser = it.isEmpty() || (it.size==1 && isNewIssue)
         })
         requireActivity().onBackPressedDispatcher
             .addCallback(mBackPressedCallback)
@@ -295,12 +299,12 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         binding.complexOpinionsRv.doOnPreDraw { startPostponedEnterTransition() }
         Log.i("backSuprise", "startDelayed")
         linearLayoutManager.scrollToPositionWithOffset(1, 0)
-        if (isFirstTime)
+        if (isNewIssue)
             guideNewIssue()
     }
 
     private fun guideNewIssue() {
-        isFirstTime = false
+        isNewIssue = false
         Timer("helpMode", false).schedule(100) {
             Log.i("backSuprise", "timedAction")
             AppExecutors.getInstance().mainThread().execute {
@@ -418,6 +422,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                     mIssueId,
                     if (isOfFirstOption) mIssue.optionAColor else mIssue.optionBColor
                 )
+            action.isNew = true
+            action.isNewUser = isNewUser && mIssue.opinions.flatMap { it.value }.isEmpty()
             action.ofFirstOption = isOfFirstOption
             clearCallback()
             findNavController().navigate(
@@ -508,7 +514,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun beginHelpMode() {
-        isFirstTime = false
+        isNewIssue = false
         val instructions = getInstructions()
         mInstructionsCurrentPos = 0
         if (!isCompareScreen()) switchToCompare()
@@ -622,7 +628,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     override fun onTransitionEnd(transition: Transition) {
-        if (isFirstTime)
+        if (isNewIssue)
             beginHelpMode()
     }
 

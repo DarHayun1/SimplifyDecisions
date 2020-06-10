@@ -25,5 +25,7 @@ class EditIssueViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun addDecision(decision: Decision) = mDecisionsRepository.addNewDecision(decision)
 
+    fun getAllIssues(): LiveData<List<Issue>> = mDecisionsRepository.allIssues
+
 
 }

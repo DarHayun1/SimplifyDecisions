@@ -5,20 +5,20 @@
     <string name="decision_default_title">Default decision title</string>
     <string name="opinions_section_header">Stuff I Need To Figure Out</string>
     <string name="facts_header_text">My Facts</string>
-    <string name="issue_title_hint">Issue Title</string>
-    <string name="new_issue_title">New Issue</string>
+    <string name="issue_title_hint">Dilemma Title</string>
+    <string name="new_issue_title">New Dilemma</string>
     <string name="new_decision_title">New Decision</string>
     <string name="issue_title_transition_name">issue_title_transition</string>
     <string name="edit_button_contentdesc">edit button</string>
     <string name="decision_title_hint">Decision Title</string>
     <string name="new_task_hint_text">New task</string>
 
-    <string name="default_opinion_title">New opinion</string>
+    <string name="default_opinion_title">New argument</string>
     <string name="importance_label">Importance</string>
     <string name="low_priority">Low</string>
     <string name="medium_priority">Medium</string>
     <string name="high_priority">High</string>
-    <string name="related_issue_label_text">related issue:</string>
+    <string name="related_issue_label_text">related dilemma:</string>
     <string name="save_button_text">SAVE</string>
     <string name="tasks_label">To-Do List</string>
     <string name="add_new_task_text">+ add new task</string>
@@ -35,17 +35,17 @@
     <string name="new_category_hint">Enter category name</string>
     <string name="option_b">option B</string>
     <string name="option_a">option A</string>
-    <string name="opinion_title">Opinion Title</string>
+    <string name="opinion_title">Argument Title</string>
     <string name="opinions_bottom_drawer_nav">opinions_bottom_drawer_trans</string>
-    <string name="new_issue_title_hint">New Issue Title</string>
+    <string name="new_issue_title_hint">New Dilemma Title</string>
     <string name="edit_issue_title">Edit</string>
     <string name="make_a_decision">Make a decision</string>
     <string name="collaborate_title">Collaborate</string>
     <string name="edit_opinion_title">Edit</string>
     <string name="edit_title_label">Edit Title</string>
 
-    <string name="edit_issue_title_label">Edit Issue Title</string>
-    <string name="edit_opinion_title_label">Edit Opinion Title</string>
+    <string name="edit_issue_title_label">Edit Dilemma Title</string>
+    <string name="edit_opinion_title_label">Edit Argument Title</string>
     <string name="frame_transition_name_extension">frame</string>
     <string name="save_menu_item">SAVE</string>
 
@@ -58,7 +58,7 @@
     <string name="bottom_Drawer_dash_transition">bottom_Drawer_dash_transition</string>
     <string name="dash_to_issues_bot_trans">dash_to_issues_bot_trans</string>
     <string name="dash_to_issues_logo_trans">dashtoissueslogotrans</string>
-    <string name="noIssueTitle">Unnamed Issue</string>
+    <string name="noIssueTitle">Unnamed Dilemma</string>
     <string name="unfinished_tasks">Unfinished Tasks</string>
     <string name="alertdialog_title">Warning</string>
     <string name="unsaved_progress_message">Are you sure?\nAll unsaved progress will be lost</string>
@@ -77,6 +77,9 @@
     <string name="first_goal_title">Add the first goal</string>
     <string name="first_goal_text">"Setting goals will help you commit to the decision
         \nKeeping your goals measurable and relatively simple is the key to success"</string>
+    <string name="first_task_title">New Task</string>
+    <string name="first_task_text">Write down tasks that will help you be sure.
+        \n(\"Compare prices online\", \"Consult a friend\"..) </string>
     <string name="add_a_reminder">Add a reminder</string>
     <string name="channel_name">decisions_channel</string>
     <string name="channel_description">reminders channel</string>
@@ -96,6 +99,7 @@
     <string name="option_a_btn_text">Option A</string>
     <string name="option_b_btn_text">Option B</string>
     <string name="default_score">0</string>
+    <string name="num_of_arguments"># of arguments:</string>
     <array name="instructions_issue_details_title">
         <item>New Argument</item>
         <item>Take your time</item>

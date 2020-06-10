@@ -122,6 +122,14 @@
             android:name="ofFirstOption"
             app:argType="boolean"
             android:defaultValue="true" />
+        <argument
+            android:name="isNew"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="isNewUser"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/newIssueTitleFragment"

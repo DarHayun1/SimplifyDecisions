@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
+import com.github.amlcurran.showcaseview.ShowcaseView
+import com.github.amlcurran.showcaseview.targets.ViewTarget
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.marcinmoskala.arcseekbar.ArcSeekBar
@@ -41,7 +43,9 @@ import dar.life.helpers.simplifydecisions.data.Opinion.Companion.HIGH_IMPORTANCE
 import dar.life.helpers.simplifydecisions.data.Opinion.Companion.MEDIUM_IMPORTANCE
 import dar.life.helpers.simplifydecisions.data.Opinion.Task
 import dar.life.helpers.simplifydecisions.databinding.FragmentOpinionDetailsBinding
+import dar.life.helpers.simplifydecisions.ui.Instruction
 import java.util.*
+import kotlin.math.abs
 
 
 /**
@@ -50,18 +54,12 @@ import java.util.*
 class OpinionDetailsFragment : Fragment(),
     OnTaskTextChangedListener {
 
+    private lateinit var importanceRelativeTv: TextView
     private lateinit var newCategoryEt: EditText
     private lateinit var categorySpinner: Spinner
     private lateinit var importanceSb: ArcSeekBar
     private lateinit var importanceSbNumTv: TextView
     private lateinit var importanceSbTv:TextView
-
-    private val mBackPressedCallback: OnBackPressedCallback =
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                backPressed()
-            }
-        }
 
     val mTimer = Timer("importanceHelper", false)
 
@@ -77,6 +75,16 @@ class OpinionDetailsFragment : Fragment(),
     private lateinit var viewModel: IssuesViewModel
     private lateinit var mContext: Context
     val args: OpinionDetailsFragmentArgs by navArgs()
+
+    private lateinit var mShowcaseView: ShowcaseView
+
+    private val mBackPressedCallback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                backPressed()
+            }
+        }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -109,6 +117,7 @@ class OpinionDetailsFragment : Fragment(),
         importanceSb = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb)
         importanceSbNumTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb_num_tv)
         importanceSbTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb_tv)
+        importanceRelativeTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_relative_tv)
     }
 
     private fun expandOrCollapse(expLayout: ExpandableLayout) {
@@ -124,7 +133,7 @@ class OpinionDetailsFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(args.opinionTitle == "New Opinion") {
+        if(args.isNew && savedInstanceState==null) {
             isNewOpinion = true
             setupTopDrawer()
         }
@@ -187,14 +196,18 @@ class OpinionDetailsFragment : Fragment(),
             textInputLayout.editText?.setText(mOpinion?.title)
         }
 
+        val isNew = isNewOpinion && args.isNewUser
+        isNewOpinion = false
         cancelBtn.setOnClickListener {
             alertDialog.dismiss()
+            if (isNew) startInstructions()
         }
         saveBtn.setOnClickListener {
             if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength) {
                 mOpinion?.title = textInputLayout.editText?.text.toString()
                 binding.opinionDetailsToolbarTitle.text = mOpinion?.title
                 alertDialog.dismiss()
+                if (isNew) startInstructions()
             }else
                 Toast.makeText(mContext,
                     "Title length is limited to max ${textInputLayout.counterMaxLength}" +
@@ -313,6 +326,7 @@ class OpinionDetailsFragment : Fragment(),
     }
 
     private fun addNewTask() {
+        hideHelpIfShown()
         mOpinion?.tasks?.let {
             it.add(Task(""))
             mTasksAdapter.newTaskAdded(it)
@@ -363,7 +377,9 @@ class OpinionDetailsFragment : Fragment(),
 
     private fun handlePbChange(value: Int) {
         val impTextView = importanceSbTv
+        importanceRelativeTv.text = setRelativeText(value)
         importanceSbNumTv.text = value.toString()
+
         when {
             value >= GAME_CHANGER -> {
                 impTextView.text = getString(R.string.game_changer_imp)
@@ -382,6 +398,21 @@ class OpinionDetailsFragment : Fragment(),
                 impTextView.setTextColor(ContextCompat.getColor(mContext, R.color.app_yellow))
             }
         }
+    }
+
+    private fun setRelativeText(imp: Int): String {
+        val closestOpinion: Opinion? = mIssue?.opinions?.flatMap { it.value }
+            ?.minBy {
+                if (it == viewModel.lastUsedOpinion)
+                    return@minBy 100
+                else
+                    abs(it.importance - imp)
+            }
+
+        return if (closestOpinion != null && closestOpinion != viewModel.lastUsedOpinion)
+            "(${closestOpinion.title} ${closestOpinion.importance})"
+        else
+            ""
     }
 
     override fun onDestroyView() {
@@ -422,6 +453,7 @@ class OpinionDetailsFragment : Fragment(),
     }
 
     private fun backPressed() {
+        if (!hideHelpIfShown())
             AlertDialog.Builder(mContext)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(getString(R.string.alertdialog_title))
@@ -439,6 +471,34 @@ class OpinionDetailsFragment : Fragment(),
                 }
                 .show()
     }
+
+    private fun hideHelpIfShown(): Boolean {
+        if (isHelpMode()) {
+            mShowcaseView.hide()
+            return true
+        }
+        return false
+    }
+
+    private fun isHelpMode() = this::mShowcaseView.isInitialized && mShowcaseView.isShown
+
+    private fun startInstructions() {
+        val instruction = getInstruction()
+        mShowcaseView = ShowcaseView.Builder(activity)
+            .withHoloShowcase()
+            .hideOnTouchOutside()
+            .setStyle(R.style.ShowcaseTheme)
+            .setTarget(ViewTarget(instruction.view))
+            .setContentTitle(instruction.title)
+            .setContentText(instruction.text.trimMargin())
+            .build()
+        mShowcaseView.hideButton()
+    }
+
+    private fun getInstruction(): Instruction = Instruction(
+        getString(R.string.first_task_title),
+        getString(R.string.first_task_text),
+        binding.addTaskBtn)
 
     private fun clearCallback() {
         mBackPressedCallback.remove()

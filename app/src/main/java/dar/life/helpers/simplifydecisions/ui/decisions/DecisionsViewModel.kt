@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import dar.life.helpers.simplifydecisions.data.Decision
 import dar.life.helpers.simplifydecisions.data.ReminderObj
 import dar.life.helpers.simplifydecisions.repository.AppRepository
@@ -15,6 +16,7 @@ class DecisionsViewModel(application: Application) : AndroidViewModel(applicatio
     private val repository = AppRepository.getInstance(application.applicationContext)
 
     fun getAllDecisions(): LiveData<List<Decision>> = repository.allDecisions
+
     fun getDecisionById(id: Int): LiveData<Decision>{
         return repository.getDecision(id)
     }

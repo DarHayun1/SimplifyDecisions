@@ -114,7 +114,7 @@ data class Issue(
 
     fun getOptionsScores(): Pair<Int, Int> {
         val (first, second) =
-            opinions?.flatMap { it.value }.partition { it.isOfFirstOption }
+            opinions.flatMap { it.value }.partition { it.isOfFirstOption }
         return Pair(
             first.sumBy { it.importance },
             second.sumBy { it.importance }

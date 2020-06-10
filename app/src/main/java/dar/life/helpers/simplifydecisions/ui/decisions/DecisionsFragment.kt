@@ -47,7 +47,14 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
         }
 
     private fun backPressed() {
+        if (!hideHelpIfShown())
+        {
+            clearCallback()
+            findNavController().popBackStack()
+        }
+    }
 
+    private fun clearCallback() {
         mBackPressedCallback.remove()
     }
 
@@ -92,8 +99,8 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
         mDecisionsViewModel = ViewModelProvider(this).get(DecisionsViewModel::class.java)
 
         initViews()
-//        requireActivity().onBackPressedDispatcher
-//            .addCallback(mBackPressedCallback)
+        requireActivity().onBackPressedDispatcher
+            .addCallback(mBackPressedCallback)
 
     }
 
@@ -126,6 +133,8 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
     }
 
     fun newDecisionRequest() {
+        hideHelpIfShown()
+        clearCallback()
         mDecisionsViewModel.addNewDecision(Decision(
             getString(R.string.new_decision_title),
             null))
