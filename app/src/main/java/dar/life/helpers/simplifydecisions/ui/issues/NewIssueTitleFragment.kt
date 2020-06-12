@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -33,7 +34,7 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
     private val args: NewIssueTitleFragmentArgs by navArgs()
 
 
-    private lateinit var viewModel: IssuesViewModel
+    private val viewModel by viewModels<IssuesViewModel>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,7 +58,6 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(IssuesViewModel::class.java)
 
         initView()
     }

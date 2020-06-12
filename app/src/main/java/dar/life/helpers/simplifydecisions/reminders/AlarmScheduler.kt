@@ -31,6 +31,7 @@ package dar.life.helpers.simplifydecisions.reminders
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.job.JobInfo
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -58,7 +59,6 @@ object AlarmScheduler {
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         // get the PendingIntent for the alarm
         val alarmIntent = createPendingIntent(context, reminder)
-
         scheduleAlarm(reminder, alarmIntent, alarmMgr)
 
 

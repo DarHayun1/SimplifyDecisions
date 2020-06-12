@@ -11,7 +11,10 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -63,8 +66,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             }
         }
 
-    private var _binding: DecisionDetailsFragmentBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: DecisionDetailsFragmentBinding
 
     companion object {
         val REMINDER_ID: String = "reminder_id_extra"
@@ -72,7 +74,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         fun newInstance() = DecisionDetailsFragment()
     }
 
-    private lateinit var viewModel: DecisionsViewModel
+    private val viewModel by viewModels<DecisionsViewModel>()
 
     private val args: DecisionDetailsFragmentArgs by navArgs()
 
@@ -94,7 +96,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = DecisionDetailsFragmentBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.decision_details_fragment, container, false
+        )
+        binding.lifecycleOwner = this
         setHasOptionsMenu(true)
         return binding.root
     }
@@ -106,8 +111,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this)
-            .get(DecisionsViewModel::class.java)
+        binding.viewModel = viewModel
+        binding.uiController = this
         requireActivity().onBackPressedDispatcher
             .addCallback(mBackPressedCallback)
         initToolbar()
@@ -134,6 +139,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             }
             R.id.action_collaborate_decision -> {
                 handleCollaborateClick()
+                true
+            }
+            R.id.action_help_decision -> {
+                startHelpMode()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -220,6 +229,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     }
 
     private fun startHelpMode() {
+        hideHelpIfShown()
         val instructions = getInstruction()
         mShowcaseView = ShowcaseView.Builder(activity)
             .withHoloShowcase()
@@ -350,6 +360,11 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     }
 
+    /**
+     * T
+     *
+     * @param goal - the completed goal
+     */
     private fun goalCompleted(goal: Goal) {
         Log.w("Snackush", goal.toString())
         if (mSnackbar != null && mSnackbar!!.isShown)
@@ -358,11 +373,28 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             binding.root,
             "Congratulations! \"${goal.name}\" Completed!",
             Snackbar.LENGTH_LONG
-        )
-            .also { it.show() }
-        if (!mSnackbar!!.isShown)
-            mSnackbar!!.show()
+        ).also {
+            it.setAction("Share"){shareGoalCompleted(goal)}
+            it.show() }
 
+
+    }
+
+    private fun shareGoalCompleted(goal: Goal) {
+        val intent =
+            ShareCompat.IntentBuilder
+                .from(requireActivity())
+                .setText(
+                    getString(
+                        R.string.share_goal_completed1
+                    ) + goal.name +
+                            getString(R.string.share_goal_completed2)
+                )
+                .setType("text/plain")
+                .setChooserTitle("Share your success")
+                .createChooserIntent()
+        if (intent.resolveActivity(mContext.packageManager) != null)
+            startActivity(intent)
     }
 
     private fun openEditGoalDialog(goalPos: Int = -1) {

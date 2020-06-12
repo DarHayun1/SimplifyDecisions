@@ -3,15 +3,14 @@ package dar.life.helpers.simplifydecisions.ui.decisions
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -26,7 +25,6 @@ import dar.life.helpers.simplifydecisions.databinding.FragmentDecisionsBinding
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import kotlinx.android.synthetic.main.fragment_decisions.*
-import kotlinx.android.synthetic.main.fragment_issues.*
 
 /**
  * A simple [Fragment] subclass.
@@ -37,7 +35,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
 
     private lateinit var mShowcaseView: ShowcaseView
 
-    private lateinit var mDecisionsViewModel: DecisionsViewModel
+    private val mViewModel by viewModels<DecisionsViewModel>()
     private lateinit var mContext: Context
     private val mBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
@@ -96,7 +94,6 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mDecisionsViewModel = ViewModelProvider(this).get(DecisionsViewModel::class.java)
 
         initViews()
         requireActivity().onBackPressedDispatcher
@@ -115,7 +112,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
             DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL)
         )
 
-        mDecisionsViewModel.getAllDecisions().observe(viewLifecycleOwner, Observer {
+        mViewModel.getAllDecisions().observe(viewLifecycleOwner, Observer {
             rvAdapter.decisions = it
             if (it.isEmpty())
                 startInstructions()
@@ -135,7 +132,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
     fun newDecisionRequest() {
         hideHelpIfShown()
         clearCallback()
-        mDecisionsViewModel.addNewDecision(Decision(
+        mViewModel.addNewDecision(Decision(
             getString(R.string.new_decision_title),
             null))
         val fragmentNavExtras = FragmentNavigatorExtras(
@@ -144,7 +141,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
         )
         val action = DecisionsFragmentDirections
             .actionDecisionsFragmentToDecisionDetailsFragment(
-                mDecisionsViewModel.lastUsedDecision!!.id,
+                mViewModel.lastUsedDecision!!.id,
                 getString(R.string.new_decision_title)
             )
         action.isNew = true

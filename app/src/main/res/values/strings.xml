@@ -74,7 +74,7 @@
     <string name="first_dilemma_text">Try adding a new dilemma</string>
     <string name="first_decision_text">Commit to your decision, set goals and share your success!
         \nNot sure yet? Go back and create a dilemma</string>
-    <string name="first_goal_title">Add the first goal</string>
+    <string name="first_goal_title">Set Goals</string>
     <string name="first_goal_text">"Setting goals will help you commit to the decision
         \nKeeping your goals measurable and relatively simple is the key to success"</string>
     <string name="first_task_title">New Task</string>
@@ -100,6 +100,8 @@
     <string name="option_b_btn_text">Option B</string>
     <string name="default_score">0</string>
     <string name="num_of_arguments"># of arguments:</string>
+    <string name="share_goal_completed1">Iv\'e just marked the goal \"</string>
+    <string name="share_goal_completed2">\" DONE in the Simplify Decision app!\n Yay!</string>
     <array name="instructions_issue_details_title">
         <item>New Argument</item>
         <item>Take your time</item>

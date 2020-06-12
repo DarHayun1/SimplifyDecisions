@@ -15,8 +15,11 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -36,6 +39,8 @@ import dar.life.helpers.simplifydecisions.repository.AppExecutors
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 import dar.life.helpers.simplifydecisions.ui.customview.OptionSumView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
@@ -64,7 +69,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             checkHelpMode()
     private lateinit var opinionsAdapter: OpinionsAdapter
     private lateinit var mContext: Context
-    private lateinit var mViewModel: EditIssueViewModel
+    private val mViewModel by viewModels<EditIssueViewModel>()
 
     private var mIssueId: Int = 0
     private var mIssue: Issue = Issue.DEFAULT_ISSUE
@@ -123,7 +128,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         super.onActivityCreated(savedInstanceState)
         initToolbar()
 
-        mViewModel = ViewModelProvider(this).get(EditIssueViewModel::class.java)
         mViewModel.getIssueById(mIssueId)?.observe(viewLifecycleOwner, Observer {
             it?.let {
                 mIssue = it
@@ -307,7 +311,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         isNewIssue = false
         Timer("helpMode", false).schedule(100) {
             Log.i("backSuprise", "timedAction")
-            AppExecutors.getInstance().mainThread().execute {
+            if (activity != null)
+            viewLifecycleOwner.lifecycleScope.launch{
                 requireActivity().onBackPressedDispatcher
                     .addCallback(mBackPressedCallback)
                 beginHelpMode()

@@ -11,5 +11,10 @@
         android:icon="@android:drawable/ic_menu_share"
         android:title="@string/collaborate_title"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_help_decision"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/Help"
+        app:showAsAction="ifRoom" />
 
 </menu>

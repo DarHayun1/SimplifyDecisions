@@ -12,6 +12,10 @@ import dar.life.helpers.simplifydecisions.repository.AppExecutors
 import dar.life.helpers.simplifydecisions.repository.AppRepository
 import dar.life.helpers.simplifydecisions.ui.decisions.DecisionDetailsFragment
 import dar.life.helpers.simplifydecisions.ui.decisions.DecisionDetailsFragment.Companion.REMINDER_ID
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -27,7 +31,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 if (intent.extras != null) {
                     val keyId = intent.getLongExtra(REMINDER_ID_KEY, 0)
                     Log.d("notification", "keyid: $keyId")
-                    AppExecutors.getInstance().diskIO().execute{
+                    GlobalScope.launch(Dispatchers.IO){
                         val decisions =
                             AppRepository.getInstance(context).allDecisionsNow
                         val reminder = decisions.flatMap { decision -> decision.goals }
@@ -39,8 +43,8 @@ class AlarmReceiver : BroadcastReceiver() {
                                 Log.d("notification", "${goal.reminder}")
                             }
                         }
-                        AppExecutors.getInstance().mainThread().execute{
                             if (reminder != null) {
+                                //Removed mainthread call
                                 NotificationsHelper.createNotification(
                                     context,
                                     reminder.title,
@@ -48,7 +52,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                     reminder.id
                                 )
                             }
-                        }
+
                     }
                 }
             }

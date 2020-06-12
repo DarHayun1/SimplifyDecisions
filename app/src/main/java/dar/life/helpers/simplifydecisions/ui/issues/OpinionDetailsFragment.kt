@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -72,7 +73,7 @@ class OpinionDetailsFragment : Fragment(),
     private var category: String = DEFAULT_CATEGORY
     private var _binding: FragmentOpinionDetailsBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: IssuesViewModel
+    private val viewModel by viewModels<IssuesViewModel>()
     private lateinit var mContext: Context
     val args: OpinionDetailsFragmentArgs by navArgs()
 
@@ -168,7 +169,6 @@ class OpinionDetailsFragment : Fragment(),
             android.R.interpolator.linear_out_slow_in
         )
         requireActivity().window.enterTransition = slide
-        viewModel = ViewModelProvider(this).get(IssuesViewModel::class.java)
         initToolbar()
         initViews()
     }

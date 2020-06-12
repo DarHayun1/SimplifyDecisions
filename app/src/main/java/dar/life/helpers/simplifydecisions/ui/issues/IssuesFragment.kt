@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -34,7 +35,7 @@ class IssuesFragment : Fragment(),
     OnDetailsRequest {
 
     private lateinit var mShowcaseView: ShowcaseView
-    private lateinit var mViewModel: IssuesViewModel
+    private val mViewModel by viewModels<IssuesViewModel>()
     private lateinit var mContext: Context
 
     private val mBackPressedCallback: OnBackPressedCallback =
@@ -93,7 +94,6 @@ class IssuesFragment : Fragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mViewModel = ViewModelProvider(requireActivity()).get(IssuesViewModel::class.java)
         initViews()
         requireActivity().onBackPressedDispatcher
             .addCallback(mBackPressedCallback)

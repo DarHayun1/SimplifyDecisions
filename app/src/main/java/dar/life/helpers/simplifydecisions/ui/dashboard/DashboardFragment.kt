@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -24,7 +25,7 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
     private val binding get() = _binding!!
 
 
-    private lateinit var mViewModel: DashboardViewModel
+    private val mViewModel by viewModels<DashboardViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,7 +69,6 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val intent = requireActivity().intent
-        mViewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
         if (intent.hasExtra(REMINDER_ID_KEY)) {
             navigateToRemindedDecision(intent.getLongExtra(REMINDER_ID_KEY, -1))
             intent.removeExtra(REMINDER_ID_KEY)
