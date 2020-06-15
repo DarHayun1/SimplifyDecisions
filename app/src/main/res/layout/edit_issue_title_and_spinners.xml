@@ -1,120 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout android:id="@+id/from_template_bottom_drawer"
+    android:transitionName="@string/bot_drawer_trans_name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="4dp"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@drawable/bottom_drawer_background"
+    android:paddingTop="@dimen/bottom_drawer_top_pad"
+    android:paddingBottom="@dimen/bottom_drawer_top_pad"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_layout"
+        android:id="@+id/from_template_title_layout"
         style="@style/titleTextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="@dimen/menu_vert_margin"
         android:hint="@string/issue_title_hint">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-black"
             android:textSize="@dimen/issue_title_text_size"
             android:selectAllOnFocus="true"
             android:singleLine="true" />
-
     </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <EditText
-            android:id="@+id/option_a_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:inputType="textPersonName"
-            android:selectAllOnFocus="true"
-            android:hint="@string/option_a_name_hint" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/a_icons"
-                android:layout_width="104dp"
-                android:layout_height="match_parent"
-                android:dropDownWidth="64dp" />
-
-            <Spinner
-                android:id="@+id/a_colors"
-                android:layout_width="104dp"
-                android:layout_height="match_parent"
-                android:dropDownWidth="64dp" />
-
-
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/option_b_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:selectAllOnFocus="true"
-            android:inputType="textPersonName"
-            android:hint="@string/option_a_name_hint" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/b_icons"
-                android:layout_width="104dp"
-                android:layout_height="match_parent"
-                android:dropDownWidth="64dp" />
-
-            <Spinner
-                android:id="@+id/b_colors"
-                android:layout_width="104dp"
-                android:layout_height="match_parent"
-                android:dropDownWidth="64dp" />
-
-
-        </LinearLayout>
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/et_cancel_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
-            android:textColor="@color/colorPrimaryDark"
-            android:background="@android:color/transparent"
-            android:text="@android:string/cancel" />
+            android:orientation="vertical"
+            android:paddingHorizontal="6dp">
 
-        <Button
-            android:id="@+id/et_save_button"
-            android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/option_a_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:hint="@string/option_a_name_hint"
+                android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/a_icons"
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="@dimen/menu_vert_margin"
+                android:layout_height="@dimen/icon_item_height"
+                android:layout_gravity="center_horizontal"
+                android:dropDownWidth="@dimen/icon_item_width" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/colorPrimaryDark"
-            android:clickable="true"
-            android:background="@android:color/transparent"
-            android:text="@string/save_button_text" />
+            android:orientation="vertical"
+            android:paddingHorizontal="6dp">
+
+            <EditText
+                android:id="@+id/option_b_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:hint="@string/option_a_name_hint"
+                android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/b_icons"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/icon_item_height"
+                android:layout_marginBottom="@dimen/menu_vert_margin"
+                android:layout_gravity="center_horizontal"
+                android:dropDownWidth="@dimen/icon_item_width" />
+
+        </LinearLayout>
+
     </LinearLayout>
-
 
 </LinearLayout>

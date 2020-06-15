@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="64dp"
-    android:layout_height="64dp">
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/icons_item_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/icon_item_width"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:padding="6dp"
         android:scaleType="centerInside"
         android:adjustViewBounds="true"/>
 

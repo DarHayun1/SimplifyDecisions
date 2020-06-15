@@ -3,6 +3,7 @@ package dar.life.helpers.simplifydecisions.ui.issues
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +15,13 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import dar.life.helpers.simplifydecisions.data.Issue
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_A_COLOR
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_B_COLOR
+import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.databinding.FragmentNewIssueTitleBinding
 import dar.life.helpers.simplifydecisions.ui.UiUtils
-import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.getColors
 
 
 class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
@@ -29,7 +30,7 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
     private var _binding: FragmentNewIssueTitleBinding? = null
     private val binding get() = _binding!!
 
-    private val mIssue: Issue? get() = viewModel.lastUsedIssue
+    private val mIssue: IssueModel? get() = viewModel.lastUsedIssue
 
     private val args: NewIssueTitleFragmentArgs by navArgs()
 
@@ -63,7 +64,7 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
     }
 
     private fun initView() {
-        viewModel.lastUsedIssue = Issue.fromTemplate(args.template)
+        viewModel.lastUsedIssue = IssueModel.fromTemplate(args.template)
         initSpinners()
         binding.fromTemplateTitleLayout.editText?.apply {
             imeOptions = EditorInfo.IME_ACTION_DONE
@@ -76,15 +77,15 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
             })
         }
         binding.firstOptionEt.apply {
-            setText(mIssue!!.optionAName)
+            setText(mIssue!!.aTitle)
             addTextChangedListener(onTextChanged = {text, _, _, _ ->
-                mIssue?.optionAName = text.toString()
+                mIssue?.aTitle = text.toString()
             })
         }
         binding.secondOptionEt.apply {
-            setText(mIssue!!.optionBName)
+            setText(mIssue!!.bTitle)
             addTextChangedListener(onTextChanged = {text, _, _, _ ->
-                mIssue?.optionBName = text.toString()
+                mIssue?.bTitle = text.toString()
             })
         }
 
@@ -114,22 +115,12 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
 
     private fun initSpinners() {
         val iconsList = UiUtils.getIconsList(mContext)
-        val colorsList = getColors(mContext)
         binding.aIconsSpinner.adapter = IconsAdapter(mContext, iconsList)
         binding.aIconsSpinner.onItemSelectedListener = this
-
-        binding.aColorsSpinner.adapter = ColorsAdapter(mContext, colorsList)
-        binding.aColorsSpinner.setSelection(2)
-        binding.aColorsSpinner.onItemSelectedListener = this
 
         binding.bIconsSpinner.adapter = IconsAdapter(mContext, iconsList)
         binding.bIconsSpinner.setSelection(1)
         binding.bIconsSpinner.onItemSelectedListener = this
-
-        binding.bColorsSpinner.adapter = ColorsAdapter(mContext, colorsList)
-        binding.bColorsSpinner.onItemSelectedListener = this
-
-
 
     }
 
@@ -140,13 +131,15 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val colors = getColors(mContext)
         when (parent){
-            binding.aIconsSpinner -> mIssue?.optionAIconName = UiUtils.getIconsNames()[position]
-            binding.bIconsSpinner -> mIssue?.optionBIconName = UiUtils.getIconsNames()[position]
-            binding.aColorsSpinner -> mIssue?.optionAColor = colors[position]
-            binding.bColorsSpinner -> mIssue?.optionBColor = colors[position]
+            binding.aIconsSpinner -> {mIssue?.aColorName =
+                UiUtils.colorNames().getOrElse(position){ DEFAULT_A_COLOR }
+                Log.d("colorname", mIssue!!.aColorName)
+            }
+            binding.bIconsSpinner -> mIssue?.bColorName =
+                UiUtils.colorNames().getOrElse(position){ DEFAULT_B_COLOR }
         }
+        Log.d("colorname", mIssue!!.aColorName)
     }
 
 }

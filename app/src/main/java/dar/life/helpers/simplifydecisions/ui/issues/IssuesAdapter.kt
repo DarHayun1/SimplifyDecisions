@@ -3,14 +3,12 @@ package dar.life.helpers.simplifydecisions.ui.issues
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Issue
+import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
-import dar.life.helpers.simplifydecisions.ui.UiUtils
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeInViews
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeOutViews
 import java.time.format.DateTimeFormatter
@@ -19,7 +17,7 @@ import java.time.format.FormatStyle
 class IssuesAdapter(private val mContext: Context, private val mCallback: OnDetailsRequest) :
     RecyclerView.Adapter<IssuesAdapter.IssueVH>() {
 
-    var issues: List<Issue> = mutableListOf()
+    var issues: List<IssueModel> = mutableListOf()
     set(value) {
         field = value
         notifyDataSetChanged()
@@ -64,7 +62,7 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
         }
     }
 
-    private fun launchDetailsScreen(issue: Issue, itemView: View) {
+    private fun launchDetailsScreen(issue: IssueModel, itemView: View) {
         mCallback.openDetailsScreen(issue.id, issue.title, itemView)
     }
 
@@ -74,7 +72,7 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
         val numOfOpinionsTv: TextView = itemView.findViewById(R.id.issue_item_num_of_opinions)
         val extraInfoLayout: View = itemView.findViewById(R.id.issue_item_extra_info)
 
-        fun bindItem(item: Issue, context: Context) {
+        fun bindItem(item: IssueModel, context: Context) {
             title.text = item.displayedTitle(context)
             dateTv.text = item.date.format(
                 DateTimeFormatter.ofLocalizedDate(

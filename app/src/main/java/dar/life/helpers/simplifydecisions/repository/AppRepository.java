@@ -6,13 +6,11 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import dar.life.helpers.simplifydecisions.data.Decision;
-import dar.life.helpers.simplifydecisions.data.Issue;
-import dar.life.helpers.simplifydecisions.data.ReminderObj;
+import dar.life.helpers.simplifydecisions.data.IssueModel;
 
 public class AppRepository {
 
@@ -20,8 +18,8 @@ public class AppRepository {
     private final IssuesDao mIssuesDao;
     private final DecisionsDao mDecisionsDao;
 
-    private final LiveData<List<Issue>> mIssues;
-    private final LiveData<List<Issue>> mActiveIssues;
+    private final LiveData<List<IssueModel>> mIssues;
+    private final LiveData<List<IssueModel>> mActiveIssues;
 
     private final LiveData<List<Decision>> mDecisions;
 
@@ -61,7 +59,7 @@ public class AppRepository {
     }
 
     @NotNull
-    public LiveData<List<Issue>> getAllIssues() {
+    public LiveData<List<IssueModel>> getAllIssues() {
         return mIssues;
     }
 
@@ -75,19 +73,19 @@ public class AppRepository {
     }
 
     @NotNull
-    public LiveData<List<Issue>> getAllActiveIssues() {
+    public LiveData<List<IssueModel>> getAllActiveIssues() {
         return mActiveIssues;
     }
 
-    public LiveData<Issue> getIssue(int requestedId) {
+    public LiveData<IssueModel> getIssue(int requestedId) {
         return mIssuesDao.getIssueById(requestedId);
     }
 
-    public void addNewIssue(@NotNull final Issue issue) {
+    public void addNewIssue(@NotNull final IssueModel issue) {
         AppExecutors.getInstance().diskIO().execute(() -> mIssuesDao.addNewIssue(issue));
     }
 
-    public void updateIssue(@NotNull Issue issue) {
+    public void updateIssue(@NotNull IssueModel issue) {
         AppExecutors.getInstance().diskIO().execute(() -> mIssuesDao.updateIssue(issue));
     }
 

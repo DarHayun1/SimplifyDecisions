@@ -14,7 +14,7 @@ import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Issue
+import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.data.Opinion
 
 class IssueTasksAdapter(
@@ -23,15 +23,15 @@ class IssueTasksAdapter(
 ) : RecyclerView.Adapter<IssueTasksAdapter.TaskVH>() {
     private var tasksWithLabels: List<Pair<String, Opinion.Task>> = mutableListOf()
 
-    fun setData(issue: Issue) {
+    fun setData(issue: IssueModel) {
         //TODO: Fix implementation
         tasksWithLabels = mutableListOf<Pair<String, Opinion.Task>>().apply {
             issue.opinions.forEach { (cat, opinions) ->
                 opinions.forEach { opinion ->
                     opinion.tasks.forEach {
                         val optionTitle =
-                            if (opinion.isOfFirstOption) issue.optionAName
-                            else issue.optionBName
+                            if (opinion.isOfFirstOption) issue.aTitle
+                            else issue.bTitle
                         this.add(Pair("@ $cat\\$optionTitle", it))
                     }
                 }

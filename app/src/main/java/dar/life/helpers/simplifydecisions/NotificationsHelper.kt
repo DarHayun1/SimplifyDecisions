@@ -20,7 +20,7 @@ object NotificationsHelper {
     ) {
         var builder =
             NotificationCompat.Builder(context, getChannelId(context)).apply {
-                setSmallIcon(R.drawable.angel_icon)
+                setSmallIcon(R.drawable.blue_light_avatar)
                 setContentTitle(title)
                 setContentText(text)
                 priority = NotificationCompat.PRIORITY_DEFAULT

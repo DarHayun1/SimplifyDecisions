@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
 import dar.life.helpers.simplifydecisions.data.Decision
-import dar.life.helpers.simplifydecisions.data.Issue
 
 @Dao
 @TypeConverters(DateConverter::class, OpinionConverter::class)

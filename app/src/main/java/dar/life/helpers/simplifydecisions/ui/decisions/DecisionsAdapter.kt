@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.Decision
-import dar.life.helpers.simplifydecisions.data.Issue
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeInViews
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeOutViews

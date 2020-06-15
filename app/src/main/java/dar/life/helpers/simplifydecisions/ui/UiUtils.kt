@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -18,7 +19,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import dar.life.helpers.simplifydecisions.Constants
+import dar.life.helpers.simplifydecisions.Constants.BLUE_LIGHT
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_A_COLOR
+import dar.life.helpers.simplifydecisions.Constants.DEFAULT_A_ICON
+import dar.life.helpers.simplifydecisions.Constants.GREY
+import dar.life.helpers.simplifydecisions.Constants.LIGHT_GREEN
+import dar.life.helpers.simplifydecisions.Constants.PURPLE
+import dar.life.helpers.simplifydecisions.Constants.RED_LIGHT
+import dar.life.helpers.simplifydecisions.Constants.TURQOISE
+import dar.life.helpers.simplifydecisions.Constants.YELLOW_DARK
 import dar.life.helpers.simplifydecisions.R
 
 
@@ -97,33 +106,56 @@ class UiUtils {
             }
         }
 
-        fun getColors(context: Context): List<Int> {
-            return listOf(
-                ContextCompat.getColor(context, R.color.app_turquoise),
-                Color.parseColor(Constants.DEFAULT_A_COLOR),
-                ContextCompat.getColor(context, R.color.colorPrimaryTrans),
-                ContextCompat.getColor(context, R.color.app_purple_trans),
-                Color.parseColor(Constants.DEFAULT_B_COLOR),
-                ContextCompat.getColor(context, R.color.app_yellow_dark),
-                ContextCompat.getColor(context, R.color.app_grey)
+        fun colorNames() = listOf<String>(
+            PURPLE,
+            LIGHT_GREEN,
+            YELLOW_DARK,
+            GREY,
+            TURQOISE,
+            BLUE_LIGHT,
+            RED_LIGHT
+        )
+
+        fun nameToColor(colorName: String, context: Context): Int{
+            val id = context.resources.getIdentifier(
+                colorResFormat(colorName),
+                "color", context.packageName)
+            if (id == 0) return Color.parseColor(DEFAULT_A_COLOR)
+            return ContextCompat.getColor(context, id)
+        }
+
+        fun nameToIcon(colorName: String, context: Context): Drawable {
+            var id = context.resources.getIdentifier(
+                iconResFormat(colorName),
+                "drawable", context.packageName
             )
+            if (id == 0)
+                id = context.resources.getIdentifier(
+                    iconResFormat(DEFAULT_A_ICON),
+                    "drawable", context.packageName
+                )
+            return ContextCompat.getDrawable(context, id)!!
+        }
+
+        fun iconResFormat(colorName: String) =
+            "${colorName}_avatar"
+
+        fun colorResFormat(colorName: String) =
+            "app_${colorName}_trans"
+
+        fun getColors(context: Context): List<Int> {
+            return colorNames().map {
+                nameToColor(it, context)
+            }
         }
 
         fun getIconsList(context: Context): MutableList<Drawable> {
-            return getIconsNames().map {
-                context.getDrawable(
-                    context.resources.getIdentifier(it, "drawable", context.packageName)
-                )!!
+            return colorNames().map {
+                return@map nameToIcon(it, context)
             }.toMutableList()
         }
 
-        fun getIconsNames(): List<String> {
-            return listOf(
-                Constants.DEFAULT_A_ICON,
-                Constants.DEFAULT_B_ICON,
-                "temp_logo"
-            )
-        }
+
 
         fun setImportanceColor(view: TextView, importance: Int, context: Context) {
             val background = view.background

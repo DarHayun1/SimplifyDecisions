@@ -23,8 +23,7 @@
             android:layout_width="@dimen/option_icon_size"
             android:layout_height="@dimen/option_icon_size"
             android:elevation="12dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/angel_icon" />
+            android:layout_gravity="center_horizontal" />
         <TextView
             android:id="@+id/first_option_title"
             android:layout_width="wrap_content"
@@ -54,7 +53,7 @@
             android:layout_height="@dimen/option_icon_size"
             android:elevation="12dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/devil_icon" />
+            android:src="@drawable/red_light_avatar" />
         <TextView
             android:id="@+id/second_option_title"
             android:layout_width="wrap_content"

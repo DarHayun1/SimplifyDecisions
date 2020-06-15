@@ -15,12 +15,10 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -37,7 +35,7 @@ import com.skydoves.expandablelayout.ExpandableLayout
 import dar.life.helpers.simplifydecisions.Constants.DEFAULT_CATEGORY
 import dar.life.helpers.simplifydecisions.Constants.NEW_CATEGORY
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Issue
+import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.data.Opinion.Companion.GAME_CHANGER
 import dar.life.helpers.simplifydecisions.data.Opinion.Companion.HIGH_IMPORTANCE
@@ -69,7 +67,7 @@ class OpinionDetailsFragment : Fragment(),
 
     private lateinit var mTasksAdapter: TasksAdapter
     private val mOpinion: Opinion? get() = viewModel.lastUsedOpinion
-    private val mIssue: Issue? get() = viewModel.lastUsedIssue
+    private val mIssue: IssueModel? get() = viewModel.lastUsedIssue
     private var category: String = DEFAULT_CATEGORY
     private var _binding: FragmentOpinionDetailsBinding? = null
     private val binding get() = _binding!!
@@ -156,8 +154,9 @@ class OpinionDetailsFragment : Fragment(),
     }
 
     private fun setupTopDrawer() {
-        binding.topDrawerOpinionDetails.elevation = 0f
         binding.root.setBackgroundColor(args.opinionColor)
+        binding.topDrawerOpinionDetails.apply { elevation = 0f
+            setBackgroundColor(Color.TRANSPARENT)}
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -248,7 +247,7 @@ class OpinionDetailsFragment : Fragment(),
         findNavController().popBackStack()
     }
 
-    private fun issueFoundInflateFragment(issue: Issue) {
+    private fun issueFoundInflateFragment(issue: IssueModel) {
 
         binding.relatedIssueTitle.text = issue.displayedTitle(mContext)
 

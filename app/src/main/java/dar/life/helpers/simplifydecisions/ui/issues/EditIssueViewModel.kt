@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import dar.life.helpers.simplifydecisions.data.Decision
-import dar.life.helpers.simplifydecisions.data.Issue
+import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.repository.AppRepository
 import dar.life.helpers.simplifydecisions.ui.Instruction
 
@@ -15,17 +15,17 @@ class EditIssueViewModel(application: Application) : AndroidViewModel(applicatio
     private val mDecisionsRepository =
         AppRepository.getInstance(application.applicationContext)
 
-    fun getIssueById(id: Int): LiveData<Issue>?{
+    fun getIssueById(id: Int): LiveData<IssueModel>?{
         return mDecisionsRepository.getIssue(id)
     }
 
-    fun updateIssue(issue: Issue) {
+    fun updateIssue(issue: IssueModel) {
         mDecisionsRepository.updateIssue(issue)
     }
 
     fun addDecision(decision: Decision) = mDecisionsRepository.addNewDecision(decision)
 
-    fun getAllIssues(): LiveData<List<Issue>> = mDecisionsRepository.allIssues
+    fun getAllIssues(): LiveData<List<IssueModel>> = mDecisionsRepository.allIssues
 
 
 }

@@ -1,7 +1,6 @@
 package dar.life.helpers.simplifydecisions.ui.issues
 
 import android.content.Context
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
@@ -11,16 +10,17 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Issue
+import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.ui.UiUtils
+import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.nameToColor
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.setImportanceColor
 import kotlin.math.max
 
 class OpinionsAdapter(
     private val mContext: Context,
     private val mCallback: OnOpinionRequest,
-    private val baseIssue: Issue
+    private val baseIssue: IssueModel
 ) :
     RecyclerView.Adapter<OpinionsAdapter.FactsVH>() {
 
@@ -65,10 +65,10 @@ class OpinionsAdapter(
             val opRaw = mOpinionsRaws[listPosition]
             holder.bindItem(opRaw, mContext)
             holder.aFrame.background?.let {
-                UiUtils.setColorFilter(it, baseIssue.optionAColor)
+                UiUtils.setColorFilter(it, nameToColor(baseIssue.aColorName, mContext))
             }
             holder.bFrame.background?.let {
-                UiUtils.setColorFilter(it, baseIssue.optionBColor)
+                UiUtils.setColorFilter(it, nameToColor(baseIssue.bColorName, mContext))
             }
             opRaw.firstOpinion?.let { opinion ->
                 holder.aFrame.setOnClickListener {
@@ -167,7 +167,7 @@ class OpinionsAdapter(
          */
         fun bindFirstItem(
             context: Context,
-            baseIssue: Issue
+            baseIssue: IssueModel
         ) {
             aFrame.elevation = 0f
             bFrame.elevation = 0f
@@ -179,9 +179,13 @@ class OpinionsAdapter(
             aImportanceIcon.visibility = GONE
             bImportanceIcon.visibility = GONE
             aTv.setTextColor(context.getColor(R.color.light_text_second))
-            UiUtils.setColorFilter(aIv.drawable.mutate(), baseIssue.optionAColor)
+            UiUtils.setColorFilter(
+                aIv.drawable.mutate(),
+                nameToColor(baseIssue.aColorName, context))
             bTv.setTextColor(context.getColor(R.color.light_text_second))
-            UiUtils.setColorFilter(bIv.drawable.mutate(), baseIssue.optionBColor)
+            UiUtils.setColorFilter(
+                bIv.drawable.mutate(),
+                nameToColor(baseIssue.bColorName, context))
             bIv.visibility = VISIBLE
             aIv.visibility = VISIBLE
             aTasksLeftTv.visibility = GONE

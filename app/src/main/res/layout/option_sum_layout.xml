@@ -18,7 +18,7 @@
         android:background="@android:color/transparent"
         android:clickable="true"
         android:paddingVertical="@dimen/toolbar_vert_pad"
-        android:src="@drawable/angel_icon" />
+        android:src="@drawable/blue_light_avatar" />
 
     <TextView
         android:id="@+id/pick_option_tv"

@@ -71,76 +71,69 @@
                         android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp">
+
                     <EditText
                         android:id="@+id/first_option_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:inputType="textPersonName"
-                        android:hint="@string/option_a_name_hint" />
+                        android:hint="@string/option_a_name_hint"
+                        android:inputType="textPersonName" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="64dp"
+                    <Spinner
+                        android:id="@+id/a_icons_spinner"
+                        android:layout_width="wrap_content"
                         android:layout_marginBottom="@dimen/menu_vert_margin"
-                        android:orientation="horizontal">
-
-                        <Spinner
-                            android:id="@+id/a_icons_spinner"
-                            android:layout_width="104dp"
-                            android:dropDownWidth="64dp"
-                            android:layout_height="match_parent" />
-
-                        <Spinner
-                            android:id="@+id/a_colors_spinner"
-                            android:layout_width="104dp"
-                            android:layout_height="match_parent"
-                            android:dropDownWidth="64dp"/>
-
-
-                    </LinearLayout>
+                        android:layout_height="@dimen/icon_item_height"
+                        android:layout_gravity="center_horizontal"
+                        android:dropDownWidth="@dimen/icon_item_width" />
 
                 </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <EditText
-                    android:id="@+id/second_option_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:inputType="textPersonName"
-                    android:hint="@string/option_a_name_hint" />
+                <View
+                    android:id="@+id/divider4"
+                    android:layout_width="6dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/listDivider" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:layout_marginBottom="@dimen/menu_vert_margin"
-                    android:orientation="horizontal">
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp">
+
+                    <EditText
+                        android:id="@+id/second_option_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:hint="@string/option_a_name_hint"
+                        android:inputType="textPersonName" />
 
                     <Spinner
                         android:id="@+id/b_icons_spinner"
-                        android:layout_width="104dp"
-                        android:dropDownWidth="64dp"
-                        android:layout_height="match_parent" />
-
-                    <Spinner
-                        android:id="@+id/b_colors_spinner"
-                        android:layout_width="104dp"
-                        android:layout_height="match_parent"
-                        android:dropDownWidth="64dp"/>
-
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/icon_item_height"
+                        android:layout_marginBottom="@dimen/menu_vert_margin"
+                        android:layout_gravity="center_horizontal"
+                        android:dropDownWidth="@dimen/icon_item_width" />
 
                 </LinearLayout>
 
             </LinearLayout>
+
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/new_issue_next_fab"

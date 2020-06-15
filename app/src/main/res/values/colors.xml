@@ -30,6 +30,7 @@
     <color name="app_yellow_dark">#cf9b28</color>
     <color name="app_yellow_dark_trans">#80cf9b28</color>
     <color name="app_green_light">#a4cf73</color>
+    <color name="app_green_light_trans">#85a4cf73</color>
     <color name="app_turquoise">#08b9ab</color>
     <color name="app_turquoise_trans">#8008b9ab</color>
     <color name="app_blue_light">#d0eefc</color>
@@ -38,7 +39,6 @@
     <color name="app_blue_dark">#223646</color>
     <color name="trans_white">#50FFFFFF</color>
 
-    <color name="app_green_light_trans">#80a4cf73</color>
     <color name="app_turquoise_trans_sc">@color/app_grey_trans</color>
     <color name="app_blue_light_trans">#80d0eefc</color>
 

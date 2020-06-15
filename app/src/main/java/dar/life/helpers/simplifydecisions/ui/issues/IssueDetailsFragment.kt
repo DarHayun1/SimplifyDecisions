@@ -16,9 +16,7 @@ import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -32,14 +30,15 @@ import com.github.amlcurran.showcaseview.ShowcaseView
 import com.github.amlcurran.showcaseview.targets.ViewTarget
 import com.google.android.material.textfield.TextInputLayout
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Issue
+import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.databinding.FragmentIssueDetailsBinding
-import dar.life.helpers.simplifydecisions.repository.AppExecutors
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
+import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.iconResFormat
+import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.nameToColor
+import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.nameToIcon
 import dar.life.helpers.simplifydecisions.ui.customview.OptionSumView
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -72,7 +71,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private val mViewModel by viewModels<EditIssueViewModel>()
 
     private var mIssueId: Int = 0
-    private var mIssue: Issue = Issue.DEFAULT_ISSUE
+    private var mIssue: IssueModel = IssueModel.DEFAULT_ISSUE
 
     private var _binding: FragmentIssueDetailsBinding? = null
     private val binding get() = _binding!!
@@ -135,7 +134,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             }
         })
         mViewModel.getAllIssues().observe(viewLifecycleOwner, Observer {
-            isNewUser = it.isEmpty() || (it.size==1 && isNewIssue)
+            isNewUser = it.isEmpty() || (it.size == 1 && isNewIssue)
         })
         requireActivity().onBackPressedDispatcher
             .addCallback(mBackPressedCallback)
@@ -244,25 +243,25 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.editIssueToolbar)
     }
 
-    private fun populateUi(issue: Issue) {
+    private fun populateUi(issue: IssueModel) {
         binding.editIssueToolbarTitle.text = issue.displayedTitle(mContext)
         binding.issueDateTv.text =
             issue.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
 
         binding.optionsHeaders.run {
-            firstOptionTitle.text = issue.optionAName
+            firstOptionTitle.text = issue.aTitle
             firstOptionIcon.setImageDrawable(
                 mContext.getDrawable(
                     mContext.resources.getIdentifier(
-                        issue.optionAIconName, "drawable", mContext.packageName
+                        iconResFormat(issue.aColorName), "drawable", mContext.packageName
                     )
                 )
             )
-            secondOptionTitle.text = issue.optionBName
+            secondOptionTitle.text = issue.bTitle
             secondOptionIcon.setImageDrawable(
                 mContext.getDrawable(
                     mContext.resources.getIdentifier(
-                        issue.optionBIconName, "drawable", mContext.packageName
+                        iconResFormat(issue.bColorName), "drawable", mContext.packageName
                     )
                 )
             )
@@ -273,7 +272,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
     }
 
-    private fun setupTasksView(issue: Issue) {
+    private fun setupTasksView(issue: IssueModel) {
         if (issue.hasTasks()) {
             binding.noTasksTv.visibility = View.GONE
             val adapter = IssueTasksAdapter(mContext, this)
@@ -288,7 +287,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
     }
 
-    private fun setupCompareViews(issue: Issue) {
+    private fun setupCompareViews(issue: IssueModel) {
         val linearLayoutManager =
             LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
         binding.complexOpinionsRv.layoutManager = linearLayoutManager
@@ -312,11 +311,11 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         Timer("helpMode", false).schedule(100) {
             Log.i("backSuprise", "timedAction")
             if (activity != null)
-            viewLifecycleOwner.lifecycleScope.launch{
-                requireActivity().onBackPressedDispatcher
-                    .addCallback(mBackPressedCallback)
-                beginHelpMode()
-            }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    requireActivity().onBackPressedDispatcher
+                        .addCallback(mBackPressedCallback)
+                    beginHelpMode()
+                }
         }
     }
 
@@ -332,8 +331,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         val saveBtn: Button = dialogView.findViewById(R.id.et_save_button)
 
         textInputLayout.editText?.setText(mIssue.title)
-        optionAEt.text = mIssue.optionAName
-        optionBEt.text = mIssue.optionBName
+        optionAEt.text = mIssue.aTitle
+        optionBEt.text = mIssue.bTitle
         setupEditSpinners(dialogView)
         cancelBtn.setOnClickListener {
             dialogBuilder.dismiss()
@@ -341,8 +340,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         saveBtn.setOnClickListener {
             if (textInputLayout.editText?.length()!! <= textInputLayout.counterMaxLength) {
                 mIssue.title = textInputLayout.editText?.text.toString()
-                mIssue.optionAName = optionAEt.text.toString()
-                mIssue.optionBName = optionBEt.text.toString()
+                mIssue.aTitle = optionAEt.text.toString()
+                mIssue.bTitle = optionBEt.text.toString()
                 mViewModel.updateIssue(mIssue)
                 binding.editIssueToolbarTitle.text = mIssue.displayedTitle(mContext)
                 dialogBuilder.dismiss()
@@ -359,31 +358,20 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun setupEditSpinners(dialogView: View) {
-        val iconsNames = UiUtils.getIconsNames()
         val iconsList = UiUtils.getIconsList(mContext)
-        val colorsList = UiUtils.getColors(mContext)
+        val colorNames = UiUtils.colorNames()
 
         aIconsSpinner = dialogView.findViewById(R.id.a_icons)
         bIconsSpinner = dialogView.findViewById(R.id.b_icons)
 
-        aColorsSpinner = dialogView.findViewById(R.id.a_colors)
-        bColorsSpinner = dialogView.findViewById(R.id.b_colors)
-        mIssue.optionAColor
         aIconsSpinner!!.adapter = IconsAdapter(mContext, iconsList)
         aIconsSpinner!!.onItemSelectedListener = this
-        aIconsSpinner!!.setSelection(iconsNames.indexOf(mIssue.optionAIconName))
-
-        aColorsSpinner!!.adapter = ColorsAdapter(mContext, colorsList)
-        aColorsSpinner!!.setSelection(colorsList.indexOf(mIssue.optionAColor))
-        aColorsSpinner!!.onItemSelectedListener = this
+        aIconsSpinner!!.setSelection(colorNames.indexOf(mIssue.aColorName))
 
         bIconsSpinner!!.adapter = IconsAdapter(mContext, iconsList)
-        bIconsSpinner!!.setSelection(iconsNames.indexOf(mIssue.optionBIconName))
+        bIconsSpinner!!.setSelection(colorNames.indexOf(mIssue.bColorName))
         bIconsSpinner!!.onItemSelectedListener = this
 
-        bColorsSpinner!!.adapter = ColorsAdapter(mContext, colorsList)
-        bColorsSpinner!!.onItemSelectedListener = this
-        bColorsSpinner!!.setSelection(colorsList.indexOf(mIssue.optionBColor))
     }
 
     override fun openOpinionScreen(opinion: Opinion, opinionItemTv: View, opinionItemFrame: View) {
@@ -394,7 +382,9 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             val action =
                 IssueDetailsFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(
                     mIssue.id,
-                    if (opinion.isOfFirstOption) mIssue.optionAColor else mIssue.optionBColor
+                    if (opinion.isOfFirstOption)
+                        nameToColor(mIssue.aColorName, mContext)
+                    else  nameToColor(mIssue.bColorName, mContext)
                 )
             action.opinionTitle = opinion.title
             action.ofFirstOption = opinion.isOfFirstOption
@@ -425,7 +415,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             val action =
                 IssueDetailsFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(
                     mIssueId,
-                    if (isOfFirstOption) mIssue.optionAColor else mIssue.optionBColor
+                    if (isOfFirstOption) nameToColor(mIssue.aColorName, mContext)
+                    else nameToColor(mIssue.bColorName, mContext)
                 )
             action.isNew = true
             action.isNewUser = isNewUser && mIssue.opinions.flatMap { it.value }.isEmpty()
@@ -452,24 +443,20 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
 //            UiUtils.setImportanceColor(this, firstScore, mContext)
 
-        var (firstOpinions, secondOpinions) =
+        val (firstOpinions, secondOpinions) =
             mIssue.opinions.flatMap { it.value }.partition { it.isOfFirstOption }
         firstOpinions.sortedByDescending { it.importance }
         secondOpinions.sortedByDescending { it.importance }
 
         optionASumView.apply {
-            setBackgroudColor(mIssue.optionAColor)
+            setBackgroudColor(nameToColor(mIssue.aColorName, mContext))
             setOnClickListener {
                 alertDialog.dismiss()
                 openNewDecision(true)
             }
             setData(
-                mContext.getDrawable(
-                    mContext.resources.getIdentifier(
-                        mIssue.optionAIconName, "drawable", mContext.packageName
-                    )
-                ),
-                mIssue.optionAName,
+                nameToIcon(mIssue.aColorName, mContext),
+                mIssue.aTitle,
                 firstScore,
                 firstOpinions.getOrNull(0),
                 firstOpinions.getOrNull(1),
@@ -477,18 +464,14 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             )
         }
         optionBSumView.apply {
-            setBackgroudColor(mIssue.optionBColor)
+            setBackgroudColor(nameToColor(mIssue.bColorName, mContext))
             setOnClickListener {
                 alertDialog.dismiss()
                 openNewDecision(false)
             }
             setData(
-                mContext.getDrawable(
-                    mContext.resources.getIdentifier(
-                        mIssue.optionBIconName, "drawable", mContext.packageName
-                    )
-                ),
-                mIssue.optionBName,
+                nameToIcon(mIssue.bColorName, mContext),
+                mIssue.bTitle,
                 secondScore,
                 secondOpinions.getOrNull(0),
                 secondOpinions.getOrNull(1),
@@ -523,16 +506,16 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         val instructions = getInstructions()
         mInstructionsCurrentPos = 0
         if (!isCompareScreen()) switchToCompare()
-            mShowcaseView = ShowcaseView.Builder(activity)
-                .withHoloShowcase()
-                .setShowcaseEventListener(this)
-                .hideOnTouchOutside()
-                .setStyle(R.style.ShowcaseTheme)
-                .setTarget(ViewTarget(binding.complexOpinionsRv[0].findViewById(R.id.opinion_a_frame)))
-                .setContentTitle(instructions[0].title)
-                .setContentText(instructions[0].text.trimMargin())
-                .build()
-            mShowcaseView.hideButton()
+        mShowcaseView = ShowcaseView.Builder(activity)
+            .withHoloShowcase()
+            .setShowcaseEventListener(this)
+            .hideOnTouchOutside()
+            .setStyle(R.style.ShowcaseTheme)
+            .setTarget(ViewTarget(binding.complexOpinionsRv[0].findViewById(R.id.opinion_a_frame)))
+            .setContentTitle(instructions[0].title)
+            .setContentText(instructions[0].text.trimMargin())
+            .build()
+        mShowcaseView.hideButton()
     }
 
     private fun handleCollaborateClick() {
@@ -580,7 +563,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                     .withHoloShowcase()
                     .setShowcaseEventListener(this)
                     .setStyle(R.style.ShowcaseTheme)
-                    .setTarget( ViewTarget(binding.editIssueToolbar.findViewById(R.id.action_create_a_decision)))
+                    .setTarget(ViewTarget(binding.editIssueToolbar.findViewById(R.id.action_create_a_decision)))
                     .hideOnTouchOutside()
                     .setContentTitle(it[mInstructionsCurrentPos].title)
                     .setContentText(it[mInstructionsCurrentPos].text.trimMargin())
@@ -623,13 +606,13 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val colors = UiUtils.getColors(mContext)
-        val icons = UiUtils.getIconsNames()
-        when (parent) {
-            aIconsSpinner -> mIssue.optionAIconName = icons[position]
-            bIconsSpinner -> mIssue.optionBIconName = icons[position]
-            aColorsSpinner -> mIssue.optionAColor = colors[position]
-            bColorsSpinner -> mIssue.optionBColor = colors[position]
-        }
+//        val icons = UiUtils.getIconsNames()
+//        when (parent) {
+//            aIconsSpinner -> mIssue.optionAColorName = icons[position]
+//            bIconsSpinner -> mIssue.optionBColorName = icons[position]
+//            aColorsSpinner -> mIssue.optionAColor = colors[position]
+//            bColorsSpinner -> mIssue.optionBColor = colors[position]
+//        }
     }
 
     override fun onTransitionEnd(transition: Transition) {
