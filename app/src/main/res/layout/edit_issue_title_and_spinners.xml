@@ -17,7 +17,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/from_template_title_layout"
+        android:id="@+id/text_input_layout"
         style="@style/titleTextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -95,6 +95,33 @@
 
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/et_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="@android:color/transparent"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/et_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorPrimaryDark"
+            android:clickable="true"
+            android:background="@android:color/transparent"
+            android:text="@string/save_button_text" />
     </LinearLayout>
 
 </LinearLayout>

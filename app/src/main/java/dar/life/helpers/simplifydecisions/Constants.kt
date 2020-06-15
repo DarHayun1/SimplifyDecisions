@@ -18,7 +18,7 @@ object Constants {
         const val LIGHT_GREEN = "green_light"
         const val YELLOW_DARK = "yellow_dark"
         const val GREY = "grey"
-        const val TURQOISE = "turqoise"
+        const val TURQUOISE = "turquoise"
         const val BLUE_LIGHT = "blue_light"
         const val RED_LIGHT = "red_light"
 

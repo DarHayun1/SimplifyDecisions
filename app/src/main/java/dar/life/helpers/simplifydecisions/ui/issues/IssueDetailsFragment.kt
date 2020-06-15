@@ -29,6 +29,7 @@ import com.github.amlcurran.showcaseview.OnShowcaseEventListener
 import com.github.amlcurran.showcaseview.ShowcaseView
 import com.github.amlcurran.showcaseview.targets.ViewTarget
 import com.google.android.material.textfield.TextInputLayout
+import dar.life.helpers.simplifydecisions.Constants
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.data.Opinion
@@ -143,30 +144,17 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
     }
 
+
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
     }
 
-    private fun setupSwitchContent() {
-        ObjectAnimator.ofFloat(
-            binding.unfinishedTasksFrame,
-            "translationX",
-            800f
-        ).apply {
-            duration = 0
-            start()
-        }
-        binding.switchModeBtn.setOnClickListener {
-            if (binding.compareOptionsFrame.isVisible) {
-                switchToTasks()
-            } else {
-                switchToCompare()
-            }
-        }
-    }
-
+    // ************* ClickListeners *************
     private fun switchToCompare() {
+        if (hideHelpIfShown())
+            return
         binding.switchModeBtn.rotation = 180f
         binding.switchModeBtn.animate().rotationBy(-180F).start()
         ObjectAnimator.ofFloat(
@@ -191,6 +179,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun switchToTasks() {
+        if (hideHelpIfShown())
+            return
         binding.switchModeBtn.rotation = 0f
         binding.switchModeBtn.animate().rotationBy(180f).start()
         ObjectAnimator.ofFloat(
@@ -213,63 +203,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             start()
         }
         UiUtils.fadeInViews(binding.unfinishedTasksFrame)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_edit_issue_title -> {
-                editIssueTitle()
-                true
-            }
-            R.id.action_help -> {
-                beginHelpMode()
-                true
-            }
-            R.id.action_create_a_decision -> {
-                handleToDecisionClick()
-                true
-            }
-            R.id.action_collaborate_issue -> {
-                handleCollaborateClick()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-
-        }
-    }
-
-    private fun initToolbar() {
-        binding.editIssueToolbar.title = ""
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.editIssueToolbar)
-    }
-
-    private fun populateUi(issue: IssueModel) {
-        binding.editIssueToolbarTitle.text = issue.displayedTitle(mContext)
-        binding.issueDateTv.text =
-            issue.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
-
-        binding.optionsHeaders.run {
-            firstOptionTitle.text = issue.aTitle
-            firstOptionIcon.setImageDrawable(
-                mContext.getDrawable(
-                    mContext.resources.getIdentifier(
-                        iconResFormat(issue.aColorName), "drawable", mContext.packageName
-                    )
-                )
-            )
-            secondOptionTitle.text = issue.bTitle
-            secondOptionIcon.setImageDrawable(
-                mContext.getDrawable(
-                    mContext.resources.getIdentifier(
-                        iconResFormat(issue.bColorName), "drawable", mContext.packageName
-                    )
-                )
-            )
-        }
-
-        setupCompareViews(issue)
-        setupTasksView(issue)
-
     }
 
     private fun setupTasksView(issue: IssueModel) {
@@ -304,6 +237,139 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         linearLayoutManager.scrollToPositionWithOffset(1, 0)
         if (isNewIssue)
             guideNewIssue()
+    }
+
+    override fun openNewOpinionScreen(isOfFirstOption: Boolean) {
+        if (hideHelpIfShown())
+            return
+        val action =
+            IssueDetailsFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(
+                mIssueId,
+                if (isOfFirstOption) nameToColor(mIssue.aColorName, mContext)
+                else nameToColor(mIssue.bColorName, mContext)
+            )
+        action.isNew = true
+        action.isNewUser = isNewUser && mIssue.opinions.flatMap { it.value }.isEmpty()
+        action.ofFirstOption = isOfFirstOption
+        clearCallback()
+        findNavController().navigate(
+            action
+        )
+
+    }
+
+    override fun openOpinionScreen(opinion: Opinion, opinionItemTv: View, opinionItemFrame: View) {
+
+        if (isHelpMode) {
+            mShowcaseView.hide()
+        } else {
+            val action =
+                IssueDetailsFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(
+                    mIssue.id,
+                    if (opinion.isOfFirstOption)
+                        nameToColor(mIssue.aColorName, mContext)
+                    else  nameToColor(mIssue.bColorName, mContext)
+                )
+            action.opinionTitle = opinion.title
+            action.ofFirstOption = opinion.isOfFirstOption
+            val transitionName = mIssue.id.toString() + opinion.title
+            opinionItemTv.transitionName = transitionName
+            val fragmentNavigatorExtras = FragmentNavigatorExtras(
+                binding.editIssueBottomDrawer to getString(R.string.opinions_bottom_drawer_nav),
+                opinionItemFrame to transitionName + getString(R.string.frame_transition_name_extension),
+                opinionItemTv to transitionName
+
+            )
+            clearCallback()
+            findNavController().navigate(
+                action, fragmentNavigatorExtras
+            )
+        }
+    }
+
+    private fun backPressed() {
+        Log.i("backSuprise", "backPressed")
+        if (isHelpMode) {
+            Log.i("backSuprise", "backPressed1111")
+            mShowcaseView.setOnShowcaseEventListener(OnShowcaseEventListener.NONE)
+            mShowcaseView.hide()
+            mShowcaseView.isEnabled = false
+        } else {
+            clearCallback()
+            findNavController().popBackStack()
+        }
+    }
+
+
+
+    private fun setupSwitchContent() {
+        ObjectAnimator.ofFloat(
+            binding.unfinishedTasksFrame,
+            "translationX",
+            800f
+        ).apply {
+            duration = 0
+            start()
+        }
+        binding.switchModeBtn.setOnClickListener {
+            if (binding.compareOptionsFrame.isVisible) {
+                switchToTasks()
+            } else {
+                switchToCompare()
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_edit_issue_title -> {
+                editIssueTitle()
+                true
+            }
+            R.id.action_help -> {
+                if (hideHelpIfShown())
+                    return true
+                beginHelpMode()
+                true
+            }
+            R.id.action_create_a_decision -> {
+                handleToDecisionClick()
+                true
+            }
+            R.id.action_collaborate_issue -> {
+                handleCollaborateClick()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+
+        }
+    }
+
+    private fun initToolbar() {
+        binding.editIssueToolbar.title = ""
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.editIssueToolbar)
+    }
+
+
+    private fun populateUi(issue: IssueModel) {
+        binding.editIssueToolbarTitle.text = issue.displayedTitle(mContext)
+        binding.issueDateTv.text =
+            issue.date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
+
+        binding.optionsHeaders.run {
+            firstOptionTitle.text = issue.aTitle
+            firstOptionIcon.setImageDrawable(
+                nameToIcon(issue.aColorName, mContext)
+            )
+            secondOptionTitle.text = issue.bTitle
+            secondOptionIcon.setImageDrawable(
+                    nameToIcon(issue.bColorName, mContext)
+            )
+        }
+
+        setupCompareViews(issue)
+        setupTasksView(issue)
+
     }
 
     private fun guideNewIssue() {
@@ -374,59 +440,12 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
     }
 
-    override fun openOpinionScreen(opinion: Opinion, opinionItemTv: View, opinionItemFrame: View) {
-
-        if (isHelpMode) {
-            mShowcaseView.hide()
-        } else {
-            val action =
-                IssueDetailsFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(
-                    mIssue.id,
-                    if (opinion.isOfFirstOption)
-                        nameToColor(mIssue.aColorName, mContext)
-                    else  nameToColor(mIssue.bColorName, mContext)
-                )
-            action.opinionTitle = opinion.title
-            action.ofFirstOption = opinion.isOfFirstOption
-            val transitionName = mIssue.id.toString() + opinion.title
-            opinionItemTv.transitionName = transitionName
-            val fragmentNavigatorExtras = FragmentNavigatorExtras(
-                binding.editIssueBottomDrawer to getString(R.string.opinions_bottom_drawer_nav),
-                opinionItemFrame to transitionName + getString(R.string.frame_transition_name_extension),
-                opinionItemTv to transitionName
-
-            )
-            clearCallback()
-            findNavController().navigate(
-                action, fragmentNavigatorExtras
-            )
-        }
-    }
-
     private fun clearCallback() {
         Log.i("backSuprise", "removeCallback")
         mBackPressedCallback.remove()
     }
 
-    override fun openNewOpinionScreen(isOfFirstOption: Boolean) {
-        if (isHelpMode)
-            mShowcaseView.hide()
-        else {
-            val action =
-                IssueDetailsFragmentDirections.actionEditIssueFragmentToOpinionDetailsFragment(
-                    mIssueId,
-                    if (isOfFirstOption) nameToColor(mIssue.aColorName, mContext)
-                    else nameToColor(mIssue.bColorName, mContext)
-                )
-            action.isNew = true
-            action.isNewUser = isNewUser && mIssue.opinions.flatMap { it.value }.isEmpty()
-            action.ofFirstOption = isOfFirstOption
-            clearCallback()
-            findNavController().navigate(
-                action
-            )
-        }
-    }
+
 
     private fun handleToDecisionClick() {
         if (isHelpMode) {
@@ -502,6 +521,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun beginHelpMode() {
+        hideHelpIfShown()
         isNewIssue = false
         val instructions = getInstructions()
         mInstructionsCurrentPos = 0
@@ -518,25 +538,20 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         mShowcaseView.hideButton()
     }
 
+    private fun hideHelpIfShown(): Boolean {
+        if (isHelpMode) {
+            mShowcaseView.hide()
+            return true
+        }
+        return false
+    }
+
     private fun handleCollaborateClick() {
         Toast.makeText(mContext, "Upcoming feature (: ", Toast.LENGTH_SHORT).show()
     }
 
     private fun isCompareScreen(): Boolean {
         return binding.compareOptionsFrame.visibility == View.VISIBLE
-    }
-
-    private fun backPressed() {
-        Log.i("backSuprise", "backPressed")
-        if (isHelpMode) {
-            Log.i("backSuprise", "backPressed1111")
-            mShowcaseView.setOnShowcaseEventListener(OnShowcaseEventListener.NONE)
-            mShowcaseView.hide()
-            mShowcaseView.isEnabled = false
-        } else {
-            clearCallback()
-            findNavController().popBackStack()
-        }
     }
 
     private fun checkHelpMode() = (this@IssueDetailsFragment::mShowcaseView.isInitialized
@@ -605,14 +620,14 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val colors = UiUtils.getColors(mContext)
-//        val icons = UiUtils.getIconsNames()
-//        when (parent) {
-//            aIconsSpinner -> mIssue.optionAColorName = icons[position]
-//            bIconsSpinner -> mIssue.optionBColorName = icons[position]
-//            aColorsSpinner -> mIssue.optionAColor = colors[position]
-//            bColorsSpinner -> mIssue.optionBColor = colors[position]
-//        }
+        when (parent) {
+            aIconsSpinner -> mIssue.aColorName =
+                UiUtils.colorNames().getOrElse(position){ Constants.DEFAULT_A_COLOR }
+
+            bIconsSpinner -> mIssue.bColorName =
+                UiUtils.colorNames().getOrElse(position){ Constants.DEFAULT_B_COLOR }
+
+        }
     }
 
     override fun onTransitionEnd(transition: Transition) {

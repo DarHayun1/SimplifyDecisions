@@ -10,7 +10,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -26,7 +25,7 @@ import dar.life.helpers.simplifydecisions.Constants.GREY
 import dar.life.helpers.simplifydecisions.Constants.LIGHT_GREEN
 import dar.life.helpers.simplifydecisions.Constants.PURPLE
 import dar.life.helpers.simplifydecisions.Constants.RED_LIGHT
-import dar.life.helpers.simplifydecisions.Constants.TURQOISE
+import dar.life.helpers.simplifydecisions.Constants.TURQUOISE
 import dar.life.helpers.simplifydecisions.Constants.YELLOW_DARK
 import dar.life.helpers.simplifydecisions.R
 
@@ -111,7 +110,7 @@ class UiUtils {
             LIGHT_GREEN,
             YELLOW_DARK,
             GREY,
-            TURQOISE,
+            TURQUOISE,
             BLUE_LIGHT,
             RED_LIGHT
         )
