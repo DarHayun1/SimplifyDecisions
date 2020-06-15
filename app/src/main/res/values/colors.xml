@@ -21,26 +21,26 @@
     <color name="prioYellow">#F1C40F</color>
 
     <color name="app_red_light">#ec1f25</color>
-    <color name="app_red_light_trans">#80ec1f25</color>
+    <color name="app_red_light_trans">#90ec1f25</color>
     <color name="app_red_pink">#bf263a</color>
     <color name="app_red_dark">#941924</color>
     <color name="app_purple">#5b284a</color>
-    <color name="app_purple_trans">#805b284a</color>
+    <color name="app_purple_trans">#F29E6CBC</color>
     <color name="app_yellow">#ffd064</color>
     <color name="app_yellow_dark">#cf9b28</color>
-    <color name="app_yellow_dark_trans">#80cf9b28</color>
+    <color name="app_yellow_dark_trans">#D9CF9B28</color>
     <color name="app_green_light">#a4cf73</color>
-    <color name="app_green_light_trans">#85a4cf73</color>
+    <color name="app_green_light_trans">#FA97BD6B</color>
     <color name="app_turquoise">#08b9ab</color>
-    <color name="app_turquoise_trans">#8008b9ab</color>
+    <color name="app_turquoise_trans">#9008b9ab</color>
     <color name="app_blue_light">#d0eefc</color>
     <color name="app_grey">#58585a</color>
     <color name="app_grey_trans">#8558585a</color>
     <color name="app_blue_dark">#223646</color>
     <color name="trans_white">#50FFFFFF</color>
 
-    <color name="app_turquoise_trans_sc">@color/app_grey_trans</color>
-    <color name="app_blue_light_trans">#80d0eefc</color>
+    <color name="app_turquoise_trans_sc">#CC5B5B61</color>
+    <color name="app_blue_light_trans">#F330BDFF</color>
 
 
     <array name="progressGradientColors">

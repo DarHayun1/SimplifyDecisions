@@ -53,9 +53,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private var isNewUser: Boolean = false
     private lateinit var decisionIcon: MenuItem
     private var aIconsSpinner: Spinner? = null
-    private var aColorsSpinner: Spinner? = null
     private var bIconsSpinner: Spinner? = null
-    private var bColorsSpinner: Spinner? = null
     private val mBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -376,11 +374,12 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         isNewIssue = false
         Timer("helpMode", false).schedule(100) {
             Log.i("backSuprise", "timedAction")
-            if (activity != null)
                 viewLifecycleOwner.lifecycleScope.launch {
-                    requireActivity().onBackPressedDispatcher
-                        .addCallback(mBackPressedCallback)
-                    beginHelpMode()
+                    if (activity != null) {
+                        requireActivity().onBackPressedDispatcher
+                            .addCallback(mBackPressedCallback)
+                        beginHelpMode()
+                    }
                 }
         }
     }
