@@ -42,6 +42,8 @@
     <color name="app_turquoise_trans_sc">#CC5B5B61</color>
     <color name="app_blue_light_trans">#F330BDFF</color>
 
+    <color name="goal_completed_green">#80a4cf73</color>
+
 
     <array name="progressGradientColors">
         <item>@color/prioYellow</item>

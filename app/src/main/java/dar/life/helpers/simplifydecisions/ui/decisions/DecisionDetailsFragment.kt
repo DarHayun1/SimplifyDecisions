@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -260,7 +259,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
     private fun backPressed() {
         if (!hideHelpIfShown()) {
             mDecision?.let {
-                Log.w("DONECHECK", it.goals.toString())
                 mDecisionLiveData.removeObservers(viewLifecycleOwner)
                 viewModel.updateDecision(it)
             }
@@ -373,8 +371,9 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             "Congratulations! \"${goal.name}\" Completed!",
             Snackbar.LENGTH_LONG
         ).also {
-            it.setAction("Share"){shareGoalCompleted(goal)}
-            it.show() }
+            it.setAction("Share") { shareGoalCompleted(goal) }
+            it.show()
+        }
 
 
     }
@@ -410,7 +409,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         val localWeekFromNow = LocalDate.now().plusWeeks(1)
         var dueDateCal: Calendar = GregorianCalendar.from(
             localWeekFromNow
-                .atStartOfDay(ZoneId.systemDefault()))
+                .atStartOfDay(ZoneId.systemDefault())
+        )
         val addToCalBtn: View = dialogView.findViewById(R.id.edit_goal_to_cal_tv)
 
         val cancelBtn: Button = dialogView.findViewById(R.id.edit_goal_cancel_button)
@@ -482,8 +482,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, dueDateCal.timeInMillis)
                 .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
-                .putExtra(CalendarContract.Events.TITLE,
-                    "${getString(R.string.due_date)} - ${textInputLayout.editText?.text}")
+                .putExtra(
+                    CalendarContract.Events.TITLE,
+                    "${getString(R.string.due_date)} - ${textInputLayout.editText?.text}"
+                )
 
             startActivity(intent)
         }

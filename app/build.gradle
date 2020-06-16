@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs"
 
@@ -51,6 +53,8 @@ dependencies {
 
     implementation "androidx.navigation:navigation-fragment-ktx:2.2.2"
     implementation "androidx.navigation:navigation-ui-ktx:2.2.2"
+    implementation 'com.google.firebase:firebase-analytics:17.4.3'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
 
     implementation 'com.github.marcinmoskala:ArcSeekBar:0.31'
     implementation 'com.github.amlcurran.showcaseview:library:5.4.3'

@@ -1,158 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"
-        android:orientation="vertical"
-        tools:context=".ui.issues.IssueDetailsFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".ui.issues.IssueDetailsFragment">
 
     <LinearLayout
         android:id="@+id/top_drawer_issue_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/toolbar_vert_pad"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/toolbar_vert_pad">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/edit_issue_toolbar"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            android:elevation="@dimen/toolbar_elevation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:subtitleTextAppearance="@style/ToolbarSecondaryTextStyle"
             android:background="@android:color/transparent"
+            android:elevation="@dimen/toolbar_elevation"
             android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:subtitleTextAppearance="@style/ToolbarSecondaryTextStyle"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
             <TextView
-                style="@style/headline_text_style"
                 android:id="@+id/edit_issue_toolbar_title"
+                style="@style/headline_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/issue_date_tv"
-        style="@style/small_content_text_style"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-        android:gravity="top"
-        app:layout_constraintStart_toStartOf="@+id/issue_title_tv"
-        app:layout_constraintTop_toBottomOf="@+id/issue_title_et_layout" />
+        <TextView
+            android:id="@+id/issue_date_tv"
+            style="@style/small_content_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:gravity="top"
+            app:layout_constraintStart_toStartOf="@+id/issue_title_tv"
+            app:layout_constraintTop_toBottomOf="@+id/issue_title_et_layout" />
     </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/switch_mode_btn"
+            android:layout_width="@dimen/switch_icon_size"
+            android:layout_height="@dimen/switch_icon_size"
+            android:elevation="8dp"
+            android:layoutDirection="rtl"
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            android:src="?attr/actionModeCloseDrawable"
+            android:tint="@color/trans_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/options_headers"
+            layout="@layout/options_headers_layout"
+            app:layout_constraintBottom_toTopOf="@id/edit_issue_bottom_drawer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_issue_bottom_drawer" />
+
+        <FrameLayout
+            android:id="@+id/edit_issue_bottom_drawer"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/switch_mode_btn"
-                android:layout_width="@dimen/switch_icon_size"
-                android:layout_height="@dimen/switch_icon_size"
-                android:elevation="8dp"
-                android:padding="2dp"
-                android:scaleType="centerInside"
-                android:src="?attr/actionModeCloseDrawable"
-                android:tint="@color/trans_white"
-                android:layoutDirection="rtl"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <include
-                android:id="@+id/options_headers"
-                layout="@layout/options_headers_layout"
-                app:layout_constraintBottom_toTopOf="@id/edit_issue_bottom_drawer"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/edit_issue_bottom_drawer" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/bottom_drawer_background"
+            android:transitionName="@string/bot_drawer_trans_name">
 
             <FrameLayout
-                android:id="@+id/edit_issue_bottom_drawer"
+                android:id="@+id/compare_options_frame"
                 android:layout_width="match_parent"
-                android:transitionName="@string/bot_drawer_trans_name"
-                android:layout_height="match_parent"
-                android:background="@drawable/bottom_drawer_background"
-                android:layout_marginTop="40dp">
+                android:layout_height="match_parent">
 
-                <FrameLayout
-                    android:id="@+id/compare_options_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/complex_opinions_rv"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="64dp"
-                        android:elevation="4dp"
-                        android:paddingStart="@dimen/activity_horizontal_margin"
-                        android:paddingEnd="@dimen/activity_horizontal_margin"
-                        android:clipChildren="false"
-                        android:clipToPadding="false"
-                        android:paddingBottom="24dp" />
-
-                    <View
-                        android:id="@+id/view"
-                        android:layout_width="4dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@color/colorPrimaryDark" />
-
-                </FrameLayout>
-
-                <LinearLayout
-                    android:id="@+id/unfinished_tasks_frame"
-                    android:visibility="invisible"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/complex_opinions_rv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingTop="@dimen/bottom_drawer_top_padd"
-                    android:orientation="vertical">
+                    android:layout_marginTop="64dp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:elevation="4dp"
+                    android:paddingStart="@dimen/activity_horizontal_margin"
+                    android:paddingEnd="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="24dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/unfinished_tasks"
-                        style="@style/subheadline1_text_style_light"
-                        android:fontFamily="@font/assistant_bold"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10dp"
-                        android:textColor="@android:color/primary_text_light"/>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="10dp">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/all_tasks_rv"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:descendantFocusability="afterDescendants"/>
-
-                        <TextView
-                            android:id="@+id/no_tasks_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:paddingBottom="60dp"
-                            style="@style/TextAppearance.AppCompat.Large"
-                            android:fontFamily="@font/assistant_regular"
-                            android:text="No tasks\nfound (:"
-                            android:visibility="gone"
-                            android:textAlignment="center"/>
-                    </FrameLayout>
-
-                </LinearLayout>
-
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/colorPrimaryDark" />
 
             </FrameLayout>
 
+            <LinearLayout
+                android:id="@+id/unfinished_tasks_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/bottom_drawer_top_padd"
+                android:visibility="invisible">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    style="@style/subheadline1_text_style_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/assistant_bold"
+                    android:text="@string/unfinished_tasks"
+                    android:textColor="@android:color/primary_text_light" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/all_tasks_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:descendantFocusability="afterDescendants" />
+
+                    <TextView
+                        android:id="@+id/no_tasks_tv"
+                        style="@style/TextAppearance.AppCompat.Large"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/assistant_regular"
+                        android:paddingBottom="60dp"
+                        android:text="No tasks\nfound (:"
+                        android:textAlignment="center"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

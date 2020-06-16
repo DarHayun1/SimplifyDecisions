@@ -48,6 +48,8 @@
             android:paddingBottom="@dimen/bottom_drawer_top_pad"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">

@@ -3,7 +3,7 @@
     <dimen name="pick_option_icon_height">140dp</dimen>
     <dimen name="toolbar_vert_pad">36dp</dimen>
     <dimen name="menu_logo_size">96dp</dimen>
-    <dimen name="menu_item_size">128dp</dimen>
+    <dimen name="menu_item_size">80dp</dimen>
     <dimen name="menu_margin">24dp</dimen>
     <dimen name="fab_size">56dp</dimen>
     <dimen name="list_item_vert_pad">18dp</dimen>
@@ -17,6 +17,9 @@
     <dimen name="subheadline2_text_size">20sp</dimen>
     <dimen name="content_text_size">18sp</dimen>
     <dimen name="small_content_text_size">16sp</dimen>
+
+    <dimen name="logo_hor_margin">164dp</dimen>
+    <dimen name="text_logo_hor_margin">124dp</dimen>
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
 </resources>

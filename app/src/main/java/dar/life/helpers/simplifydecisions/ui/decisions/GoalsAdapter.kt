@@ -109,7 +109,7 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
         holder.itemView.background?.let {
             val backgroundColorId =
                 if (goal.isDone)
-                    R.color.app_green_light_trans
+                    R.color.goal_completed_green
                 else
                     android.R.color.background_light
             UiUtils.setColorFilter(
@@ -124,7 +124,10 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
         holder: GoalVH,
         position: Int
     ) {
-        Log.d("doneandexpand", "setUpExpand expandedPos: $expandedPos, goalexpanded?${goal.expanded}, Goal: $goal")
+        Log.d(
+            "doneandexpand",
+            "setUpExpand expandedPos: $expandedPos, goalexpanded?${goal.expanded}, Goal: $goal"
+        )
         if (goal.expanded) {
             expandedPos = position
             fadeInViews(holder.extraInfoLayout)

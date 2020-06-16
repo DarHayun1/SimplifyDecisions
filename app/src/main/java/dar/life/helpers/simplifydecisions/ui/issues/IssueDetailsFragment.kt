@@ -36,7 +36,6 @@ import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.databinding.FragmentIssueDetailsBinding
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
-import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.iconResFormat
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.nameToColor
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.nameToIcon
 import dar.life.helpers.simplifydecisions.ui.customview.OptionSumView
@@ -141,7 +140,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         setupSwitchContent()
 
     }
-
 
 
     override fun onDestroyView() {
@@ -266,7 +264,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                     mIssue.id,
                     if (opinion.isOfFirstOption)
                         nameToColor(mIssue.aColorName, mContext)
-                    else  nameToColor(mIssue.bColorName, mContext)
+                    else nameToColor(mIssue.bColorName, mContext)
                 )
             action.opinionTitle = opinion.title
             action.ofFirstOption = opinion.isOfFirstOption
@@ -297,7 +295,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             findNavController().popBackStack()
         }
     }
-
 
 
     private fun setupSwitchContent() {
@@ -361,7 +358,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             )
             secondOptionTitle.text = issue.bTitle
             secondOptionIcon.setImageDrawable(
-                    nameToIcon(issue.bColorName, mContext)
+                nameToIcon(issue.bColorName, mContext)
             )
         }
 
@@ -374,13 +371,13 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         isNewIssue = false
         Timer("helpMode", false).schedule(100) {
             Log.i("backSuprise", "timedAction")
-                viewLifecycleOwner.lifecycleScope.launch {
-                    if (activity != null) {
-                        requireActivity().onBackPressedDispatcher
-                            .addCallback(mBackPressedCallback)
-                        beginHelpMode()
-                    }
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (activity != null) {
+                    requireActivity().onBackPressedDispatcher
+                        .addCallback(mBackPressedCallback)
+                    beginHelpMode()
                 }
+            }
         }
     }
 
@@ -443,7 +440,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         Log.i("backSuprise", "removeCallback")
         mBackPressedCallback.remove()
     }
-
 
 
     private fun handleToDecisionClick() {
@@ -621,10 +617,10 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (parent) {
             aIconsSpinner -> mIssue.aColorName =
-                UiUtils.colorNames().getOrElse(position){ Constants.DEFAULT_A_COLOR }
+                UiUtils.colorNames().getOrElse(position) { Constants.DEFAULT_A_COLOR }
 
             bIconsSpinner -> mIssue.bColorName =
-                UiUtils.colorNames().getOrElse(position){ Constants.DEFAULT_B_COLOR }
+                UiUtils.colorNames().getOrElse(position) { Constants.DEFAULT_B_COLOR }
 
         }
     }
