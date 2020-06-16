@@ -114,7 +114,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
 
         mViewModel.getAllDecisions().observe(viewLifecycleOwner, Observer {
             rvAdapter.decisions = it
-            if (it.isEmpty())
+            if (it.isEmpty() && !mViewModel.gotDecisionsFirstHelp)
                 startInstructions()
         })
         binding.addDecisionFab.setOnClickListener {

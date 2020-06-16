@@ -11,7 +11,6 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -46,8 +45,7 @@ class IssuesFragment : Fragment(),
         }
 
     private fun backPressed() {
-        if (!hideHelpIfShown())
-        {
+        if (!hideHelpIfShown()) {
             clearCallback()
             findNavController().popBackStack()
         }
@@ -140,12 +138,14 @@ class IssuesFragment : Fragment(),
         )
         issues_rv.addItemDecoration(DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         mViewModel.getAllActiveIssues().observe(viewLifecycleOwner, Observer
-            { if (it.isEmpty())
-                mViewModel.getAllIssues().observe(viewLifecycleOwner, Observer {allIssues ->
+        {
+            if (it.isEmpty())
+                mViewModel.getAllIssues().observe(viewLifecycleOwner, Observer { allIssues ->
                     if (allIssues.isEmpty())
                         startInstructions()
                 })
-                issuesAdapter.issues = it }
+            issuesAdapter.issues = it
+        }
         )
         view
         postponeEnterTransition()
@@ -166,9 +166,10 @@ class IssuesFragment : Fragment(),
     }
 
     private fun getInstruction(): Instruction = Instruction(
-                    getString(R.string.first_dilemma_title),
-                    getString(R.string.first_dilemma_text),
-                    binding.addIssueFab)
+        getString(R.string.first_dilemma_title),
+        getString(R.string.first_dilemma_text),
+        binding.addIssueFab
+    )
 
 
     override fun openDetailsScreen(id: Int, title: String, titleView: View) {
@@ -183,13 +184,15 @@ class IssuesFragment : Fragment(),
                 id,
                 title
             ),
-            extras)
+            extras
+        )
     }
 
     override fun onStop() {
         hideHelpIfShown()
         super.onStop()
     }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()

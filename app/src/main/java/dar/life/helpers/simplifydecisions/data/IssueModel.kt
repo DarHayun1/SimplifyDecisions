@@ -92,7 +92,8 @@ data class IssueModel(
     fun toDecision(isOpinionA: Boolean): Decision {
         isActive = false
         val decisionName = if (isOpinionA) aTitle else bTitle
-        return Decision(decisionName, description, opinions, id)
+        val color = if (isOpinionA) aColorName else bColorName
+        return Decision(decisionName, description, opinions, id, color)
 
     }
 

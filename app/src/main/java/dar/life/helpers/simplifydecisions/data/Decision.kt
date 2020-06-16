@@ -1,9 +1,8 @@
 package dar.life.helpers.simplifydecisions.data
 
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
+import android.provider.SyncStateContract
+import androidx.room.*
+import dar.life.helpers.simplifydecisions.Constants
 import dar.life.helpers.simplifydecisions.repository.DateConverter
 import dar.life.helpers.simplifydecisions.repository.GoalsConverter
 import dar.life.helpers.simplifydecisions.repository.OpinionConverter
@@ -18,7 +17,9 @@ data class Decision(
     var title: String,
     var description: String?,
     var opinions: MutableMap<String, MutableList<Opinion>> = mutableMapOf(),
-    val issueIdBasedOf: Int? = null
+    val issueIdBasedOf: Int? = null,
+    @ColumnInfo(name = "color_name")
+    val colorName: String = Constants.DEFAULT_A_ICON
 ) {
 
     @TypeConverters(DateConverter::class)

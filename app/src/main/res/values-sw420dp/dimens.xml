@@ -22,4 +22,5 @@
     <dimen name="text_logo_hor_margin">124dp</dimen>
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="goodluck_logo_width">64dp</dimen>
 </resources>

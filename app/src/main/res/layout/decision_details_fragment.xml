@@ -125,7 +125,7 @@
 
                 <ImageView
                     android:id="@+id/goodluck_logo"
-                    android:layout_width="80dp"
+                    android:layout_width="@dimen/goodluck_logo_width"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:adjustViewBounds="true"

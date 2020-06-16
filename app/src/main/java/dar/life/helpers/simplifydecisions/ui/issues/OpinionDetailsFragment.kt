@@ -60,9 +60,6 @@ class OpinionDetailsFragment : Fragment(),
     private lateinit var importanceSbNumTv: TextView
     private lateinit var importanceSbTv:TextView
 
-    val mTimer = Timer("importanceHelper", false)
-
-
     private var isNewOpinion: Boolean = false
 
     private lateinit var mTasksAdapter: TasksAdapter

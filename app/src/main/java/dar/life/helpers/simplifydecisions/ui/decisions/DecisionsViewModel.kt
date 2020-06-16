@@ -11,6 +11,14 @@ import dar.life.helpers.simplifydecisions.repository.AppRepository
 
 class DecisionsViewModel(application: Application) : AndroidViewModel(application) {
 
+    var gotDecisionsFirstHelp = false
+        get() {
+            if (!field){
+                field = true
+                return false
+            }
+            return true
+        }
     private var openedDecision: Decision? = null
     var lastUsedDecision: Decision? = null
     private val repository = AppRepository.getInstance(application.applicationContext)
@@ -36,7 +44,6 @@ class DecisionsViewModel(application: Application) : AndroidViewModel(applicatio
             return true
         }
         return false
-
     }
 
 }

@@ -51,4 +51,5 @@
     <dimen name="pick_option_icon_height">124dp</dimen>
     <dimen name="icon_item_width">112dp</dimen>
     <dimen name="icon_item_height">124dp</dimen>
+    <dimen name="goodluck_logo_width">64dp</dimen>
 </resources>

@@ -291,6 +291,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         }
         (binding.goalsRv.adapter as GoalsAdapter).goalsList = decision.goals
 
+        binding.goodluckLogo.setImageDrawable(UiUtils.nameToIcon(decision.colorName, mContext))
 
     }
 

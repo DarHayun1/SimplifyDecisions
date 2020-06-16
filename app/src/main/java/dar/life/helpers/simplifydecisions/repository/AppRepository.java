@@ -1,6 +1,7 @@
 package dar.life.helpers.simplifydecisions.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Room;
@@ -27,10 +28,7 @@ public class AppRepository {
 
     private AppRepository(Context context) {
 
-        IssuesDatabase db = Room.databaseBuilder(
-                context.getApplicationContext(),
-                IssuesDatabase.class, IssuesDatabase.DB_NAME
-        ).build();
+        IssuesDatabase db = IssuesDatabase.Companion.invoke(context);
 
         mIssuesDao = db.issuesDao();
         mDecisionsDao = db.decisionsDao();
@@ -90,6 +88,7 @@ public class AppRepository {
     }
 
     public void addNewDecision(@NotNull Decision decision) {
+        Log.i("helpfix", "adddecision: $decision");
         AppExecutors.getInstance().diskIO().execute(() -> mDecisionsDao.addNewDecision(decision));
     }
 
@@ -98,6 +97,10 @@ public class AppRepository {
     }
 
     public void updateDecision(@NotNull Decision decision) {
-        AppExecutors.getInstance().diskIO().execute(() -> mDecisionsDao.updateDecision(decision));
+        Log.i("helpfix", "update1: $decision");
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            mDecisionsDao.updateDecision(decision);
+            Log.i("helpfix", "update2: $decision");
+        });
     }
 }
