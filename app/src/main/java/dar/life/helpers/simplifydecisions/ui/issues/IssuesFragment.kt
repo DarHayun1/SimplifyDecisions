@@ -147,7 +147,6 @@ class IssuesFragment : Fragment(),
             issuesAdapter.issues = it
         }
         )
-        view
         postponeEnterTransition()
         issues_rv.doOnPreDraw { startPostponedEnterTransition() }
     }

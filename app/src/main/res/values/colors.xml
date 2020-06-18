@@ -36,6 +36,7 @@
     <color name="app_blue_light">#d0eefc</color>
     <color name="app_grey">#58585a</color>
     <color name="app_grey_trans">#8558585a</color>
+    <color name="grey_divider">#7FA8A8AE</color>
     <color name="app_blue_dark">#223646</color>
     <color name="trans_white">#50FFFFFF</color>
 

@@ -17,7 +17,7 @@
     <item
         android:id="@+id/action_help"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="@string/Help"
+        android:title="@string/help_title"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_collaborate_issue"

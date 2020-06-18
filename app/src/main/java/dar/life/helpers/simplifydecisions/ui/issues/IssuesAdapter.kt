@@ -69,6 +69,7 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
     class IssueVH(itemView: View) : RecyclerView.ViewHolder(itemView){
         val title: TextView = itemView.findViewById(R.id.issue_item_title_tv)
         val dateTv: TextView = itemView.findViewById(R.id.issue_item_date_tv)
+        val optionsTv: TextView = itemView.findViewById(R.id.issue_item_avsb_tv)
         val numOfOpinionsTv: TextView = itemView.findViewById(R.id.issue_item_num_of_opinions)
         val extraInfoLayout: View = itemView.findViewById(R.id.issue_item_extra_info)
 
@@ -77,6 +78,7 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
             dateTv.text = item.date.format(
                 DateTimeFormatter.ofLocalizedDate(
                     FormatStyle.LONG))
+            optionsTv.text = """ "${item.aTitle}\" Vs. \"${item.bTitle}\ """
             numOfOpinionsTv.text = item.opinions.flatMap { it.value }.size.toString()
             title.transitionName = item.id.toString()
         }

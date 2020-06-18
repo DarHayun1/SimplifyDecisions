@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/from_template_bottom_drawer"
-    android:transitionName="@string/bot_drawer_trans_name"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/from_template_bottom_drawer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@drawable/bottom_drawer_background"
-    android:paddingTop="@dimen/bottom_drawer_top_pad"
-    android:paddingBottom="@dimen/bottom_drawer_top_pad"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:transitionName="@string/bot_drawer_trans_name"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    app:layout_constraintStart_toStartOf="parent">
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -21,15 +18,15 @@
         style="@style/titleTextInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/menu_vert_margin"
-        android:hint="@string/issue_title_hint">
+        android:hint="@string/issue_title_hint"
+        android:inputType="textPersonName">
 
         <com.google.android.material.textfield.TextInputEditText
+            style="@style/subheadline1_text_style_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-black"
-            android:textSize="@dimen/issue_title_text_size"
             android:selectAllOnFocus="true"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -37,6 +34,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -57,9 +55,9 @@
             <Spinner
                 android:id="@+id/a_icons"
                 android:layout_width="wrap_content"
-                android:layout_marginBottom="@dimen/menu_vert_margin"
                 android:layout_height="@dimen/icon_item_height"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/menu_vert_margin"
                 android:dropDownWidth="@dimen/icon_item_width" />
 
         </LinearLayout>
@@ -89,8 +87,8 @@
                 android:id="@+id/b_icons"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/icon_item_height"
-                android:layout_marginBottom="@dimen/menu_vert_margin"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/menu_vert_margin"
                 android:dropDownWidth="@dimen/icon_item_width" />
 
         </LinearLayout>
@@ -108,20 +106,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:textColor="@color/colorPrimaryDark"
-            android:background="@android:color/transparent"
-            android:text="@android:string/cancel" />
+            android:text="@android:string/cancel"
+            android:textColor="@color/colorPrimaryDark" />
+
+
+        <View
+            android:id="@+id/divider6"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="4dp"
+            android:background="@color/grey_divider" />
 
         <Button
             android:id="@+id/et_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/colorPrimaryDark"
+            android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:background="@android:color/transparent"
-            android:text="@string/save_button_text" />
+            android:text="@string/save_button_text"
+            android:textColor="@color/colorPrimaryDark" />
     </LinearLayout>
 
 </LinearLayout>

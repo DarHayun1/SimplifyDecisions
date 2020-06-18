@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.transition.Slide
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import androidx.recyclerview.widget.RecyclerView
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener
 import com.github.amlcurran.showcaseview.ShowcaseView
 import com.github.amlcurran.showcaseview.targets.ViewTarget
 import com.google.android.material.snackbar.Snackbar
@@ -51,7 +53,7 @@ import kotlin.math.abs
  * A simple [Fragment] subclass.
  */
 class OpinionDetailsFragment : Fragment(),
-    OnTaskTextChangedListener {
+    OnTaskTextChangedListener, OnShowcaseEventListener {
 
     private lateinit var importanceRelativeTv: TextView
     private lateinit var newCategoryEt: EditText
@@ -449,7 +451,8 @@ class OpinionDetailsFragment : Fragment(),
     }
 
     private fun backPressed() {
-        if (!hideHelpIfShown())
+        if (!hideHelpIfShown()) {
+            Log.d("BACKBACK", "NO WAY!!!!!!")
             AlertDialog.Builder(mContext)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(getString(R.string.alertdialog_title))
@@ -466,9 +469,11 @@ class OpinionDetailsFragment : Fragment(),
                     findNavController().popBackStack()
                 }
                 .show()
+        }
     }
 
     private fun hideHelpIfShown(): Boolean {
+        Log.d("BACKBACK", "${isHelpMode()}")
         if (isHelpMode()) {
             mShowcaseView.hide()
             return true
@@ -483,6 +488,7 @@ class OpinionDetailsFragment : Fragment(),
         mShowcaseView = ShowcaseView.Builder(activity)
             .withHoloShowcase()
             .hideOnTouchOutside()
+            .setShowcaseEventListener(this)
             .setStyle(R.style.ShowcaseTheme)
             .setTarget(ViewTarget(instruction.view))
             .setContentTitle(instruction.title)
@@ -497,7 +503,20 @@ class OpinionDetailsFragment : Fragment(),
         binding.addTaskBtn)
 
     private fun clearCallback() {
+        mBackPressedCallback.isEnabled = false
         mBackPressedCallback.remove()
+    }
+
+    override fun onShowcaseViewShow(showcaseView: ShowcaseView?) {
+    }
+
+    override fun onShowcaseViewHide(showcaseView: ShowcaseView?) {
+    }
+
+    override fun onShowcaseViewDidHide(showcaseView: ShowcaseView?) {
+    }
+
+    override fun onShowcaseViewTouchBlocked(motionEvent: MotionEvent?) {
     }
 
 }

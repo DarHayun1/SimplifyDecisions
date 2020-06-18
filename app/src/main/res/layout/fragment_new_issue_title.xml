@@ -67,8 +67,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:textSize="@dimen/issue_title_text_size"
+                        style="@style/subheadline1_text_style_light"
                         android:selectAllOnFocus="true"
                         android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>

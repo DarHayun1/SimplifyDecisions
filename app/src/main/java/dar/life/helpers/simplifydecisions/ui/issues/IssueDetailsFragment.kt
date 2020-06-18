@@ -54,7 +54,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private var aIconsSpinner: Spinner? = null
     private var bIconsSpinner: Spinner? = null
     private val mBackPressedCallback: OnBackPressedCallback =
-        object : OnBackPressedCallback(true) {
+        object : OnBackPressedCallback(false) {
             override fun handleOnBackPressed() {
                 backPressed()
             }
@@ -286,10 +286,9 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private fun backPressed() {
         Log.i("backSuprise", "backPressed")
         if (isHelpMode) {
-            Log.i("backSuprise", "backPressed1111")
             mShowcaseView.setOnShowcaseEventListener(OnShowcaseEventListener.NONE)
             mShowcaseView.hide()
-            mShowcaseView.isEnabled = false
+            mBackPressedCallback.isEnabled = false
         } else {
             clearCallback()
             findNavController().popBackStack()
@@ -437,14 +436,14 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun clearCallback() {
+        mBackPressedCallback.isEnabled = false
         Log.i("backSuprise", "removeCallback")
         mBackPressedCallback.remove()
     }
 
 
     private fun handleToDecisionClick() {
-        if (isHelpMode) {
-            mShowcaseView.hide()
+        if (hideHelpIfShown()) {
             return
         }
         val alertDialog = AlertDialog.Builder(mContext).create()
@@ -555,10 +554,11 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     /****************
      * ShowCastEventListener
      ****************/
-    override fun onShowcaseViewShow(showcaseView: ShowcaseView?) {}
+    override fun onShowcaseViewShow(showcaseView: ShowcaseView?) {
+        mBackPressedCallback.isEnabled = true
+    }
 
     override fun onShowcaseViewHide(showcaseView: ShowcaseView?) {
-
         nextInstruction()
     }
 
@@ -580,6 +580,8 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
                     .build()
                 mShowcaseView.hideButton()
             }
+            else
+                mBackPressedCallback.isEnabled = false
         }
     }
 

@@ -10,7 +10,7 @@
         android:id="@+id/edit_goal_header_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/TextAppearance.AppCompat.Headline"
+        style="@style/subheadline2_text_style_light"
         android:text="@string/edit_goal_info"
         android:paddingVertical="@dimen/edit_goal_headline_vert_pad"/>
 
@@ -31,7 +31,7 @@
             android:id="@+id/goal_edit_text_input_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-black"
+            style="@style/subheadline2_text_style_light"
             android:selectAllOnFocus="true"
             android:singleLine="true" />
 
