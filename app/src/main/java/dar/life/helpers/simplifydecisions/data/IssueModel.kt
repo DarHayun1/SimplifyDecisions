@@ -15,6 +15,18 @@ import dar.life.helpers.simplifydecisions.repository.OpinionConverter
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
+/**
+ * A Dilemma(Issue) data model.
+ * representing all the aspects of the dilemma
+ *
+ * @property title - the issue title
+ * @property aColorName - option A color theme
+ * @property bColorName - option B color theme
+ * @property aTitle - option A title
+ * @property bTitle - option B title
+ * @property description - Description if exists
+ * @property isActive - flag representing the active state of a dilemma (false if a decision has been made)
+ */
 @Entity(tableName = "issues")
 data class IssueModel(
     var title: String,
@@ -31,6 +43,12 @@ data class IssueModel(
     var date = LocalDateTime.now()
     @PrimaryKey(autoGenerate = true)
     var id: Int = date.toEpochSecond(ZoneOffset.UTC).toInt()
+
+    /**
+     * Holding all the opinions in a map.
+     * The keys represent the categories and the values are lists of opinions in that category.
+     * each opinion holds a flag to associate it withe either option a or b
+     * */
     @TypeConverters(OpinionConverter::class)
     var opinions: MutableMap<String, MutableList<Opinion>> = createNewMap()
 
@@ -43,8 +61,12 @@ data class IssueModel(
     var expanded: Boolean = false
 
     companion object{
+        //An empty issue defined in order to prevent null cases
         val DEFAULT_ISSUE: IssueModel = IssueModel(title = "", description = null)
 
+        /**
+         * Creating a new issue based on the requested template
+         */
         fun fromTemplate(template: String): IssueModel{
             var optionA = "Option A"
             var optionB = "Option B"
@@ -83,19 +105,23 @@ data class IssueModel(
         }
     }
 
+    /**
+     * Return an "unnamed dilemma" title in case of an empty title
+     */
     fun displayedTitle(context: Context): String{
         return if (title.isNotEmpty())
             title
         else
             context.getString(R.string.noIssueTitle)
     }
-    fun toDecision(isOpinionA: Boolean): Decision {
+    fun toDecision(isOpinionA: Boolean): DecisionModel {
         isActive = false
         val decisionName = if (isOpinionA) aTitle else bTitle
         val color = if (isOpinionA) aColorName else bColorName
-        return Decision(decisionName, description, opinions, id, color)
+        return DecisionModel(decisionName, description, opinions, id, color)
 
     }
+
 
     fun changeOpinionCategory(opinion: Opinion, category: String) {
         opinions[opinion.category]?.remove(opinion)
@@ -108,6 +134,9 @@ data class IssueModel(
 
     fun hasTasks(): Boolean = opinions.flatMap { it.value }.flatMap { it.tasks }.isNotEmpty()
 
+    /**
+     * @return the sum of the importance scores.
+     */
     fun getOptionsScores(): Pair<Int, Int> {
         val (first, second) =
             opinions.flatMap { it.value }.partition { it.isOfFirstOption }

@@ -4,9 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import dar.life.helpers.simplifydecisions.data.Decision
-import dar.life.helpers.simplifydecisions.data.ReminderObj
+import dar.life.helpers.simplifydecisions.data.DecisionModel
 import dar.life.helpers.simplifydecisions.repository.AppRepository
 
 class DecisionsViewModel(application: Application) : AndroidViewModel(application) {
@@ -19,21 +17,20 @@ class DecisionsViewModel(application: Application) : AndroidViewModel(applicatio
             }
             return true
         }
-    private var openedDecision: Decision? = null
-    var lastUsedDecision: Decision? = null
+    private var openedDecision: DecisionModel? = null
+    var lastUsedDecision: DecisionModel? = null
     private val repository = AppRepository.getInstance(application.applicationContext)
 
-    fun getAllDecisions(): LiveData<List<Decision>> = repository.allDecisions
+    fun getAllDecisions(): LiveData<List<DecisionModel>> = repository.allDecisions
 
-    fun getDecisionById(id: Int): LiveData<Decision>{
+    fun getDecisionById(id: Int): LiveData<DecisionModel>{
         return repository.getDecision(id)
     }
-    fun updateDecision(decision: Decision) {
-        Log.d("DeleteBug1", "decisiongoals: ${decision.goals}")
+    fun updateDecision(decision: DecisionModel) {
         repository.updateDecision(decision)
     }
 
-    fun addNewDecision(decision: Decision){
+    fun addNewDecision(decision: DecisionModel){
         lastUsedDecision = decision
         repository.addNewDecision(decision)
     }

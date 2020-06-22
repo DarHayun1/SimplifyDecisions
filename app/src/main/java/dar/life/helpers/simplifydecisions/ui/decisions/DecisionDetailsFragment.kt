@@ -26,11 +26,11 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Decision
+import dar.life.helpers.simplifydecisions.data.DecisionModel
 import dar.life.helpers.simplifydecisions.data.Goal
 import dar.life.helpers.simplifydecisions.data.ReminderObj
 import dar.life.helpers.simplifydecisions.databinding.DecisionDetailsFragmentBinding
-import dar.life.helpers.simplifydecisions.reminders.AlarmScheduler
+import dar.life.helpers.simplifydecisions.remindersutils.AlarmScheduler
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 import java.time.LocalDate
@@ -44,7 +44,7 @@ import java.util.*
 class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     private var mSnackbar: Snackbar? = null
-    private lateinit var mDecisionLiveData: LiveData<Decision>
+    private lateinit var mDecisionLiveData: LiveData<DecisionModel>
     private lateinit var mShowcaseView: ShowcaseView
     private var mFirstTime: Boolean = false
     private var mDialogView: View? = null
@@ -52,7 +52,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     private var cancelUiUpdate: Boolean = false
 
-    private var mDecision: Decision?
+    private var mDecision: DecisionModel?
         get() = viewModel.lastUsedDecision
         set(value) {
             viewModel.lastUsedDecision = value
@@ -86,7 +86,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null && args.isNew)
             mFirstTime = true
-        Log.d("savedis", savedInstanceState.toString())
         sharedElementEnterTransition =
             TransitionInflater.from(mContext).inflateTransition(android.R.transition.move)
     }
@@ -155,10 +154,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         mDecisionLiveData.observe(viewLifecycleOwner, Observer {
             it?.let {
                 mDecision = it
-                Log.w(
-                    "doneandexpand",
-                    "decision updated, canceledUpdate: $cancelUiUpdate, ${mDecision!!.goals}"
-                )
 
                 if (cancelUiUpdate)
                     cancelUiUpdate = false
@@ -271,7 +266,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         mBackPressedCallback.remove()
     }
 
-    private fun populateUi(decision: Decision) {
+    private fun populateUi(decision: DecisionModel) {
 
         binding.decisionDateTv.text = decision.date.format(ofLocalizedDate(FormatStyle.LONG))
 
@@ -316,14 +311,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     override fun onGoalChecked(goal: Goal) {
         cancelUiUpdate = true
-        Log.e(
-            "doneandexpand",
-            "Fragment onGoalChecked. goal: $goal\ndecisionGs: ${mDecision!!.goals}"
-        )
-        Log.e(
-            "doneandexpand",
-            "Fragment onGoalChecked.2 isEqual: ${mDecision!!.goals.contains(goal)}"
-        )
         viewModel.updateDecision(mDecision!!
             .also {
                 it.goals.find {
@@ -340,13 +327,11 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     override fun goalDeleted(goal: Goal) {
         cancelUiUpdate = true
-        Log.w("DeleteBug2", "goal: ")
         viewModel.updateDecision(mDecision!!.apply { goals.remove(goal) })
 
     }
 
     override fun goalExpanded(goal: Goal) {
-        Log.w("doneandexpand", "goalExpended(frag) decision: ${mDecision!!.goals}")
         cancelUiUpdate = true
         viewModel.updateDecision(mDecision!!.also { decision ->
             decision.goals.find { it == goal }
@@ -364,7 +349,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
      * @param goal - the completed goal
      */
     private fun goalCompleted(goal: Goal) {
-        Log.w("Snackush", goal.toString())
         if (mSnackbar != null && mSnackbar!!.isShown)
             return
         mSnackbar = Snackbar.make(

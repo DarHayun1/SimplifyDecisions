@@ -73,7 +73,6 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
                     }
                     R.id.action_delete_goal -> {
                         goalsList.remove(goal)
-                        Log.d("DeleteBug1", "goal: $goal, list: $goalsList")
                         notifyItemRemoved(position)
                         mCallback.goalDeleted(goal)
                         return@setOnMenuItemClickListener true
@@ -89,12 +88,10 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
     private fun setUpIsDone(goal: Goal, holder: GoalVH, position: Int) {
         holder.titleCb.isChecked = goal.isDone
         paintIfDone(holder, goal)
-        Log.d("doneandexpand", "done setUp goal: $goal, position: $position")
 
         holder.titleCb.setOnCheckedChangeListener { view, isChecked ->
             if (view == holder.titleCb) {
                 goal.isDone = isChecked
-                Log.d("doneandexpand", "done clickListener goal: $goal, position: $position")
                 mCallback.onGoalChecked(goal)
                 paintIfDone(holder, goal)
                 holder.warnIfDueDatePassed(goal, mContext)
@@ -124,10 +121,6 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
         holder: GoalVH,
         position: Int
     ) {
-        Log.d(
-            "doneandexpand",
-            "setUpExpand expandedPos: $expandedPos, goalexpanded?${goal.expanded}, Goal: $goal"
-        )
         if (goal.expanded) {
             expandedPos = position
             fadeInViews(holder.extraInfoLayout)
@@ -136,7 +129,6 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
         }
 
         holder.itemView.setOnClickListener {
-            Log.i("doneandexpand", "goal: $goal clicklisten expanded:${goal.expanded}")
             if (goal.expanded) {
                 expandedPos = -1
                 goal.expanded = false

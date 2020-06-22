@@ -9,7 +9,12 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 
-@Entity(tableName = "reminders")
+/**
+ * A Reminder data model, representing a reminder for a specific task
+ *
+ * @property title
+ * @property isActive
+ */
 data class ReminderObj(var title: String, var isActive: Boolean = false) {
 
     companion object {
@@ -18,13 +23,12 @@ data class ReminderObj(var title: String, var isActive: Boolean = false) {
         }
     }
 
-
-    @PrimaryKey
     var id = Instant.now().epochSecond
-    @TypeConverters(DateConverter::class)
-    var time: LocalDateTime = LocalDateTime.now()
+    //The reminder's activating time
+    var time: LocalDateTime = LocalDateTime.now().plusWeeks(1L)
     var text: String = ""
 
+    //Migrating to a db version of the object
     fun toIntReminderObj(): IntReminderObj = IntReminderObj(
         title,
         id,
@@ -36,6 +40,9 @@ data class ReminderObj(var title: String, var isActive: Boolean = false) {
         return "id: $id\ntime: $time\ntitle: $title\ntext: $text"
     }
 }
+/**
+ * The reminder object DB version (compatible types)
+ */
 data class IntReminderObj(
     val title1: String,
     var id1: Long,
@@ -43,6 +50,7 @@ data class IntReminderObj(
     var isActive1: Boolean,
     var text1: String){
 
+    //Migrating to the Reminder object
     fun toReminderObj(): ReminderObj = ReminderObj(title1).apply {
         id = id1
         time = LocalDateTime.ofEpochSecond(time1,0, ZoneOffset.UTC)

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 <data>
-    <import type="dar.life.helpers.simplifydecisions.data.Decision"/>
+    <import type="dar.life.helpers.simplifydecisions.data.DecisionModel"/>
 <variable
     name="viewModel"
     type="dar.life.helpers.simplifydecisions.ui.decisions.DecisionsViewModel" />

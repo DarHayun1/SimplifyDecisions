@@ -27,18 +27,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package dar.life.helpers.simplifydecisions.reminders
+package dar.life.helpers.simplifydecisions.remindersutils
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.app.job.JobInfo
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.ReminderObj
 import dar.life.helpers.simplifydecisions.ui.decisions.DecisionDetailsFragment
-import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
@@ -73,7 +71,6 @@ object AlarmScheduler {
         alarmIntent: PendingIntent?,
         alarmMgr: AlarmManager
     ) {
-        Log.d("notification", "scheduleAlarm, $reminderData")
 
         val cal = GregorianCalendar.from(
             ZonedDateTime.of(reminderData.time, ZoneId.systemDefault())

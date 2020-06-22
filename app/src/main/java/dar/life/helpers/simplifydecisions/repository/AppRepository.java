@@ -4,13 +4,12 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Room;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import dar.life.helpers.simplifydecisions.data.Decision;
+import dar.life.helpers.simplifydecisions.data.DecisionModel;
 import dar.life.helpers.simplifydecisions.data.IssueModel;
 
 public class AppRepository {
@@ -22,7 +21,7 @@ public class AppRepository {
     private final LiveData<List<IssueModel>> mIssues;
     private final LiveData<List<IssueModel>> mActiveIssues;
 
-    private final LiveData<List<Decision>> mDecisions;
+    private final LiveData<List<DecisionModel>> mDecisions;
 
 
 
@@ -62,11 +61,11 @@ public class AppRepository {
     }
 
     @NotNull
-    public LiveData<List<Decision>> getAllDecisions() {
+    public LiveData<List<DecisionModel>> getAllDecisions() {
         return mDecisions;
     }
 
-    public List<Decision> getAllDecisionsNow() {
+    public List<DecisionModel> getAllDecisionsNow() {
         return mDecisionsDao.getAllDecisionsNow();
     }
 
@@ -87,20 +86,17 @@ public class AppRepository {
         AppExecutors.getInstance().diskIO().execute(() -> mIssuesDao.updateIssue(issue));
     }
 
-    public void addNewDecision(@NotNull Decision decision) {
-        Log.i("helpfix", "adddecision: $decision");
+    public void addNewDecision(@NotNull DecisionModel decision) {
         AppExecutors.getInstance().diskIO().execute(() -> mDecisionsDao.addNewDecision(decision));
     }
 
-    public LiveData<Decision> getDecision(int id) {
+    public LiveData<DecisionModel> getDecision(int id) {
         return mDecisionsDao.getDecisionById(id);
     }
 
-    public void updateDecision(@NotNull Decision decision) {
-        Log.i("helpfix", "update1: $decision");
+    public void updateDecision(@NotNull DecisionModel decision) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             mDecisionsDao.updateDecision(decision);
-            Log.i("helpfix", "update2: $decision");
         });
     }
 }

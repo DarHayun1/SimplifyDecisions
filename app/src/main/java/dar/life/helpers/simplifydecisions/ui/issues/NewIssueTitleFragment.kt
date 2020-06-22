@@ -134,12 +134,10 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
         when (parent){
             binding.aIconsSpinner -> {mIssue?.aColorName =
                 UiUtils.colorNames().getOrElse(position){ DEFAULT_A_COLOR }
-                Log.d("colorname", mIssue!!.aColorName)
             }
             binding.bIconsSpinner -> mIssue?.bColorName =
                 UiUtils.colorNames().getOrElse(position){ DEFAULT_B_COLOR }
         }
-        Log.d("colorname", mIssue!!.aColorName)
     }
 
 }

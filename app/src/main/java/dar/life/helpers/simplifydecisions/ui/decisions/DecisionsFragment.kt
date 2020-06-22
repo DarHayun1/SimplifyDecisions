@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.github.amlcurran.showcaseview.ShowcaseView
 import com.github.amlcurran.showcaseview.targets.ViewTarget
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Decision
+import dar.life.helpers.simplifydecisions.data.DecisionModel
 import dar.life.helpers.simplifydecisions.databinding.FragmentDecisionsBinding
 import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
@@ -132,7 +132,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
     fun newDecisionRequest() {
         hideHelpIfShown()
         clearCallback()
-        mViewModel.addNewDecision(Decision(
+        mViewModel.addNewDecision(DecisionModel(
             getString(R.string.new_decision_title),
             null))
         val fragmentNavExtras = FragmentNavigatorExtras(

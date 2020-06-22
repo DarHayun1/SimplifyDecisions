@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/simplify_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".reminders.AlarmReceiver" />
+        <receiver android:name=".remindersutils.AlarmReceiver" />
         <activity android:name="dar.life.helpers.simplifydecisions.ui.MainActivity"
             android:screenOrientation = "portrait"
             android:windowSoftInputMode="adjustPan"

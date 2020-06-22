@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        Log.w("backSuprise", "backpressedActivity")
         super.onBackPressed()
     }
 }

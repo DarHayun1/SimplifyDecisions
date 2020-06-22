@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.Decision
+import dar.life.helpers.simplifydecisions.data.DecisionModel
 import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeInViews
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeOutViews
@@ -18,7 +18,7 @@ import java.time.format.FormatStyle
 class DecisionsAdapter(private val mContext: Context, private val mCallback: OnDetailsRequest) :
     RecyclerView.Adapter<DecisionsAdapter.DecisionsVH>() {
 
-    var decisions: List<Decision> = mutableListOf()
+    var decisions: List<DecisionModel> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -60,7 +60,7 @@ class DecisionsAdapter(private val mContext: Context, private val mCallback: OnD
         }
     }
 
-    private fun launchDetailsScreen(decision: Decision, itemView: View) {
+    private fun launchDetailsScreen(decision: DecisionModel, itemView: View) {
         mCallback.openDetailsScreen(decision.id, decision.title, itemView)
     }
 
@@ -72,7 +72,7 @@ class DecisionsAdapter(private val mContext: Context, private val mCallback: OnD
         val decisionDate: TextView = itemView.findViewById(R.id.decision_item_date_tv)
 
 
-        fun bindItem(decision: Decision) {
+        fun bindItem(decision: DecisionModel) {
             title.text = decision.title
             if (decision.description == null || decision.description!!.isEmpty())
                 description.visibility = GONE

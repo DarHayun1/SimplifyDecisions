@@ -452,7 +452,6 @@ class OpinionDetailsFragment : Fragment(),
 
     private fun backPressed() {
         if (!hideHelpIfShown()) {
-            Log.d("BACKBACK", "NO WAY!!!!!!")
             AlertDialog.Builder(mContext)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(getString(R.string.alertdialog_title))
@@ -473,7 +472,6 @@ class OpinionDetailsFragment : Fragment(),
     }
 
     private fun hideHelpIfShown(): Boolean {
-        Log.d("BACKBACK", "${isHelpMode()}")
         if (isHelpMode()) {
             mShowcaseView.hide()
             return true

@@ -10,10 +10,19 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-
+/**
+ * Decision Data Model.
+ * Represents a decision that's made.
+ *
+ * @property title - decision's title
+ * @property description - description (Nullable)
+ * @property opinions - The opinions that support the decision
+ * @property issueIdBasedOf - The original dilemma.
+ * @property colorName - the decision's theme color.
+ */
 @Entity(tableName = "decisions")
 @TypeConverters(OpinionConverter::class)
-data class Decision(
+data class DecisionModel(
     var title: String,
     var description: String?,
     var opinions: MutableMap<String, MutableList<Opinion>> = mutableMapOf(),

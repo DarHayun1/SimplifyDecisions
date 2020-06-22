@@ -136,7 +136,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         })
         requireActivity().onBackPressedDispatcher
             .addCallback(mBackPressedCallback)
-        Log.i("backSuprise", "addCallback")
         setupSwitchContent()
 
     }
@@ -229,7 +228,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         binding.complexOpinionsRv.adapter = opinionsAdapter
         opinionsAdapter.setData(issue.opinions)
         binding.complexOpinionsRv.doOnPreDraw { startPostponedEnterTransition() }
-        Log.i("backSuprise", "startDelayed")
         linearLayoutManager.scrollToPositionWithOffset(1, 0)
         if (isNewIssue)
             guideNewIssue()
@@ -284,7 +282,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     }
 
     private fun backPressed() {
-        Log.i("backSuprise", "backPressed")
         if (isHelpMode) {
             mShowcaseView.setOnShowcaseEventListener(OnShowcaseEventListener.NONE)
             mShowcaseView.hide()
@@ -369,7 +366,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private fun guideNewIssue() {
         isNewIssue = false
         Timer("helpMode", false).schedule(100) {
-            Log.i("backSuprise", "timedAction")
             viewLifecycleOwner.lifecycleScope.launch {
                 if (activity != null) {
                     requireActivity().onBackPressedDispatcher
@@ -437,7 +433,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
     private fun clearCallback() {
         mBackPressedCallback.isEnabled = false
-        Log.i("backSuprise", "removeCallback")
         mBackPressedCallback.remove()
     }
 
