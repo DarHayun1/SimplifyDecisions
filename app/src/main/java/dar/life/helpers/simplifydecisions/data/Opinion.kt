@@ -7,7 +7,7 @@ import dar.life.helpers.simplifydecisions.Constants.DEFAULT_CATEGORY
  *
  * @property title - the opinion's title
  * @property description - description if available
- * @property isOfFirstOption - a flag declaring which option the opinion supports
+ * @property isOfFirstOption - a flag declaring which option the [Opinion] supports
  * @property importance - the importance score
  */
 data class Opinion(var title: String,
@@ -43,7 +43,7 @@ data class Opinion(var title: String,
 
     /**
      *
-     * @return string representing the tasks completion status in the format :
+     * @return string representing the [tasks] completion status in the format :
      * unfinised_tasks/total_tasks
      */
     fun tasksLeftText(): CharSequence? {

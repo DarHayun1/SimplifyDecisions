@@ -23,7 +23,7 @@ class DecisionsViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun getAllDecisions(): LiveData<List<DecisionModel>> = repository.allDecisions
 
-    fun getDecisionById(id: Int): LiveData<DecisionModel>{
+    fun getDecisionById(id: Int): LiveData<DecisionModel?>{
         return repository.getDecision(id)
     }
     fun updateDecision(decision: DecisionModel) {

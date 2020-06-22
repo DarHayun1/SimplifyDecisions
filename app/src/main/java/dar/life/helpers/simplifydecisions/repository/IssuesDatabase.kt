@@ -8,7 +8,11 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dar.life.helpers.simplifydecisions.data.DecisionModel
 import dar.life.helpers.simplifydecisions.data.IssueModel
-import dar.life.helpers.simplifydecisions.data.ReminderObj
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 
 @Database(entities = [IssueModel::class, DecisionModel::class], version = 3, exportSchema = false)
@@ -21,15 +25,16 @@ abstract class IssuesDatabase : RoomDatabase() {
 
         @Volatile private var instance: IssuesDatabase? = null
 
-        private val LOCK = Any()
+        private val mutex = Mutex()
         private const val DB_NAME: String = "issuesdb.db"
 
-        operator fun invoke(context: Context) =
+        fun getDatabase(context: Context) =
             instance ?:
-            synchronized(LOCK){
-                instance ?:
-                buildDatabase(context).also { instance = it}
-        }
+            runBlocking {
+                mutex.withLock {
+                    return@runBlocking instance ?: buildDatabase(context).also { instance = it }
+                }
+            }
 
         private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
             IssuesDatabase::class.java, DB_NAME)

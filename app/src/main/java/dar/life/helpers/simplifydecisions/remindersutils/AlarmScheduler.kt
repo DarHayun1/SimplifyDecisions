@@ -33,9 +33,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import dar.life.helpers.simplifydecisions.R
-import dar.life.helpers.simplifydecisions.data.ReminderObj
+import dar.life.helpers.simplifydecisions.data.ReminderModel
 import dar.life.helpers.simplifydecisions.ui.decisions.DecisionDetailsFragment
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -43,17 +42,17 @@ import java.util.*
 import java.util.Calendar.*
 
 /**
- * Helpers to assist in scheduling alarms for ReminderData.
+ * Helpers to assist in scheduling alarms for reminders.
  */
 object AlarmScheduler {
 
     /**
-     * Schedules all the alarms for [ReminderData].
+     * Schedules all the alarms for [ReminderModel].
      *
-     * @param context      current application context
-     * @param reminder ReminderData to use for the alarm
+     * @param context  current application context
+     * @param reminder [ReminderModel] to use for the alarm
      */
-    fun scheduleAlarmsForReminder(context: Context, reminder: ReminderObj) {
+    fun scheduleAlarmsForReminder(context: Context, reminder: ReminderModel) {
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         // get the PendingIntent for the alarm
         val alarmIntent = createPendingIntent(context, reminder)
@@ -67,7 +66,7 @@ object AlarmScheduler {
      * Schedules a single alarm
      */
     private fun scheduleAlarm(
-        reminderData: ReminderObj,
+        reminderData: ReminderModel,
         alarmIntent: PendingIntent?,
         alarmMgr: AlarmManager
     ) {
@@ -86,11 +85,11 @@ object AlarmScheduler {
      * Creates a [PendingIntent] for the Alarm using the [ReminderData]
      *
      * @param context      current application context
-     * @param reminder ReminderData for the notification
+     * @param reminder [ReminderModel] for the notification
      */
     private fun createPendingIntent(
         context: Context,
-        reminder: ReminderObj
+        reminder: ReminderModel
     ): PendingIntent? {
         // create the intent using a unique type
         val intent = Intent(context.applicationContext, AlarmReceiver::class.java).apply {
@@ -120,25 +119,12 @@ object AlarmScheduler {
     }
 
     /**
-     * Updates a notification.
-     * Note: this just calls [AlarmScheduler.scheduleAlarmsForReminder] since
-     * alarms with exact matching pending intents will update if they are already set, otherwise
-     * call [AlarmScheduler.removeAlarmsForReminder] if the medicine has been administered.
-     *
-     * @param context      current application context
-     * @param reminderData ReminderData for the notification
-     */
-    fun updateAlarmsForReminder(context: Context, reminderData: ReminderObj) {
-        scheduleAlarmsForReminder(context, reminderData)
-    }
-
-    /**
      * Removes the notification if it was previously scheduled.
      *
      * @param context      current application context
-     * @param reminderData ReminderData for the notification
+     * @param reminderData [ReminderModel] for the notification
      */
-    fun removeAlarmsForReminder(context: Context, reminderData: ReminderObj) {
+    fun removeAlarmsForReminder(context: Context, reminderData: ReminderModel) {
         val intent = Intent(context.applicationContext, AlarmReceiver::class.java)
         intent.putExtra(DecisionDetailsFragment.REMINDER_ID, reminderData.id)
 
@@ -160,26 +146,6 @@ object AlarmScheduler {
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmMgr.cancel(alarmIntent)
-    }
-
-
-    /**
-     * Returns the int representation for the day of the week.
-     *
-     * @param days      array from resources
-     * @param dayOfWeek String representation of the day e.g "Sunday"
-     * @return [Calendar.DAY_OF_WEEK] for given dayOfWeek
-     */
-    private fun getDayOfWeek(days: Array<String>, dayOfWeek: String): Int {
-        return when {
-            dayOfWeek.equals(days[0], ignoreCase = true) -> SUNDAY
-            dayOfWeek.equals(days[1], ignoreCase = true) -> MONDAY
-            dayOfWeek.equals(days[2], ignoreCase = true) -> TUESDAY
-            dayOfWeek.equals(days[3], ignoreCase = true) -> WEDNESDAY
-            dayOfWeek.equals(days[4], ignoreCase = true) -> THURSDAY
-            dayOfWeek.equals(days[5], ignoreCase = true) -> FRIDAY
-            else -> SATURDAY
-        }
     }
 
 }

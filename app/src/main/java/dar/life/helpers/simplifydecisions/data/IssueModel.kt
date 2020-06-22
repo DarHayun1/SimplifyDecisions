@@ -45,9 +45,9 @@ data class IssueModel(
     var id: Int = date.toEpochSecond(ZoneOffset.UTC).toInt()
 
     /**
-     * Holding all the opinions in a map.
-     * The keys represent the categories and the values are lists of opinions in that category.
-     * each opinion holds a flag to associate it withe either option a or b
+     * Holding all the [Opinion]s in a map.
+     * The keys represent the categories and the values are lists of [Opinion]s in that category.
+     * each [Opinion] holds a flag to associate it withe either option a or b
      * */
     @TypeConverters(OpinionConverter::class)
     var opinions: MutableMap<String, MutableList<Opinion>> = createNewMap()
@@ -65,7 +65,7 @@ data class IssueModel(
         val DEFAULT_ISSUE: IssueModel = IssueModel(title = "", description = null)
 
         /**
-         * Creating a new issue based on the requested template
+         * Creating a new [IssueModel] based on the requested template
          */
         fun fromTemplate(template: String): IssueModel{
             var optionA = "Option A"
@@ -106,7 +106,7 @@ data class IssueModel(
     }
 
     /**
-     * Return an "unnamed dilemma" title in case of an empty title
+     * Return an "unnamed dilemma" title in case of an empty [title]
      */
     fun displayedTitle(context: Context): String{
         return if (title.isNotEmpty())
@@ -135,7 +135,7 @@ data class IssueModel(
     fun hasTasks(): Boolean = opinions.flatMap { it.value }.flatMap { it.tasks }.isNotEmpty()
 
     /**
-     * @return the sum of the importance scores.
+     * @return the sum of the [Opinion.importance] scores.
      */
     fun getOptionsScores(): Pair<Int, Int> {
         val (first, second) =

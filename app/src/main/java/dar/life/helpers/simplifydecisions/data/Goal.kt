@@ -1,7 +1,7 @@
 package dar.life.helpers.simplifydecisions.data
 
 /**
- *A data class representing a "goal" for a decision, included in the decisions db
+ *A data class representing a "goal" for a [DecisionModel], included in the "decisions" db
  *
  */
 data class Goal(var name: String) {
@@ -10,7 +10,7 @@ data class Goal(var name: String) {
     var epochDueDate: Long? = null
 
     //Holding the goal reminder (if exists)
-    var reminder: ReminderObj = ReminderObj.emptyObj()
+    var reminder: ReminderModel = ReminderModel.emptyObj()
 
     var expanded: Boolean = false
 

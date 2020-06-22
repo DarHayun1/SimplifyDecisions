@@ -125,7 +125,7 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         super.onActivityCreated(savedInstanceState)
         initToolbar()
 
-        mViewModel.getIssueById(mIssueId)?.observe(viewLifecycleOwner, Observer {
+        mViewModel.getIssueById(mIssueId).observe(viewLifecycleOwner, Observer {
             it?.let {
                 mIssue = it
                 populateUi(it)

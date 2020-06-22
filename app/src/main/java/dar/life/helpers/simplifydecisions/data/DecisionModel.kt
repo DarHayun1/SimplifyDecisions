@@ -17,7 +17,7 @@ import java.time.ZoneOffset
  * @property title - decision's title
  * @property description - description (Nullable)
  * @property opinions - The opinions that support the decision
- * @property issueIdBasedOf - The original dilemma.
+ * @property issueIdBasedOf - The original [IssueModel] id.
  * @property colorName - the decision's theme color.
  */
 @Entity(tableName = "decisions")

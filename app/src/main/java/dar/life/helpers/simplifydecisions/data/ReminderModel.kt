@@ -1,25 +1,20 @@
 package dar.life.helpers.simplifydecisions.data
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import dar.life.helpers.simplifydecisions.repository.DateConverter
 import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 
 /**
- * A Reminder data model, representing a reminder for a specific task
+ * A Reminder data object, representing a reminder for a specific [Goal]
  *
  * @property title
  * @property isActive
  */
-data class ReminderObj(var title: String, var isActive: Boolean = false) {
+data class ReminderModel(var title: String, var isActive: Boolean = false) {
 
     companion object {
-        fun emptyObj(): ReminderObj{
-            return ReminderObj("", isActive = false)
+        fun emptyObj(): ReminderModel{
+            return ReminderModel("", isActive = false)
         }
     }
 
@@ -51,7 +46,7 @@ data class IntReminderObj(
     var text1: String){
 
     //Migrating to the Reminder object
-    fun toReminderObj(): ReminderObj = ReminderObj(title1).apply {
+    fun toReminderObj(): ReminderModel = ReminderModel(title1).apply {
         id = id1
         time = LocalDateTime.ofEpochSecond(time1,0, ZoneOffset.UTC)
         isActive = isActive1

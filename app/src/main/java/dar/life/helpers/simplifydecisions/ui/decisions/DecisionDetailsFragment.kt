@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -28,7 +27,7 @@ import com.google.android.material.textfield.TextInputLayout
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.DecisionModel
 import dar.life.helpers.simplifydecisions.data.Goal
-import dar.life.helpers.simplifydecisions.data.ReminderObj
+import dar.life.helpers.simplifydecisions.data.ReminderModel
 import dar.life.helpers.simplifydecisions.databinding.DecisionDetailsFragmentBinding
 import dar.life.helpers.simplifydecisions.remindersutils.AlarmScheduler
 import dar.life.helpers.simplifydecisions.ui.Instruction
@@ -44,7 +43,7 @@ import java.util.*
 class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     private var mSnackbar: Snackbar? = null
-    private lateinit var mDecisionLiveData: LiveData<DecisionModel>
+    private lateinit var mDecisionLiveData: LiveData<DecisionModel?>
     private lateinit var mShowcaseView: ShowcaseView
     private var mFirstTime: Boolean = false
     private var mDialogView: View? = null
@@ -558,7 +557,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
 
     private fun openDateTimePicker(
-        reminderObj: ReminderObj?,
+        reminderModel: ReminderModel?,
         dateTimeView: TextView
     ) {
         val dialogView = View.inflate(activity, R.layout.date_time_picker, null)
@@ -578,15 +577,15 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                     timePicker.hour,
                     timePicker.minute
                 )
-                reminderObj?.isActive = true
+                reminderModel?.isActive = true
 
-                reminderObj?.time =
+                reminderModel?.time =
                     LocalDateTime.ofInstant(
                         calendar.toInstant(),
                         TimeZone.getDefault().toZoneId()
                     )
                 dateTimeView.text =
-                    reminderObj?.time?.format(ofLocalizedDate(FormatStyle.SHORT))
+                    reminderModel?.time?.format(ofLocalizedDate(FormatStyle.SHORT))
                 alertDialog.dismiss()
             }
         alertDialog.setView(dialogView)

@@ -16,7 +16,7 @@ interface DecisionsDao {
     fun getAllDecisionsNow(): List<DecisionModel>
 
     @Query("SELECT * FROM decisions WHERE id = :requestedId")
-    fun getDecisionById(requestedId: Int): LiveData<DecisionModel>
+    fun getDecisionById(requestedId: Int): LiveData<DecisionModel?>
 
     @Insert(onConflict = REPLACE)
     fun addNewDecision(decision: DecisionModel)
