@@ -11,6 +11,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+/**
+ * The App's singleton repository, in charge of updating and fetching data as a single source to
+ * the data sources
+ *
+ * @param context
+ */
 class AppRepository
 private constructor(context: Context) {
     companion object {
@@ -30,6 +36,7 @@ private constructor(context: Context) {
                 sInstance ?: AppRepository(context).also {sInstance = it}
             }
     }
+
 
     private val mIssuesDao: IssuesDao
     private val mDecisionsDao: DecisionsDao

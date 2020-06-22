@@ -7,6 +7,11 @@ import dar.life.helpers.simplifydecisions.data.Opinion
 import java.lang.reflect.Type
 import java.time.*
 
+/**
+ * A converter for db intended data.
+ *
+ * (epochSec: Long?) <--> (date: LocalDateTime?)
+ */
 class DateConverter {
 
     @TypeConverter
@@ -18,18 +23,5 @@ class DateConverter {
     fun dateToTimestamp(date: LocalDateTime?): Long? {
         return date?.toEpochSecond(ZoneOffset.UTC)
     }
-
-    @TypeConverter
-    fun fromString(value: String?): MutableList<Instant> {
-        val listType: Type = object : TypeToken<MutableList<Instant>>() {}.type
-        return Gson().fromJson(value, listType)
-    }
-
-    @TypeConverter
-    fun fromList(list: MutableList<Instant>?): String {
-        val gson = Gson()
-        return gson.toJson(list)
-    }
-
 
 }

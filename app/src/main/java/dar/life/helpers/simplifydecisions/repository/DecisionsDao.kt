@@ -12,6 +12,12 @@ interface DecisionsDao {
     @Query("SELECT * FROM decisions ORDER BY date DESC")
     fun getAllDecisions(): LiveData<List<DecisionModel>>
 
+    /**
+     * Fetching the decisions without a wrapper LiveData.
+     * Blocks the thread.
+     *
+     * @return A list of [DecisionModel]
+     */
     @Query("SELECT * FROM decisions ORDER BY date DESC")
     fun getAllDecisionsNow(): List<DecisionModel>
 

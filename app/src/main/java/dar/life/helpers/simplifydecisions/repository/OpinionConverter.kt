@@ -6,6 +6,11 @@ import com.google.gson.reflect.TypeToken
 import dar.life.helpers.simplifydecisions.data.Opinion
 import java.lang.reflect.Type
 
+/**
+ * A converter for db intended data.
+ *
+ * (json: String?) <--> (opinionsMap: MutableMap<String, MutableList<Opinion>>?)
+ */
 class OpinionConverter {
 
     @TypeConverter

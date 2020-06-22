@@ -15,6 +15,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 
+/**
+ * The app Database.
+ *
+ */
 @Database(entities = [IssueModel::class, DecisionModel::class], version = 3, exportSchema = false)
 abstract class IssuesDatabase : RoomDatabase() {
 
