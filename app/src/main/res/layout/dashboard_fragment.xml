@@ -11,7 +11,8 @@
 
     <ImageView
         android:id="@+id/dashboard_logo"
-        android:layout_width="@dimen/large_logo_width"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="@dimen/logo_hor_margin"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:src="@drawable/temp_logo"
@@ -55,6 +56,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/decisions_btn" />
 
+    <TextView
+        android:id="@+id/textView2"
+        style="@style/subheadline1_text_style_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/issues_headline"
+        android:layout_marginTop="2dp"
+        app:layout_constraintEnd_toEndOf="@+id/issues_btn"
+        app:layout_constraintStart_toStartOf="@+id/issues_btn"
+        app:layout_constraintTop_toBottomOf="@id/issues_btn" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
@@ -68,6 +80,16 @@
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="@+id/dashboard_logo"
         app:layout_constraintTop_toBottomOf="@+id/dashboard_logo" />
+
+    <TextView
+        style="@style/subheadline1_text_style_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/decisions_headline"
+        android:layout_marginTop="2dp"
+        app:layout_constraintEnd_toEndOf="@+id/decisions_btn"
+        app:layout_constraintStart_toStartOf="@+id/decisions_btn"
+        app:layout_constraintTop_toBottomOf="@+id/decisions_btn" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
