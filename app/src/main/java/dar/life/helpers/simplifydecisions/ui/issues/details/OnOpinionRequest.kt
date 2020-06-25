@@ -1,4 +1,4 @@
-package dar.life.helpers.simplifydecisions.ui.issues
+package dar.life.helpers.simplifydecisions.ui.issues.details
 
 import android.view.View
 import dar.life.helpers.simplifydecisions.data.Opinion

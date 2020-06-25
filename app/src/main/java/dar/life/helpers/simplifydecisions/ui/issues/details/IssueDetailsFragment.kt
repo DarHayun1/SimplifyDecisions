@@ -1,11 +1,10 @@
-package dar.life.helpers.simplifydecisions.ui.issues
+package dar.life.helpers.simplifydecisions.ui.issues.details
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -38,45 +37,58 @@ import dar.life.helpers.simplifydecisions.ui.Instruction
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.nameToColor
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.nameToIcon
-import dar.life.helpers.simplifydecisions.ui.customview.OptionSumView
+import dar.life.helpers.simplifydecisions.ui.views.OptionSumView
+import dar.life.helpers.simplifydecisions.ui.issues.*
+import dar.life.helpers.simplifydecisions.ui.issues.opinions.OpinionsAdapter
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
 import kotlin.concurrent.schedule
+import kotlin.system.measureTimeMillis
 
-
-class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListener,
+/**
+ * A [Fragment] in charge of displaying and editing the [IssueModel] details
+ *
+ */
+class IssueDetailsFragment : Fragment(),
+    OnOpinionRequest, OnShowcaseEventListener,
     IssueDetailsTaskChangedListener, AdapterView.OnItemSelectedListener, TransitionListener {
 
-    private var isNewUser: Boolean = false
-    private lateinit var decisionIcon: MenuItem
     private var aIconsSpinner: Spinner? = null
     private var bIconsSpinner: Spinner? = null
+
+    private var mIssueId: Int = 0
+    private var mIssue: IssueModel = IssueModel.DEFAULT_ISSUE
+    private var isNewUser: Boolean = false
+    private var isNewIssue: Boolean = false
+
+    private var mInstructionsCurrentPos: Int = -1
+    private lateinit var mShowcaseView: ShowcaseView
+    private val isHelpMode: Boolean
+        get() =
+            checkHelpMode()
+
+    private lateinit var opinionsAdapter: OpinionsAdapter
+    private lateinit var mContext: Context
+    private val mViewModel by viewModels<EditIssueViewModel>()
+
+
+    private var _binding: FragmentIssueDetailsBinding? = null
+    private val binding get() = _binding!!
+
     private val mBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(false) {
             override fun handleOnBackPressed() {
                 backPressed()
             }
         }
-    private var mInstructionsCurrentPos: Int = -1
-    private lateinit var mShowcaseView: ShowcaseView
-    private val isHelpMode: Boolean
-        get() =
-            checkHelpMode()
-    private lateinit var opinionsAdapter: OpinionsAdapter
-    private lateinit var mContext: Context
-    private val mViewModel by viewModels<EditIssueViewModel>()
-
-    private var mIssueId: Int = 0
-    private var mIssue: IssueModel = IssueModel.DEFAULT_ISSUE
-
-    private var _binding: FragmentIssueDetailsBinding? = null
-    private val binding get() = _binding!!
-
-    private var isNewIssue: Boolean = false
 
     private val args: IssueDetailsFragmentArgs by navArgs()
+
+    // *****************************
+    // ***** Fragment methods *****
+    // *****************************
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -140,13 +152,41 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
 
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_edit_issue_title -> {
+                editIssueTitle()
+                true
+            }
+            R.id.action_help -> {
+                if (hideHelpIfShown())
+                    return true
+                beginHelpMode()
+                true
+            }
+            R.id.action_create_a_decision -> {
+                handleToDecisionClick()
+                true
+            }
+            R.id.action_collaborate_issue -> {
+                handleCollaborateClick()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+
+        }
+    }
 
     override fun onDestroyView() {
+        hideHelpIfShown()
         _binding = null
         super.onDestroyView()
     }
 
-    // ************* ClickListeners *************
+    //***************************
+    // ***** ClickListeners *****
+    //***************************
+
     private fun switchToCompare() {
         if (hideHelpIfShown())
             return
@@ -203,8 +243,12 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
     private fun setupTasksView(issue: IssueModel) {
         if (issue.hasTasks()) {
             binding.noTasksTv.visibility = View.GONE
-            val adapter = IssueTasksAdapter(mContext, this)
-            adapter.setData(issue)
+            val adapter =
+                IssueTasksAdapter(
+                    mContext,
+                    this
+                )
+            println("Timeeeeeeeeeeeeeeeeeeee: ${measureTimeMillis { adapter.setData(issue) }}")
 
             binding.allTasksRv.adapter = adapter
             binding.allTasksRv.layoutManager =
@@ -220,11 +264,12 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
             LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
         binding.complexOpinionsRv.layoutManager = linearLayoutManager
         binding.complexOpinionsRv.setHasFixedSize(true)
-        opinionsAdapter = OpinionsAdapter(
-            mContext,
-            this,
-            mIssue
-        )
+        opinionsAdapter =
+            OpinionsAdapter(
+                mContext,
+                this,
+                mIssue
+            )
         binding.complexOpinionsRv.adapter = opinionsAdapter
         opinionsAdapter.setData(issue.opinions)
         binding.complexOpinionsRv.doOnPreDraw { startPostponedEnterTransition() }
@@ -292,6 +337,9 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         }
     }
 
+    // **************************
+    // ***** Helper methods *****
+    // **************************
 
     private fun setupSwitchContent() {
         ObjectAnimator.ofFloat(
@@ -311,30 +359,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_edit_issue_title -> {
-                editIssueTitle()
-                true
-            }
-            R.id.action_help -> {
-                if (hideHelpIfShown())
-                    return true
-                beginHelpMode()
-                true
-            }
-            R.id.action_create_a_decision -> {
-                handleToDecisionClick()
-                true
-            }
-            R.id.action_collaborate_issue -> {
-                handleCollaborateClick()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-
-        }
-    }
 
     private fun initToolbar() {
         binding.editIssueToolbar.title = ""
@@ -421,11 +445,19 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         aIconsSpinner = dialogView.findViewById(R.id.a_icons)
         bIconsSpinner = dialogView.findViewById(R.id.b_icons)
 
-        aIconsSpinner!!.adapter = IconsAdapter(mContext, iconsList)
+        aIconsSpinner!!.adapter =
+            IconsAdapter(
+                mContext,
+                iconsList
+            )
         aIconsSpinner!!.onItemSelectedListener = this
         aIconsSpinner!!.setSelection(colorNames.indexOf(mIssue.aColorName))
 
-        bIconsSpinner!!.adapter = IconsAdapter(mContext, iconsList)
+        bIconsSpinner!!.adapter =
+            IconsAdapter(
+                mContext,
+                iconsList
+            )
         bIconsSpinner!!.setSelection(colorNames.indexOf(mIssue.bColorName))
         bIconsSpinner!!.onItemSelectedListener = this
 
@@ -435,7 +467,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         mBackPressedCallback.isEnabled = false
         mBackPressedCallback.remove()
     }
-
 
     private fun handleToDecisionClick() {
         if (hideHelpIfShown()) {
@@ -527,39 +558,6 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         mShowcaseView.hideButton()
     }
 
-    private fun hideHelpIfShown(): Boolean {
-        if (isHelpMode) {
-            mShowcaseView.hide()
-            return true
-        }
-        return false
-    }
-
-    private fun handleCollaborateClick() {
-        Toast.makeText(mContext, "Upcoming feature (: ", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun isCompareScreen(): Boolean {
-        return binding.compareOptionsFrame.visibility == View.VISIBLE
-    }
-
-    private fun checkHelpMode() = (this@IssueDetailsFragment::mShowcaseView.isInitialized
-            && mShowcaseView.isShown)
-
-    /****************
-     * ShowCastEventListener
-     ****************/
-    override fun onShowcaseViewShow(showcaseView: ShowcaseView?) {
-        mBackPressedCallback.isEnabled = true
-    }
-
-    override fun onShowcaseViewHide(showcaseView: ShowcaseView?) {
-        nextInstruction()
-    }
-
-    override fun onShowcaseViewDidHide(showcaseView: ShowcaseView?) {}
-    override fun onShowcaseViewTouchBlocked(motionEvent: MotionEvent?) {}
-
     private fun nextInstruction() {
         mInstructionsCurrentPos++
         mViewModel.issueDetailsInstruc?.let {
@@ -597,6 +595,40 @@ class IssueDetailsFragment : Fragment(), OnOpinionRequest, OnShowcaseEventListen
         }
         return mViewModel.issueDetailsInstruc!!
     }
+
+    private fun hideHelpIfShown(): Boolean {
+        if (isHelpMode) {
+            mShowcaseView.hide()
+            return true
+        }
+        return false
+    }
+
+    private fun handleCollaborateClick() {
+        Toast.makeText(mContext, "Upcoming feature (: ", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun isCompareScreen(): Boolean {
+        return binding.compareOptionsFrame.visibility == View.VISIBLE
+    }
+
+    private fun checkHelpMode() = (this@IssueDetailsFragment::mShowcaseView.isInitialized
+            && mShowcaseView.isShown)
+
+    // ***************************
+    // ** ShowCastEventListener **
+    // ***************************
+    override fun onShowcaseViewShow(showcaseView: ShowcaseView?) {
+        mBackPressedCallback.isEnabled = true
+    }
+
+    override fun onShowcaseViewHide(showcaseView: ShowcaseView?) {
+        nextInstruction()
+    }
+
+    override fun onShowcaseViewDidHide(showcaseView: ShowcaseView?) {}
+    override fun onShowcaseViewTouchBlocked(motionEvent: MotionEvent?) {}
+
 
     override fun taskTextChanged() {
         mViewModel.updateIssue(mIssue)

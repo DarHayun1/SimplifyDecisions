@@ -7,7 +7,7 @@
     android:background="@color/colorPrimaryDark"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".ui.issues.IssueDetailsFragment">
+    tools:context=".ui.issues.details.IssueDetailsFragment">
 
     <LinearLayout
         android:id="@+id/top_drawer_issue_details"

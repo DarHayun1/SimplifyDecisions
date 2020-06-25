@@ -1,4 +1,4 @@
-package dar.life.helpers.simplifydecisions.ui.issues
+package dar.life.helpers.simplifydecisions.ui.issues.details
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -8,6 +8,11 @@ import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.repository.AppRepository
 import dar.life.helpers.simplifydecisions.ui.Instruction
 
+/**
+ * A view model serving the [IssueDetailsFragment]
+ *
+ * @param application - the app ref
+ */
 class EditIssueViewModel(application: Application) : AndroidViewModel(application) {
 
     var issueDetailsInstruc: List<Instruction>? = null

@@ -26,9 +26,7 @@ import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import kotlinx.android.synthetic.main.fragment_issues.*
 
 /**
- * A simple [Fragment] subclass.
- * Use the [IssuesFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * A [Fragment] In charge of displaying the [IssueModel]s list
  */
 class IssuesFragment : Fragment(),
     OnDetailsRequest {
@@ -58,17 +56,10 @@ class IssuesFragment : Fragment(),
     private var _binding: FragmentIssuesBinding? = null
     private val binding get() = _binding!!
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @return A new instance of fragment IssuesFragment.
-         */
-        @JvmStatic
-        fun newInstance() =
-            IssuesFragment()
-    }
+
+    // *****************************
+    // ***** Fragment methods *****
+    // *****************************
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -97,6 +88,16 @@ class IssuesFragment : Fragment(),
             .addCallback(mBackPressedCallback)
     }
 
+    override fun onDestroyView() {
+        hideHelpIfShown()
+        _binding = null
+        super.onDestroyView()
+    }
+
+
+    // ****************************
+    // ***** Helper methods *****
+    // ****************************
 
     private fun initViews() {
         binding.addIssueFab.setOnClickListener {
@@ -187,14 +188,5 @@ class IssuesFragment : Fragment(),
         )
     }
 
-    override fun onStop() {
-        hideHelpIfShown()
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
 
 }

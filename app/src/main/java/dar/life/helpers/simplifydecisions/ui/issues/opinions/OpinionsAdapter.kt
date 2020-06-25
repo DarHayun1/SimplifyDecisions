@@ -1,4 +1,4 @@
-package dar.life.helpers.simplifydecisions.ui.issues
+package dar.life.helpers.simplifydecisions.ui.issues.opinions
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -15,8 +15,16 @@ import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.nameToColor
 import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.setImportanceColor
+import dar.life.helpers.simplifydecisions.ui.issues.details.OnOpinionRequest
 import kotlin.math.max
 
+/**
+ * Adapter in charge of displaying the [Opinion] list
+ *
+ * @property mContext
+ * @property mCallback
+ * @property baseIssue
+ */
 class OpinionsAdapter(
     private val mContext: Context,
     private val mCallback: OnOpinionRequest,
@@ -46,14 +54,22 @@ class OpinionsAdapter(
             val a = first.getOrNull(i)
             val b = second.getOrNull(i)
             val category = if (i == 0) cat else null
-            if (a != null || b != null) mOpinionsRaws.add(OpinionsRaw(a, category, b))
+            if (a != null || b != null) mOpinionsRaws.add(
+                OpinionsRaw(
+                    a,
+                    category,
+                    b
+                )
+            )
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FactsVH {
         val view = LayoutInflater
             .from(mContext).inflate(R.layout.opinions_item, parent, false)
-        return FactsVH(view)
+        return FactsVH(
+            view
+        )
     }
 
     override fun getItemCount(): Int =

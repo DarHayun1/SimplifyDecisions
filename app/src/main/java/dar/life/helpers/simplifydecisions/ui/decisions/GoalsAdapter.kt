@@ -20,6 +20,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
+/**
+ * Adapter in charge of displaying the decision's goals list
+ *
+ * @property mContext - The activity's context
+ * @property mCallback - The fragment handling the events
+ */
 class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
     RecyclerView.Adapter<GoalsAdapter.GoalVH>() {
 
@@ -44,11 +50,14 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
     override fun onBindViewHolder(holder: GoalVH, position: Int) {
         val goal = goalsList[position]
         holder.populateView(goal, mContext)
-        setUpIsDone(goal, holder, position)
+        setUpIsDone(goal, holder)
         setUpExpandOption(goal, holder, position)
         setupMoreOptions(holder, goal, position)
     }
 
+    /**
+     * initinating the "more" button
+     */
     private fun setupMoreOptions(
         holder: GoalVH,
         goal: Goal,
@@ -85,7 +94,7 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
         }
     }
 
-    private fun setUpIsDone(goal: Goal, holder: GoalVH, position: Int) {
+    private fun setUpIsDone(goal: Goal, holder: GoalVH) {
         holder.titleCb.isChecked = goal.isDone
         paintIfDone(holder, goal)
 
@@ -99,6 +108,9 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
         }
     }
 
+    /**
+     * Painting the goal in green if it's done
+     */
     private fun paintIfDone(
         holder: GoalVH,
         goal: Goal
@@ -116,6 +128,9 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
         }
     }
 
+    /**
+     * Expanding the view if needed and setting [expandedPos] to the expanded [goal]
+     */
     private fun setUpExpandOption(
         goal: Goal,
         holder: GoalVH,
@@ -144,6 +159,9 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
         }
     }
 
+    /**
+     * The Goals view holder
+     */
     class GoalVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleCb: CheckBox = itemView.findViewById(R.id.goal_title_checkbox)
         val titleTv: TextView = itemView.findViewById(R.id.goal_title_tv)
@@ -189,6 +207,10 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
             } else reminderFrame.visibility = View.GONE
         }
 
+        /**
+         * Marking the [goal]s that has an expired due date.
+         *
+         */
         fun warnIfDueDatePassed(goal: Goal, context: Context) {
             warnIv.visibility = if (
                 !goal.isDone &&

@@ -14,6 +14,12 @@ import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeOutViews
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
+/**
+ * Adapter in charge on displaying the [IssueModel]s in the [RecyclerView]
+ *
+ * @property mContext
+ * @property mCallback
+ */
 class IssuesAdapter(private val mContext: Context, private val mCallback: OnDetailsRequest) :
     RecyclerView.Adapter<IssuesAdapter.IssueVH>() {
 
@@ -62,6 +68,12 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
         }
     }
 
+    /**
+     * Asking the callback to open a [IssueModel] details screen
+     *
+     * @param issue
+     * @param itemView - the view for shared element transition
+     */
     private fun launchDetailsScreen(issue: IssueModel, itemView: View) {
         mCallback.openDetailsScreen(issue.id, issue.title, itemView)
     }
@@ -78,7 +90,8 @@ class IssuesAdapter(private val mContext: Context, private val mCallback: OnDeta
             dateTv.text = item.date.format(
                 DateTimeFormatter.ofLocalizedDate(
                     FormatStyle.LONG))
-            optionsTv.text = """ "${item.aTitle}\" Vs. \"${item.bTitle}\ """
+            val titleText = """ "${item.aTitle}"  Vs.  "${item.bTitle}" """
+            optionsTv.text = titleText
             numOfOpinionsTv.text = item.opinions.flatMap { it.value }.size.toString()
             title.transitionName = item.id.toString()
         }

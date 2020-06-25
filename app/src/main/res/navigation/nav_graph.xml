@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/editIssueFragment"
-        android:name="dar.life.helpers.simplifydecisions.ui.issues.IssueDetailsFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.issues.details.IssueDetailsFragment"
         android:label="fragment_edit_issue"
         tools:layout="@layout/fragment_issue_details" >
         <argument
@@ -102,7 +102,7 @@
     </fragment>
     <fragment
         android:id="@+id/opinionDetailsFragment"
-        android:name="dar.life.helpers.simplifydecisions.ui.issues.OpinionDetailsFragment"
+        android:name="dar.life.helpers.simplifydecisions.ui.issues.opinions.OpinionDetailsFragment"
         android:label="fragment_opinion_details"
         tools:layout="@layout/fragment_opinion_details" >
         <action

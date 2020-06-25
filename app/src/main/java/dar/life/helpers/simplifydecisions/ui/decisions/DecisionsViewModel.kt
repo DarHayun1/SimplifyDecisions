@@ -7,8 +7,14 @@ import androidx.lifecycle.LiveData
 import dar.life.helpers.simplifydecisions.data.DecisionModel
 import dar.life.helpers.simplifydecisions.repository.AppRepository
 
+/**
+ * View model for the [DecisionsFragment] and the [DecisionDetailsFragment]
+ *
+ * @param application - the app ref
+ */
 class DecisionsViewModel(application: Application) : AndroidViewModel(application) {
 
+    //True only for the first time being called
     var gotDecisionsFirstHelp = false
         get() {
             if (!field){

@@ -12,18 +12,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
+import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.databinding.FragmentCreateFromTemplateBinding
 
+/**
+ * A [Fragment] for picking a template for an [IssueModel]
+ */
 class CreateFromTemplateFragment : Fragment(), OnTemplateClickedListener {
-
     private var _binding: FragmentCreateFromTemplateBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var mContext: Context
 
-    companion object{
-        const val ISSUE_TITLE_KEY = "issue_title"
-    }
+    // *****************************
+    // ***** Fragment methods *****
+    // *****************************
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,10 +50,9 @@ class CreateFromTemplateFragment : Fragment(), OnTemplateClickedListener {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-    }
+    // ****************************
+    // ***** Helper methods *****
+    // ****************************
 
     private fun initRV() {
         val adapter =
@@ -60,6 +62,11 @@ class CreateFromTemplateFragment : Fragment(), OnTemplateClickedListener {
             GridLayoutManager(mContext, 2, RecyclerView.VERTICAL, false)
     }
 
+    /**
+     * Opening the [NewIssueTitleFragment] with the [template] chosen.
+     *
+     * @param template - the chosen template
+     */
     override fun onTemplateClicked(template: String) {
         val action =
             CreateFromTemplateFragmentDirections.actionCreateFromTemplateFragmentToNewIssueTitleFragment()

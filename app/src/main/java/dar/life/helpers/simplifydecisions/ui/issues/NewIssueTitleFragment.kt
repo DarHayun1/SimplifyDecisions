@@ -24,6 +24,10 @@ import dar.life.helpers.simplifydecisions.databinding.FragmentNewIssueTitleBindi
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 
 
+/**
+ * A [Fragment] in charge of creating a new [IssueModel]
+ *
+ */
 class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
 
     private lateinit var mContext: Context
@@ -34,8 +38,11 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
 
     private val args: NewIssueTitleFragmentArgs by navArgs()
 
-
     private val viewModel by viewModels<IssuesViewModel>()
+
+    // *****************************
+    // ***** Fragment methods *****
+    // *****************************
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -62,6 +69,10 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
 
         initView()
     }
+
+    // ****************************
+    // ***** Helper methods *****
+    // ****************************
 
     private fun initView() {
         viewModel.lastUsedIssue = IssueModel.fromTemplate(args.template)
@@ -124,9 +135,9 @@ class NewIssueTitleFragment : Fragment(), OnItemSelectedListener {
 
     }
 
-    /**
-     * spinners interface
-     */
+    // *************************************
+    // ***** Spinner interface methods *****
+    // *************************************
     override fun onNothingSelected(parent: AdapterView<*>?) {
     }
 

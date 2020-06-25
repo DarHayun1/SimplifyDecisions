@@ -1,4 +1,4 @@
-package dar.life.helpers.simplifydecisions.ui.issues
+package dar.life.helpers.simplifydecisions.ui.issues.details
 
 import android.content.Context
 import android.graphics.Paint
@@ -17,14 +17,25 @@ import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.data.Opinion
 
+/**
+ * Adapter in charge of displaying the [Opinion.Task]s list in the [IssueDetailsFragment]
+ *
+ * @property context
+ * @property mCallback
+ */
 class IssueTasksAdapter(
     private val context: Context,
     private val mCallback: IssueDetailsTaskChangedListener
 ) : RecyclerView.Adapter<IssueTasksAdapter.TaskVH>() {
     private var tasksWithLabels: List<Pair<String, Opinion.Task>> = mutableListOf()
 
+    /**
+     *
+     * Setting the tasks and building a reference string for each task
+     *
+     * @param issue - The relevant [IssueModel]
+     */
     fun setData(issue: IssueModel) {
-        //TODO: Fix implementation
         tasksWithLabels = mutableListOf<Pair<String, Opinion.Task>>().apply {
             issue.opinions.forEach { (cat, opinions) ->
                 opinions.forEach { opinion ->
@@ -48,7 +59,10 @@ class IssueTasksAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskVH {
         val view = LayoutInflater.from(context)
             .inflate(R.layout.task_item, parent, false)
-        return TaskVH(view, mCallback)
+        return TaskVH(
+            view,
+            mCallback
+        )
     }
 
     override fun getItemCount(): Int = tasksWithLabels.size

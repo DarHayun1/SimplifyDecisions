@@ -16,7 +16,7 @@ import kotlinx.coroutines.sync.withLock
 
 
 /**
- * The app Database.
+ * The app Room Database.
  *
  */
 @Database(entities = [IssueModel::class, DecisionModel::class], version = 3, exportSchema = false)
@@ -44,6 +44,10 @@ abstract class IssuesDatabase : RoomDatabase() {
             IssuesDatabase::class.java, DB_NAME)
             .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .build()
+
+        // ********************************
+        // ********* Migrations ***********
+        // ********************************
 
         private val MIGRATION_1_2: Migration =
             object : Migration(1, 2) {

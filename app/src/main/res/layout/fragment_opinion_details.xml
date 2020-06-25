@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:focusableInTouchMode="true"
     android:clickable="true"
-    tools:context=".ui.issues.OpinionDetailsFragment">
+    tools:context=".ui.issues.opinions.OpinionDetailsFragment">
 
 
     <LinearLayout

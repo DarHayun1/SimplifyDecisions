@@ -12,6 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.ui.UiUtils
 
+/**
+ * An adapter in charge of displaying the templates icons.
+ *
+ * @property mContext
+ * @property mCallBack
+ */
 class TopicsAdapter(val mContext: Context, val mCallBack: OnTemplateClickedListener):
     RecyclerView.Adapter<TopicsAdapter.TopicsVH>() {
 

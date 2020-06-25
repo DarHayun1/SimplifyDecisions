@@ -13,6 +13,10 @@ import dar.life.helpers.simplifydecisions.Constants.REMINDER_ID_KEY
 import dar.life.helpers.simplifydecisions.R
 import dar.life.helpers.simplifydecisions.databinding.DashboardFragmentBinding
 
+/**
+ * First App screen, the main menu (Issues/Decisions)
+ *
+ */
 class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
 
     companion object {
@@ -35,6 +39,21 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
         return binding.root
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val intent = requireActivity().intent
+        if (intent.hasExtra(REMINDER_ID_KEY)) {
+            navigateToRemindedDecision(intent.getLongExtra(REMINDER_ID_KEY, -1))
+            intent.removeExtra(REMINDER_ID_KEY)
+        }
+
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     private fun initViews() {
         binding.issuesBtn.setOnClickListener {
             openIssues()
@@ -43,6 +62,10 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
             openDecisions()
         }
     }
+
+    // *************************
+    // **** Click Listeners ****
+    // *************************
 
     private fun openIssues() {
         val extras = FragmentNavigatorExtras(
@@ -54,7 +77,6 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
             extras
         )
     }
-
     private fun openDecisions() {
         val extras = FragmentNavigatorExtras(
             binding.dashboardLogo to getString(R.string.dash_to_issues_logo_trans),
@@ -65,18 +87,18 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
         )
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val intent = requireActivity().intent
-        if (intent.hasExtra(REMINDER_ID_KEY)) {
-            navigateToRemindedDecision(intent.getLongExtra(REMINDER_ID_KEY, -1))
-            intent.removeExtra(REMINDER_ID_KEY)
-        }
+    // **** End of Click Listeners
 
-    }
 
+    /**
+     * Gets called when the user entered the app through a reminder.
+     * navigating to the corresponding decision.
+     *
+     * @param reminderId
+     */
     private fun navigateToRemindedDecision(reminderId: Long) {
 
+        //Searching for the reminder with the given id
         mViewModel.getAllDecisions().observe(viewLifecycleOwner, Observer { decisions ->
             val decision = decisions.find { decision ->
                 decision.goals.map { goal ->
@@ -84,6 +106,7 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
                 }.any { reminder -> reminder.id == reminderId }
             }
 
+            //navigating to the decision, if found.
             decision?.let {
                 val action =
                     DashboardFragmentDirections.actionDashboardFragmentToDecisionDetailsFragment(
@@ -98,8 +121,4 @@ class DashboardFragment : Fragment(R.layout.dashboard_fragment) {
         })
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
 }

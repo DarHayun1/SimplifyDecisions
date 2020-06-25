@@ -27,9 +27,7 @@ import dar.life.helpers.simplifydecisions.ui.OnDetailsRequest
 import kotlinx.android.synthetic.main.fragment_decisions.*
 
 /**
- * A simple [Fragment] subclass.
- * Use the [DecisionsFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * In charge of displaying the list of decisions
  */
 class DecisionsFragment : Fragment(), OnDetailsRequest {
 
@@ -59,17 +57,9 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
     private var _binding: FragmentDecisionsBinding? = null
     private val binding get() = _binding!!
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @return A new instance of fragment DecisionsFragment.
-         */
-        @JvmStatic
-        fun newInstance() =
-            DecisionsFragment()
-    }
+    // ****************************
+    // ***** Fragment methods *****
+    // ****************************
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -101,6 +91,16 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
 
     }
 
+    override fun onDestroyView() {
+        hideHelpIfShown()
+        _binding = null
+        super.onDestroyView()
+    }
+
+    // ****************************
+    // ***** Helper methods *****
+    // ****************************
+
     private fun initViews() {
 
         val rvAdapter = DecisionsAdapter(mContext, this)
@@ -124,12 +124,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
         decisions_rv.doOnPreDraw { startPostponedEnterTransition() }
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
-
-    fun newDecisionRequest() {
+    private fun newDecisionRequest() {
         hideHelpIfShown()
         clearCallback()
         mViewModel.addNewDecision(DecisionModel(
@@ -151,19 +146,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
         )
     }
 
-    override fun openDetailsScreen(id: Int, title: String, view: View) {
 
-        val fragmentNavigatorExtras =
-            FragmentNavigatorExtras(
-                view to id.toString(),
-                binding.decisionsBottomDrawer to getString(R.string.bot_drawer_trans_name)
-            )
-        findNavController().navigate(
-            DecisionsFragmentDirections
-                .actionDecisionsFragmentToDecisionDetailsFragment(id, title),
-            fragmentNavigatorExtras
-        )
-    }
 
     private fun hideHelpIfShown(): Boolean {
         if (isHelpMode()) {
@@ -192,5 +175,23 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
         getString(R.string.first_decision_title),
         getString(R.string.first_decision_text),
         binding.addDecisionFab)
+
+    // **************************
+    // ***** Click handlers *****
+    // **************************
+
+    override fun openDetailsScreen(id: Int, title: String, titleView: View) {
+
+        val fragmentNavigatorExtras =
+            FragmentNavigatorExtras(
+                titleView to id.toString(),
+                binding.decisionsBottomDrawer to getString(R.string.bot_drawer_trans_name)
+            )
+        findNavController().navigate(
+            DecisionsFragmentDirections
+                .actionDecisionsFragmentToDecisionDetailsFragment(id, title),
+            fragmentNavigatorExtras
+        )
+    }
 }
 

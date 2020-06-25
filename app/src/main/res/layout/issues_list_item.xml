@@ -39,12 +39,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=" 'A' vs 'B'"
+            android:layout_marginTop="2dp"
             style="@style/small_content_text_style" />
 
         <LinearLayout
             android:id="@+id/num_of_opinions_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView

@@ -8,6 +8,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import dar.life.helpers.simplifydecisions.R
 
+/**
+ * An abstract class for implementing a call back to delete an item with a swipe.
+ * Extending [ItemTouchHelper.SimpleCallback]
+ *
+ * @param context
+ */
 abstract class SwipeToDeleteCallback(context: Context) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
@@ -19,15 +25,6 @@ abstract class SwipeToDeleteCallback(context: Context) :
     private val backgroundColor = Color.parseColor("#f44336")
     private val clearPaint =
         Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
-
-
-    override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
-    ): Int {
-        //disable swipe if return 0 (viewholder.getApapterPosition == x) return 0
-        return super.getMovementFlags(recyclerView, viewHolder)
-    }
 
 
     override fun onChildDraw(

@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <dar.life.helpers.simplifydecisions.ui.customview.OptionSumView
+        <dar.life.helpers.simplifydecisions.ui.views.OptionSumView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -31,7 +31,7 @@
             android:focusable="true"
             android:id="@+id/pick_option_a_sumview"/>
 
-        <dar.life.helpers.simplifydecisions.ui.customview.OptionSumView
+        <dar.life.helpers.simplifydecisions.ui.views.OptionSumView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

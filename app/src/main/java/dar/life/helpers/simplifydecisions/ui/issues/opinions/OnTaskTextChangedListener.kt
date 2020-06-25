@@ -1,4 +1,4 @@
-package dar.life.helpers.simplifydecisions.ui.issues
+package dar.life.helpers.simplifydecisions.ui.issues.opinions
 
 interface OnTaskTextChangedListener {
     fun onTaskTextChange(pos: Int, text: String)

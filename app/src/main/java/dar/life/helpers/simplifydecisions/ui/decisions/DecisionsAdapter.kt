@@ -15,6 +15,12 @@ import dar.life.helpers.simplifydecisions.ui.UiUtils.Companion.fadeOutViews
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
+/**
+ * Adapter in charge of displaying the [DecisionModel] list.
+ *
+ * @property mContext - The activity's context
+ * @property mCallback - The fragment handling the events
+ */
 class DecisionsAdapter(private val mContext: Context, private val mCallback: OnDetailsRequest) :
     RecyclerView.Adapter<DecisionsAdapter.DecisionsVH>() {
 
@@ -65,6 +71,9 @@ class DecisionsAdapter(private val mContext: Context, private val mCallback: OnD
     }
 
 
+    /**
+     * The [DecisionModel] [RecyclerView.ViewHolder]
+     */
     class DecisionsVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.decision_item_title_tv)
         val description: TextView = itemView.findViewById(R.id.decision_item_desc_tv)

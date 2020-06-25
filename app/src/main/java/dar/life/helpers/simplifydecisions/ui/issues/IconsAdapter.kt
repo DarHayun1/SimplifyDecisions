@@ -9,6 +9,13 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import dar.life.helpers.simplifydecisions.R
 
+/**
+ * Adapter in charge of displaying the avatars drawables to pick from in the dropdown spinner
+ *
+ * @property icons - The avatars icons list
+
+ * @param context
+ */
 class IconsAdapter(context: Context, val icons: MutableList<Drawable>) :
     ArrayAdapter<Drawable>(context, 0, icons) {
 

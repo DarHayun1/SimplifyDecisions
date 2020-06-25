@@ -40,16 +40,24 @@ import java.time.format.DateTimeFormatter.ofLocalizedDateTime
 import java.time.format.FormatStyle
 import java.util.*
 
+/**
+ * Fragment in charge of displaying and editing the decision's details
+ */
 class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
-    private var mSnackbar: Snackbar? = null
+
     private lateinit var mDecisionLiveData: LiveData<DecisionModel?>
-    private lateinit var mShowcaseView: ShowcaseView
-    private var mFirstTime: Boolean = false
-    private var mDialogView: View? = null
+
     private lateinit var mContext: Context
 
+    private val viewModel by viewModels<DecisionsViewModel>()
+
+    private var mFirstTime: Boolean = false
     private var cancelUiUpdate: Boolean = false
+
+    private var mSnackbar: Snackbar? = null
+    private lateinit var mShowcaseView: ShowcaseView
+    private var mDialogView: View? = null
 
     private var mDecision: DecisionModel?
         get() = viewModel.lastUsedDecision
@@ -57,6 +65,9 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             viewModel.lastUsedDecision = value
         }
 
+    /**
+     * Back button callback for ShowCaseView screens.
+     */
     private val mBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -68,13 +79,13 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     companion object {
         val REMINDER_ID: String = "reminder_id_extra"
-
-        fun newInstance() = DecisionDetailsFragment()
     }
 
-    private val viewModel by viewModels<DecisionsViewModel>()
-
     private val args: DecisionDetailsFragmentArgs by navArgs()
+
+    // *****************************
+    // ***** Fragment methods *****
+    // *****************************
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -116,11 +127,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         initViews()
     }
 
-    private fun initToolbar() {
-        binding.decisionDetailsToolbar.title = ""
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.decisionDetailsToolbar)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -147,6 +153,19 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         }
     }
 
+    // **************************
+    // ***** Helper methods *****
+    // **************************
+
+    /**
+     * setting the right toolbar for the activity
+     *
+     */
+    private fun initToolbar() {
+        binding.decisionDetailsToolbar.title = ""
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.decisionDetailsToolbar)
+    }
+
     private fun initViews() {
         mDecisionLiveData = viewModel.getDecisionById(args.decisionId)
 
@@ -167,20 +186,36 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         setupGoals()
     }
 
+    private fun populateUi(decision: DecisionModel) {
+
+        binding.decisionDateTv.text = decision.date.format(ofLocalizedDate(FormatStyle.LONG))
+
+        binding.decisionDetailsToolbarTitle.text = decision.title
+
+        if (viewModel.isFirstInit()) {
+            //If the user navigated from a reminder it will expand, otherwise, the first
+            val remindersGoal = decision.goals.find {
+                it.expanded = false
+                it.reminder.id == args.reminderId
+            }
+            if (remindersGoal != null) {
+                remindersGoal.expanded = true
+            } else {
+                expandNextGoal(decision.goals)
+            }
+        }
+        (binding.goalsRv.adapter as GoalsAdapter).goalsList = decision.goals
+
+        binding.goodluckLogo.setImageDrawable(UiUtils.nameToIcon(decision.colorName, mContext))
+
+    }
+
     private fun setupGoals() {
         val layoutManager = LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
         binding.goalsRv.adapter = GoalsAdapter(mContext, this)
         binding.goalsRv.layoutManager = layoutManager
 
         binding.addAGoal.setOnClickListener { onNewGoalRequest() }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
     }
 
     private fun handleCollaborateClick() {
@@ -265,30 +300,6 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         mBackPressedCallback.remove()
     }
 
-    private fun populateUi(decision: DecisionModel) {
-
-        binding.decisionDateTv.text = decision.date.format(ofLocalizedDate(FormatStyle.LONG))
-
-        binding.decisionDetailsToolbarTitle.text = decision.title
-
-        if (viewModel.isFirstInit()) {
-            //If the user navigated from a reminder it will expand, otherwise, the first
-            val remindersGoal = decision.goals.find {
-                it.expanded = false
-                it.reminder.id == args.reminderId
-            }
-            if (remindersGoal != null) {
-                remindersGoal.expanded = true
-            } else {
-                expandNextGoal(decision.goals)
-            }
-        }
-        (binding.goalsRv.adapter as GoalsAdapter).goalsList = decision.goals
-
-        binding.goodluckLogo.setImageDrawable(UiUtils.nameToIcon(decision.colorName, mContext))
-
-    }
-
     private fun expandNextGoal(goals: MutableList<Goal>) {
         goals.forEach {
             it.expanded = false
@@ -303,47 +314,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             ?.let { it.expanded = true }
     }
 
-    override fun onNewGoalRequest() {
-        hideHelpIfShown()
-        openEditGoalDialog()
-    }
-
-    override fun onGoalChecked(goal: Goal) {
-        cancelUiUpdate = true
-        viewModel.updateDecision(mDecision!!
-            .also {
-                it.goals.find {
-                    it == goal
-                }?.isDone = goal.isDone
-            })
-        if (goal.isDone)
-            goalCompleted(goal)
-    }
-
-    override fun onEditGoalRequest(position: Int) {
-        openEditGoalDialog(position)
-    }
-
-    override fun goalDeleted(goal: Goal) {
-        cancelUiUpdate = true
-        viewModel.updateDecision(mDecision!!.apply { goals.remove(goal) })
-
-    }
-
-    override fun goalExpanded(goal: Goal) {
-        cancelUiUpdate = true
-        viewModel.updateDecision(mDecision!!.also { decision ->
-            decision.goals.find { it == goal }
-                ?.also {
-                    it.expanded = goal.expanded
-                    it.isDone = goal.isDone
-                }
-        })
-
-    }
-
     /**
-     * T
+     * Handling a completed goal event
      *
      * @param goal - the completed goal
      */
@@ -409,41 +381,10 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             dialogBuilder.dismiss()
         }
         mDecision?.let { decision ->
-            goal = decision.goals.getOrElse(goalPos) {
-                decision.goals.add(0, goal)
-                goal
-            }
-
-            textInputLayout.editText?.setText(goal.name)
-
-            if (goal.epochDueDate != null) {
-                dueDateCal =
-                    GregorianCalendar.from(
-                        LocalDate.ofEpochDay(goal.epochDueDate!!)
-                            .atStartOfDay(ZoneId.systemDefault())
-                    )
-                dueDateCb.isChecked = true
-                UiUtils.fadeInViews(dueDateTv, addToCalBtn)
-            }
-            dueDateTv.text = dueDateCal.time.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-                .format(ofLocalizedDate(FormatStyle.SHORT))
-
-            if (goal.reminder.isActive) {
-                isReminderSet = true
-                firstReminderEt.setText(goal.reminder.title)
-                firstDateTv.text = goal.reminder.time.format(
-                    ofLocalizedDateTime(FormatStyle.SHORT)
-                )
-            }
-            firstDateTv.setOnClickListener { tv ->
-                openDateTimePicker(
-                    goal.reminder,
-                    tv as TextView
-                )
-                isReminderSet = true
-            }
+            initEditGoalDialogViews(
+                goal, decision, goalPos, textInputLayout, dueDateCal, dueDateCb, dueDateTv,
+                addToCalBtn, firstReminderEt, firstDateTv
+            )
         }
         saveBtn.setOnClickListener {
             editGoalSaveClicked(
@@ -475,6 +416,54 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         }
         dialogBuilder.setView(dialogView)
         dialogBuilder.show()
+    }
+
+
+    // *****************************************
+    // *** Edit Goal dialog helper functions ***
+    // *****************************************
+
+
+    private fun initEditGoalDialogViews(
+        goal: Goal, decision: DecisionModel, goalPos: Int, textInputLayout: TextInputLayout,
+        dueDateCal: Calendar, dueDateCb: CheckBox, dueDateTv: TextView,
+        addToCalBtn: View, firstReminderEt: EditText, firstDateTv: TextView
+    ) {
+        var goal1 = goal
+        var dueDateCal1 = dueDateCal
+        goal1 = decision.goals.getOrElse(goalPos) {
+            decision.goals.add(0, goal1)
+            goal1
+        }
+
+        textInputLayout.editText?.setText(goal1.name)
+
+        if (goal1.epochDueDate != null) {
+            dueDateCal1 =
+                GregorianCalendar.from(
+                    LocalDate.ofEpochDay(goal1.epochDueDate!!)
+                        .atStartOfDay(ZoneId.systemDefault())
+                )
+            dueDateCb.isChecked = true
+            UiUtils.fadeInViews(dueDateTv, addToCalBtn)
+        }
+        dueDateTv.text = dueDateCal1.time.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+            .format(ofLocalizedDate(FormatStyle.SHORT))
+
+        if (goal1.reminder.isActive) {
+            firstReminderEt.setText(goal1.reminder.title)
+            firstDateTv.text = goal1.reminder.time.format(
+                ofLocalizedDateTime(FormatStyle.SHORT)
+            )
+        }
+        firstDateTv.setOnClickListener { tv ->
+            openDateTimePicker(
+                goal1.reminder,
+                tv as TextView
+            )
+        }
     }
 
     private fun editGoalSaveClicked(
@@ -591,4 +580,49 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         alertDialog.setView(dialogView)
         alertDialog.show()
     }
+
+    // ******************************
+    // ***** Interfaces methods *****
+    // ******************************
+
+    override fun onNewGoalRequest() {
+        hideHelpIfShown()
+        openEditGoalDialog()
+    }
+
+    override fun onGoalChecked(goal: Goal) {
+        cancelUiUpdate = true
+        viewModel.updateDecision(mDecision!!
+            .also {
+                it.goals.find {
+                    it == goal
+                }?.isDone = goal.isDone
+            })
+        if (goal.isDone)
+            goalCompleted(goal)
+    }
+
+    override fun onEditGoalRequest(position: Int) {
+        openEditGoalDialog(position)
+    }
+
+    override fun goalDeleted(goal: Goal) {
+        cancelUiUpdate = true
+        viewModel.updateDecision(mDecision!!.apply { goals.remove(goal) })
+
+    }
+
+    override fun goalExpanded(goal: Goal) {
+        cancelUiUpdate = true
+        viewModel.updateDecision(mDecision!!.also { decision ->
+            decision.goals.find { it == goal }
+                ?.also {
+                    it.expanded = goal.expanded
+                    it.isDone = goal.isDone
+                }
+        })
+
+    }
+
+
 }

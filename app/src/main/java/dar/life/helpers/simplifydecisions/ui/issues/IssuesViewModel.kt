@@ -7,6 +7,9 @@ import dar.life.helpers.simplifydecisions.data.IssueModel
 import dar.life.helpers.simplifydecisions.data.Opinion
 import dar.life.helpers.simplifydecisions.repository.AppRepository
 
+/**
+ * An [AndroidViewModel] serving fragments displaying [IssueModel]s
+ */
 class IssuesViewModel(application: Application) : AndroidViewModel(application) {
 
     var lastUsedIssue: IssueModel? = null

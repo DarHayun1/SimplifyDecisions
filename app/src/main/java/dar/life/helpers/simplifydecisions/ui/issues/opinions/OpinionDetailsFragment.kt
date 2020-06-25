@@ -1,4 +1,4 @@
-package dar.life.helpers.simplifydecisions.ui.issues
+package dar.life.helpers.simplifydecisions.ui.issues.opinions
 
 import android.content.Context
 import android.graphics.Color
@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.transition.Slide
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.view.animation.TranslateAnimation
@@ -45,12 +44,14 @@ import dar.life.helpers.simplifydecisions.data.Opinion.Companion.MEDIUM_IMPORTAN
 import dar.life.helpers.simplifydecisions.data.Opinion.Task
 import dar.life.helpers.simplifydecisions.databinding.FragmentOpinionDetailsBinding
 import dar.life.helpers.simplifydecisions.ui.Instruction
-import java.util.*
+import dar.life.helpers.simplifydecisions.ui.issues.IssuesViewModel
+import dar.life.helpers.simplifydecisions.ui.issues.SwipeToDeleteCallback
+import dar.life.helpers.simplifydecisions.ui.issues.opinions.OnTaskTextChangedListener
 import kotlin.math.abs
 
 
 /**
- * A simple [Fragment] subclass.
+ * A [Fragment] in charge of displaying and editing the [Opinion] details
  */
 class OpinionDetailsFragment : Fragment(),
     OnTaskTextChangedListener, OnShowcaseEventListener {
@@ -72,6 +73,7 @@ class OpinionDetailsFragment : Fragment(),
     private val binding get() = _binding!!
     private val viewModel by viewModels<IssuesViewModel>()
     private lateinit var mContext: Context
+
     val args: OpinionDetailsFragmentArgs by navArgs()
 
     private lateinit var mShowcaseView: ShowcaseView
@@ -83,6 +85,9 @@ class OpinionDetailsFragment : Fragment(),
             }
         }
 
+    // *****************************
+    // ***** Fragment methods *****
+    // *****************************
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -103,24 +108,6 @@ class OpinionDetailsFragment : Fragment(),
         setHasOptionsMenu(true)
         initExpandedViews()
         return binding.root
-    }
-
-    private fun initExpandedViews() {
-        binding.expandableCategory.let {expLayout ->
-            expLayout.parentLayout.setOnClickListener{ expandOrCollapse(expLayout) }}
-        binding.expandableImportance.let {expLayout ->
-            expLayout.parentLayout.setOnClickListener{ expandOrCollapse(expLayout) }}
-        newCategoryEt = binding.expandableCategory.secondLayout.findViewById(R.id.new_category_et)
-        categorySpinner = binding.expandableCategory.secondLayout.findViewById(R.id.category_spinner)
-        importanceSb = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb)
-        importanceSbNumTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb_num_tv)
-        importanceSbTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb_tv)
-        importanceRelativeTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_relative_tv)
-    }
-
-    private fun expandOrCollapse(expLayout: ExpandableLayout) {
-        if (expLayout.isExpanded) expLayout.collapse()
-        else expLayout.expand()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -152,12 +139,6 @@ class OpinionDetailsFragment : Fragment(),
 
     }
 
-    private fun setupTopDrawer() {
-        binding.root.setBackgroundColor(args.opinionColor)
-        binding.topDrawerOpinionDetails.apply { elevation = 0f
-            setBackgroundColor(Color.TRANSPARENT)}
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val slide = Slide(Gravity.BOTTOM)
@@ -179,7 +160,68 @@ class OpinionDetailsFragment : Fragment(),
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroyView() {
+        hideHelpIfShown()
+        _binding = null
+        super.onDestroyView()
+    }
 
+    // ****************************
+    // ***** Helper methods *****
+    // ****************************
+
+    /**
+     * Populating the UI with the fetched [IssueModel]
+     */
+    private fun issueFoundInflateFragment(issue: IssueModel) {
+
+        binding.relatedIssueTitle.text = issue.displayedTitle(mContext)
+
+        viewModel.lastUsedOpinion =
+            issue.opinions.values.flatten().firstOrNull { it.title == args.opinionTitle }
+        if (mOpinion == null)
+            viewModel.lastUsedOpinion = Opinion(getString(R.string.default_opinion_title),
+                isOfFirstOption = args.ofFirstOption)
+                .also {newOpinion -> mIssue!!.opinions[DEFAULT_CATEGORY]!!.add(newOpinion)}
+
+        binding.opinionDetailsToolbarTitle.text = mOpinion?.title
+        setupImportanceBar()
+        setupTasks()
+
+        initCategorySpinner()
+    }
+
+    /**
+     * Getting the ref to the expanded child views and setting the click listeners
+     */
+    private fun initExpandedViews() {
+        binding.expandableCategory.let {expLayout ->
+            expLayout.parentLayout.setOnClickListener{ expandOrCollapse(expLayout) }}
+        binding.expandableImportance.let {expLayout ->
+            expLayout.parentLayout.setOnClickListener{ expandOrCollapse(expLayout) }}
+        newCategoryEt = binding.expandableCategory.secondLayout.findViewById(R.id.new_category_et)
+        categorySpinner = binding.expandableCategory.secondLayout.findViewById(R.id.category_spinner)
+        importanceSb = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb)
+        importanceSbNumTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb_num_tv)
+        importanceSbTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_sb_tv)
+        importanceRelativeTv = binding.expandableImportance.secondLayout.findViewById(R.id.importance_relative_tv)
+    }
+
+    /**
+     * Expanding / Collapsing the [ExpandableLayout]s as needed
+     *
+     * @param expLayout
+     */
+    private fun expandOrCollapse(expLayout: ExpandableLayout) {
+        if (expLayout.isExpanded) expLayout.collapse()
+        else expLayout.expand()
+    }
+
+    private fun setupTopDrawer() {
+        binding.root.setBackgroundColor(args.opinionColor)
+        binding.topDrawerOpinionDetails.apply { elevation = 0f
+            setBackgroundColor(Color.TRANSPARENT)}
+    }
 
     private fun editTitle() {
         val alertDialog: AlertDialog = AlertDialog.Builder(mContext).create()
@@ -246,24 +288,6 @@ class OpinionDetailsFragment : Fragment(),
         findNavController().popBackStack()
     }
 
-    private fun issueFoundInflateFragment(issue: IssueModel) {
-
-        binding.relatedIssueTitle.text = issue.displayedTitle(mContext)
-
-        viewModel.lastUsedOpinion =
-            issue.opinions.values.flatten().firstOrNull { it.title == args.opinionTitle }
-        if (mOpinion == null)
-            viewModel.lastUsedOpinion = Opinion(getString(R.string.default_opinion_title),
-                isOfFirstOption = args.ofFirstOption)
-                .also {newOpinion -> mIssue!!.opinions[DEFAULT_CATEGORY]!!.add(newOpinion)}
-
-        binding.opinionDetailsToolbarTitle.text = mOpinion?.title
-        setupImportanceBar()
-        setupTasks()
-
-        initCategorySpinner()
-    }
-
     private fun initCategorySpinner() {
         val categories =
             mIssue!!.opinions.keys.toMutableList().apply { add(NEW_CATEGORY) }
@@ -305,7 +329,6 @@ class OpinionDetailsFragment : Fragment(),
         binding.editOpinionToolbar.title = ""
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.editOpinionToolbar)
     }
-
 
     private fun setupTasks() {
         mTasksAdapter =
@@ -413,43 +436,11 @@ class OpinionDetailsFragment : Fragment(),
             ""
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
-
-    fun slideUp(view: View) {
-        view.visibility = View.VISIBLE
-        val animate = TranslateAnimation(
-            0f,  // fromXDelta
-            0f,  // toXDelta
-            view.height.toFloat(),  // fromYDelta
-            0f
-        ) // toYDelta
-        animate.duration = 500
-        view.startAnimation(animate)
-    }
-
-    // slide the view from its current position to below itself
-    fun slideDown(view: View) {
-        val animate = TranslateAnimation(
-            0f,  // fromXDelta
-            0f,  // toXDelta
-            0f,  // fromYDelta
-            view.height.toFloat()
-        ) // toYDelta
-        animate.duration = 500
-        view.startAnimation(animate)
-    }
-
-    override fun onTaskTextChange(pos: Int, text: String) {
-        mOpinion?.tasks!![pos].text = text
-    }
-
-    override fun onCheckedChanged(pos: Int, checked: Boolean) {
-        mOpinion?.checkTask(pos, checked)
-    }
-
+    /**
+     * Handling a back button event from the registered callback
+     * Hiding the help if it's shown, otherwise letting the user an option to save the progress
+     * and return to the previous page
+     */
     private fun backPressed() {
         if (!hideHelpIfShown()) {
             AlertDialog.Builder(mContext)
@@ -503,6 +494,18 @@ class OpinionDetailsFragment : Fragment(),
     private fun clearCallback() {
         mBackPressedCallback.isEnabled = false
         mBackPressedCallback.remove()
+    }
+
+    // ***************************
+    // ***** Event listeners *****
+    // ***************************
+
+    override fun onTaskTextChange(pos: Int, text: String) {
+        mOpinion?.tasks!![pos].text = text
+    }
+
+    override fun onCheckedChanged(pos: Int, checked: Boolean) {
+        mOpinion?.checkTask(pos, checked)
     }
 
     override fun onShowcaseViewShow(showcaseView: ShowcaseView?) {
