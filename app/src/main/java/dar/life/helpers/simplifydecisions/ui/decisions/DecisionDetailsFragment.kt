@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -151,6 +152,12 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
             else -> super.onOptionsItemSelected(item)
 
         }
+    }
+
+    override fun onDestroyView() {
+        hideHelpIfShown()
+        clearCallback()
+        super.onDestroyView()
     }
 
     // **************************
@@ -377,14 +384,16 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         val firstDateTv: TextView = dialogView.findViewById(R.id.edit_reminder_date1)
 
         var isReminderSet = false
+        Log.i("GOALBUG", mDecision?.goals.toString())
         cancelBtn.setOnClickListener {
             dialogBuilder.dismiss()
         }
         mDecision?.let { decision ->
-            initEditGoalDialogViews(
+            goal = initEditGoalDialogViews(
                 goal, decision, goalPos, textInputLayout, dueDateCal, dueDateCb, dueDateTv,
                 addToCalBtn, firstReminderEt, firstDateTv
             )
+            Log.d("GOALBUG", mDecision?.goals.toString())
         }
         saveBtn.setOnClickListener {
             editGoalSaveClicked(
@@ -414,6 +423,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
             startActivity(intent)
         }
+        Log.i("GOALBUG", mDecision?.goals.toString())
         dialogBuilder.setView(dialogView)
         dialogBuilder.show()
     }
@@ -428,7 +438,7 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
         goal: Goal, decision: DecisionModel, goalPos: Int, textInputLayout: TextInputLayout,
         dueDateCal: Calendar, dueDateCb: CheckBox, dueDateTv: TextView,
         addToCalBtn: View, firstReminderEt: EditText, firstDateTv: TextView
-    ) {
+    ): Goal {
         var goal1 = goal
         var dueDateCal1 = dueDateCal
         goal1 = decision.goals.getOrElse(goalPos) {
@@ -464,6 +474,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
                 tv as TextView
             )
         }
+
+        return goal1
     }
 
     private fun editGoalSaveClicked(
@@ -608,7 +620,8 @@ class DecisionDetailsFragment : Fragment(), OnGoalClickListener {
 
     override fun goalDeleted(goal: Goal) {
         cancelUiUpdate = true
-        viewModel.updateDecision(mDecision!!.apply { goals.remove(goal) })
+        viewModel.updateDecision(mDecision!!.apply {
+        })
 
     }
 

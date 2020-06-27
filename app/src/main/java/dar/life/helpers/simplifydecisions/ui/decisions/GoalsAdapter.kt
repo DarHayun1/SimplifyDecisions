@@ -81,8 +81,11 @@ class GoalsAdapter(val mContext: Context, val mCallback: OnGoalClickListener) :
                         return@setOnMenuItemClickListener true
                     }
                     R.id.action_delete_goal -> {
+                        Log.w("GOALBUG11111", goalsList.toString())
                         goalsList.remove(goal)
+                        Log.i("GOALBUG11111", goalsList.toString())
                         notifyItemRemoved(position)
+                        Log.i("GOALBUG11111", goalsList.toString())
                         mCallback.goalDeleted(goal)
                         return@setOnMenuItemClickListener true
                     }

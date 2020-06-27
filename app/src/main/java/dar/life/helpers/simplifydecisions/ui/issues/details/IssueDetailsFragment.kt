@@ -180,6 +180,7 @@ class IssueDetailsFragment : Fragment(),
     override fun onDestroyView() {
         hideHelpIfShown()
         _binding = null
+        clearCallback()
         super.onDestroyView()
     }
 

@@ -94,6 +94,7 @@ class DecisionsFragment : Fragment(), OnDetailsRequest {
     override fun onDestroyView() {
         hideHelpIfShown()
         _binding = null
+        clearCallback()
         super.onDestroyView()
     }
 
